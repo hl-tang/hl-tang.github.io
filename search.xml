@@ -1,0 +1,1159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>220920_Manjaro上安装MySQL</title>
+    <url>/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/</url>
+    <content><![CDATA[<p>19年的大三冬季初学数据库时，在matebook win10上安装了微软的SQL Server。之后20年疫情宅家时，跟着一本小册子SQL必知必会(这本书的MySQL安装内容太旧了)还有网上教程，在老ideapad win7上安装了MySQL，但并不一定是最佳的安装方式，书上和网上教程并不完美适配，有冲突的地方。当时记得是在win7 cmd里运行sql命令，看得是真难受。当时也没有安装MySQL Workbench这样的图形界面工具。不过当时安装了mysql倒是在后来的夏季学期に役立った，不用再次安装了，就pip install个django的mysql，让django连上本地的mysql就好了。然后用了navicat的30天免费试用，撑过了夏季学期。</p>
+<hr>
+<h2 id="一些闲言碎语"><a href="#一些闲言碎语" class="headerlink" title="一些闲言碎语"></a>一些闲言碎语</h2><p>读wikipedia上MySQL及び其作者Michael Widenius的词条，获得的一些豆知識</p>
+<p>起初以为mysql的my是“我的”的意思，其实Its name is a combination of “My”, the name of co-founder <a class="link"   href="https://en.wikipedia.org/wiki/Michael_Widenius" >Michael Widenius <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>‘s daughter My, and “SQL”, the abbreviation for <a class="link"   href="https://en.wikipedia.org/wiki/Structured_Query_Language" >Structured Query Language <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>.原来是name after作者女儿的名字。そして，Widenius has three children – My, Max, and Maria – who inspired the names for <a class="link"   href="https://en.wikipedia.org/wiki/MySQL" >MySQL <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>, <a class="link"   href="https://en.wikipedia.org/wiki/MaxDB" >MaxDB <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> and the MySQL-Max distribution, and <a class="link"   href="https://en.wikipedia.org/wiki/MariaDB" >MariaDB <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>.他还用另外两个子女的名字来命名其他数据库。</p>
+<p>MariaDB就是MySQL被Oracle收购后的一个开源复刻，与MySQL高度兼容。甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险，因此社区采用分支的方式来避开这个风险。MariaDB的目的是完全兼容MySQL，包括API和命令行，使之能轻松成为MySQL的代替品。</p>
+<p>聊聊作者Michael Widenius吧。芬兰人，Helsinki University of Technolog辍学(说来另一个赫尔辛基的狠人就是linus)。33岁时开始写mysql，1年后发布。</p>
+<p>之后mysql被Sun收购，然后又被Oracle收购。</p>
+<h2 id="安装MySQL及初始化"><a href="#安装MySQL及初始化" class="headerlink" title="安装MySQL及初始化"></a>安装MySQL及初始化</h2><h3 id="查看软件仓库MySQL版本"><a href="#查看软件仓库MySQL版本" class="headerlink" title="查看软件仓库MySQL版本"></a>查看软件仓库MySQL版本</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">pacman -Si mysql</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_18-37-49%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<h3 id="安装MySQL"><a href="#安装MySQL" class="headerlink" title="安装MySQL"></a>安装MySQL</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S mysql</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-11-58%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-16.png"
+                     
+                ></p>
+<h3 id="确认安装成功-mysql版本"><a href="#确认安装成功-mysql版本" class="headerlink" title="确认安装成功&amp;mysql版本"></a>确认安装成功&amp;mysql版本</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql --version</span><br></pre></td></tr></table></figure></div>
+
+<p>or</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysqladmin --version</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="初始化MySQL"><a href="#初始化MySQL" class="headerlink" title="初始化MySQL"></a>初始化MySQL</h3><p>第一次使用前先初始化</p>
+<p>安装mysql后的输出信息已经说了要这样初始化</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo mysqld --initialize --user=mysql --basedir=/usr --datadir=/var/lib/mysql</span><br></pre></td></tr></table></figure></div>
+
+<p>&#x3D;&#x3D;执行后会产生一个<strong>临时password</strong>&#x3D;&#x3D;</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-23-36%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<p>error了，试试加上sudo</p>
+<p>OK，刚才应该是权限不够操作&#x2F;var&#x2F;lib里的文件。<code>sudo rm -rf mysql</code>把刚才失败的文件夹删掉。加上sudo初始化后成功了。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-37.jpg"
+                     
+                ></p>
+<p>用户名：root@localhost</p>
+<p>临时口令：S4ypiYr8gt.S</p>
+<h3 id="启动MySQL服务"><a href="#启动MySQL服务" class="headerlink" title="启动MySQL服务"></a>启动MySQL服务</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl start mysqld</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="启动mysql服务后，secure-installation"><a href="#启动mysql服务后，secure-installation" class="headerlink" title="启动mysql服务后，secure installation"></a>启动mysql服务后，secure installation</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql_secure_installation</span><br></pre></td></tr></table></figure></div>
+
+<p>事实上我把这步放在修改完root口令后再执行</p>
+<p>输入了新的root口令</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_22-08-01%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<p>这个好像会按照密码强度，设置密码，要8位以上。那就不弄了。</p>
+<h3 id="查看MySQL运行状态"><a href="#查看MySQL运行状态" class="headerlink" title="查看MySQL运行状态"></a>查看MySQL运行状态</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl status mysqld</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="修改root用户的password"><a href="#修改root用户的password" class="headerlink" title="修改root用户的password"></a>修改root用户的password</h3><p>initialize时生成了一个临时的口令，现在修改口令，就改为和linux的登录口令一样好了</p>
+<p><code>mysql -u root -p</code>，输入initialize时的临时口令，进入mysql</p>
+<p>修改root口令</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql&gt; alter user &#x27;root&#x27;@&#x27;localhost&#x27; identified by &#x27;新密码&#x27;;</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-49-53%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<p>然后退出，再用新口令登录mysql试试</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql&gt; exit;</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure></div>
+
+<p>输入新口令，成功登入</p>
+<p><em><strong>よし、到这里就算安装与初始化结束了</strong></em></p>
+<h2 id="卸载MySQL"><a href="#卸载MySQL" class="headerlink" title="卸载MySQL"></a>卸载MySQL</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -Rsn mysql</span><br></pre></td></tr></table></figure></div>
+
+<p>注：-s参数删除没有被其他已安装软件包使用的依赖	-n参数删除相应的配置文件</p>
+<p>然后删除&#x2F;var&#x2F;lib&#x2F;mysql目录</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo rm -rf /var/lib/mysql</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h2 id="MySQL简单使用"><a href="#MySQL简单使用" class="headerlink" title="MySQL简单使用"></a>MySQL简单使用</h2><h3 id="1-启动MySQL"><a href="#1-启动MySQL" class="headerlink" title="1.启动MySQL"></a>1.启动MySQL</h3><p>若没有设置开机自动启动mysql服务，那么当要使用mysql时需手动启动服务 <code>systemctl start mysqld</code></p>
+<p>关掉mysql服务：<code>systemctl stop mysqld</code>  以减少内存占用</p>
+<p>mysql服务没开启时，就没法连接mysql数据库</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_22-30.jpg"
+                     
+                ></p>
+<p>ちなみに、mariadb数据库的相关命令是：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl start mariadb  #启动MariaDB</span><br><span class="line">systemctl stop mariadb  #停止MariaDB</span><br><span class="line">systemctl restart mariadb  #重启MariaDB</span><br><span class="line">systemctl enable mariadb  #设置开机启动</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="2-登录MySQL"><a href="#2-登录MySQL" class="headerlink" title="2.登录MySQL"></a>2.登录MySQL</h3><p>当MySQL服务已经运行时, 我们可以通过MySQL自带的客户端工具登录到MySQL数据库中, 打开命令行, 输入以下格式的命名:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql -h 主机名 -u 用户名 -p</span><br></pre></td></tr></table></figure></div>
+
+<p>参数说明：</p>
+<ul>
+<li><strong>-h</strong>: 指定客户端所要登录的MySQL主机名, 登录本机(localhost 或 127.0.0.1)该参数可以省略</li>
+<li><strong>-u</strong>: 登录的用户名</li>
+<li><strong>-p</strong>: 告诉服务器将会使用一个密码来登录, 如果所要登录的用户名密码为空, 可以忽略此选项</li>
+</ul>
+<p>如果我们要登录本机的MySQL数据库，只需要输入以下命令即可：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="3-管理MySQL的命令"><a href="#3-管理MySQL的命令" class="headerlink" title="3.管理MySQL的命令"></a>3.管理MySQL的命令</h3><p><strong>注意:</strong> MySQL的SQL语句以分号 (;) 作为结束标识	大小写構いません</p>
+<p>下面列举一些常用命令：</p>
+<ul>
+<li><p><code>show databases;</code></p>
+<p>列出MySQL数据库管理系统的数据库列表</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-23_02-10.jpg"
+                     
+                ></p>
+<p>​	mysqlDBMS中最初是这4个数据库</p>
+<ul>
+<li><p><code>use 数据库名;</code></p>
+<p>在连接到 MySQL 数据库后，可能有多个可以操作的数据库，所以需要选择要操作的数据库</p>
+<p><code>use</code>选择要操作的数据库，使用该命令后所有SQL命令都只针对该数据库</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql&gt; use RUNOOB;</span><br><span class="line">Database changed</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+<ul>
+<li><p><code>show tables;</code></p>
+<p>显示指定数据库的所有表，使用该命令前需要使用 use 命令来选择要操作的数据库</p>
+</li>
+<li><p><code>show columns from 表名;</code></p>
+<p>显示数据表的属性，属性类型，主键信息 ，是否为 NULL，默认值等其他信息</p>
+</li>
+</ul>
+<p>跟着菜鸟教程试了试增删改查语句，查询的语句select from where在终端中敲，输出会对不齐，不如在可视化界面里操作。</p>
+<h2 id="安装与使用MySQL-Workbench"><a href="#安装与使用MySQL-Workbench" class="headerlink" title="安装与使用MySQL Workbench"></a>安装与使用MySQL Workbench</h2><p>MySQL Workbench是专门面向mysql的可视化数据库管理工具，就是个DBMS的gui。也是甲骨文公司旗下的产品，属于mysql套件中的一部分。</p>
+<p>安装mysql-workbench</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S mysql-workbench</span><br></pre></td></tr></table></figure></div>
+
+<p>启动程序可以终端敲<code>mysql-workbench</code></p>
+<p>进入程序后默认的连接一般是Local instance 3306。如果要自己新建一个连接的话，本地端口好像也是3306。</p>
+<p>输入root口令后连接mysql</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-23_17-44.jpg"
+                     
+                ></p>
+<p>这个窗口从Adminisration调到Schemas，可以看到目前在mysql中的数据库。しかし、内置的4个数据库中只有sys显示了出来。RUNOOB是跟着菜鸟教程做的。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-23_17-37.jpg"
+                     
+                ></p>
+<p>在图形界面里SQL命令不加;也能跑，终端是一定要有;的</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-23_17-53.jpg"
+                     
+                ></p>
+<p><a class="link"   href="https://blog.csdn.net/qq_40468936/article/details/114964412" >https://blog.csdn.net/qq_40468936/article/details/114964412 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://zhuanlan.zhihu.com/p/422931126" >https://zhuanlan.zhihu.com/p/422931126 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h2 id="230429更新-nodejs连接mysql数据库，报错Client-does-not-support-authentication-protocol-requested-by-server"><a href="#230429更新-nodejs连接mysql数据库，报错Client-does-not-support-authentication-protocol-requested-by-server" class="headerlink" title="230429更新 nodejs连接mysql数据库，报错Client does not support authentication protocol requested by server"></a>230429更新 nodejs连接mysql数据库，报错Client does not support authentication protocol requested by server</h2><p>尝试nodejs连接mysql数据库</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install mysql</span><br></pre></td></tr></table></figure></div>
+
+<p>建了一个db.js文件</p>
+<div class="highlight-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> mysql = <span class="built_in">require</span>(<span class="string">&quot;mysql&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> connection = mysql.<span class="title function_">createConnection</span>(&#123;</span><br><span class="line">    <span class="attr">host</span>:<span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">port</span>:<span class="number">3306</span>,</span><br><span class="line">    <span class="attr">user</span>:<span class="string">&quot;root&quot;</span>,</span><br><span class="line">    <span class="attr">password</span>:<span class="string">&quot;thl5160&quot;</span>,</span><br><span class="line">    <span class="attr">database</span>:<span class="string">&quot;idol&quot;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">connection.<span class="title function_">connect</span>()</span><br><span class="line"></span><br><span class="line">connection.<span class="title function_">query</span>(<span class="string">&quot;select * from idol.group&quot;</span>, <span class="keyword">function</span>(<span class="params">error,results,fields</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span>(error) <span class="keyword">throw</span> error</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;results = &quot;</span>, results)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">connection.<span class="title function_">end</span>()</span><br></pre></td></tr></table></figure></div>
+
+<p>然后<code>node db.js</code>运行，报错<font color='salmon'>‘Client does not support authentication protocol requested by server; consider upgrading MySQL client’</font></p>
+<p>网上查到两个解决方法的帖子</p>
+<p><a class="link"   href="https://stackoverflow.com/questions/51008807/nodejs-mysql-client-does-not-support-authentication-protocol" >https://stackoverflow.com/questions/51008807/nodejs-mysql-client-does-not-support-authentication-protocol <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://blog.csdn.net/airdark_long/article/details/82588064" >https://blog.csdn.net/airdark_long/article/details/82588064 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>Try change the password as below:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">ALTER USER &#x27;root&#x27;@&#x27;localhost&#x27; IDENTIFIED BY &#x27;your new password&#x27;; </span><br><span class="line">ALTER USER &#x27;root&#x27;@&#x27;localhost&#x27; IDENTIFIED WITH mysql_native_password BY &#x27;your new password&#x27;;</span><br><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure></div>
+
+<p>再び<code>node db.js</code>，输出成功</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a class="link"   href="https://www.youtube.com/watch?v=chezeWdTHbo" >MySQL Workbench Tutorial <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>  11min左右讲了个通过右击table来自动生成sql语句</p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=C0y35FpiLRA" >How to Use VS Code to Run SQL on a Database <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>  用SQLToolsという插件</p>
+<p><a class="link"   href="https://www.bilibili.com/video/BV1sr4y1V7PV" >ArchLinux安装mysql <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://developer.aliyun.com/article/809624" >MySQL Workbench 使用教程 - 如何使用 Workbench 操作 MySQL &#x2F; MariaDB 数据库中文指南 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://blog.csdn.net/UNIONDONG/article/details/98392738" >Manjaro安装Mysql8.0（血泪篇） <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://linuxhint.com/install-mysql-workbench-manjaro-linux/" >How to install MySQL Workbench on Manjaro Linux <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>  后半有详细的怎么使用workbench</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>230429_nvm尝试node版本管理</title>
+    <url>/2023/04/29/230429_nvm%E5%B0%9D%E8%AF%95node%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%EF%BC%8C%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E8%B7%91github%E5%88%AB%E4%BA%BA%E5%86%99%E7%9A%84repo/</url>
+    <content><![CDATA[<p>这周在github上试了好几个vue的mail项目，下载后，<code>npm install</code>,<code>npm run dev/serve</code>就各种版本不兼容的报错。本来想要在pacman装旧版本的nodejs，问了lph，然后可以用nvm相当于一个虚拟环境って教えてもらった。</p>
+<p>类比pycharm新建项目时可以选虚拟环境，就不会用本地的解释器</p>
+<h2 id="Manjaro上安装nvm"><a href="#Manjaro上安装nvm" class="headerlink" title="Manjaro上安装nvm"></a>Manjaro上安装nvm</h2><p>pacman仓库里就有nvm</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S nvm</span><br></pre></td></tr></table></figure></div>
+
+<p>此时新开终端，敲<code>nvm</code>或<code>nvm -v</code>都是没输出的。需要配置shell（官网github也是）</p>
+<p>以下是pacman安装后输出的提示信息：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">You need to source nvm before you can use it. Do one of the following</span><br><span class="line">or similar depending on your shell (and then restart your shell):</span><br><span class="line"></span><br><span class="line">  echo &#x27;source /usr/share/nvm/init-nvm.sh&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line">  echo &#x27;source /usr/share/nvm/init-nvm.sh&#x27; &gt;&gt; ~/.zshrc</span><br><span class="line"></span><br><span class="line">You can now install node.js versions (e.g. nvm install 10) and</span><br><span class="line">activate them (e.g. nvm use 10).</span><br><span class="line"></span><br><span class="line">init-nvm.sh is a convenience script which does the following:</span><br><span class="line"></span><br><span class="line">[ -z &quot;$NVM_DIR&quot; ] &amp;&amp; export NVM_DIR=&quot;$HOME/.nvm&quot;</span><br><span class="line">source /usr/share/nvm/nvm.sh</span><br><span class="line">source /usr/share/nvm/bash_completion</span><br><span class="line">source /usr/share/nvm/install-nvm-exec</span><br><span class="line"></span><br><span class="line">You may wish to customize and put these lines directly in your</span><br><span class="line">.bashrc (or similar) if, for example, you would like an NVM_DIR</span><br><span class="line">other than ~/.nvm or you don&#x27;t want bash completion.</span><br><span class="line"></span><br><span class="line">See the nvm readme for more information: https://github.com/creationix/nvm</span><br></pre></td></tr></table></figure></div>
+
+<p>那么zsh就终端执行</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">&#x27;source /usr/share/nvm/init-nvm.sh&#x27;</span> &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>fish的话并不完全支持bash语法，在 ~&#x2F;.config&#x2F;fish&#x2F;config.fish里直接写入source &#x2F;usr&#x2F;share&#x2F;nvm&#x2F;init-nvm.sh是不work的。</p>
+<p>去看nvm项目的Issues <a class="link"   href="https://github.com/nvm-sh/nvm/issues/303#issuecomment-121086278" >https://github.com/nvm-sh/nvm/issues/303#issuecomment-121086278 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>需要使用fish的package manager(如oh-my-fish, fisher)装bass。Bass makes it easy to use utilities written for Bash in a fish shell.</p>
+<ul>
+<li>下载Bass: <code>omf install bass</code>&#x2F;<code>fisher install edc/bass</code></li>
+<li>编辑~&#x2F;.config&#x2F;fish&#x2F;config.fish:</li>
+</ul>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">function nvm</span><br><span class="line">    bass source /usr/share/nvm/init-nvm.sh &#x27;;&#x27; nvm $argv</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>&#x3D;&#x3D;fish的话，其实不如用这个fish插件&#x3D;&#x3D; <a class="link"   href="https://github.com/jorgebucaran/nvm.fish" >https://github.com/jorgebucaran/nvm.fish <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>还可以用<code>node use system</code>切换回系统的nodejs</p>
+<p>然后新开终端，敲<code>nvm</code>或<code>nvm -v</code>都有输出了</p>
+<h2 id="nvm使用"><a href="#nvm使用" class="headerlink" title="nvm使用"></a>nvm使用</h2><p>目前的本机环境node v19.8.1, npm 8.19.2。跑一个<a class="link"   href="https://panjiachen.github.io/vue-element-admin" >vue-element-admin <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>项目 <a class="link"   href="https://github.com/PanJiaChen/vue-element-admin" >https://github.com/PanJiaChen/vue-element-admin <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line"># clone the project</span><br><span class="line">git clone https://github.com/PanJiaChen/vue-element-admin.git</span><br><span class="line"></span><br><span class="line"># enter the project directory</span><br><span class="line">cd vue-element-admin</span><br><span class="line"></span><br><span class="line"># install dependency</span><br><span class="line">npm install</span><br><span class="line"></span><br><span class="line"># develop</span><br><span class="line">npm run dev</span><br></pre></td></tr></table></figure></div>
+
+<p>This will automatically open <a class="link"   href="http://localhost:9527/" >http://localhost:9527 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><code>npm run dev</code>时报错：<font color='Coral'>error:0308010C:digital envelope routines::unsupported</font></p>
+<p>网上查了下，就是node版本高了。然后就可以用nvm来切换版本</p>
+<hr>
+<p>If you want to see what versions are available to install, You can list available versions using <code>ls-remote</code>:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">nvm ls-remote</span><br></pre></td></tr></table></figure></div>
+
+<p>If you want to see what versions are installed:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">nvm ls</span><br></pre></td></tr></table></figure></div>
+
+<p>use之前先要install</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">nvm install 16</span><br></pre></td></tr></table></figure></div>
+
+<p>此时我在当前目录下<code>node -v</code>版本是<code>v16.20.0</code>。但其他目录下终端也变成v16.20.0了。</p>
+<p>由于当前目录下已经是用老版本的nodejs了，直接<code>npm run dev</code></p>
+<p>OK，它跑起来了！</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a class="link"   href="https://github.com/nvm-sh/nvm" >https://github.com/nvm-sh/nvm <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 官方</p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=_izDpz2Tewk" >NVM(Node Version Manager)を使ってNode.jsの開発環境を作る <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=P3aKRdUyr0s" >What is NPM, and why do we need it? | Tutorial for beginners <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 讲得很好的npm教程</p>
+<p><a class="link"   href="https://zenn.dev/antez/articles/a9d9d12178b7b2" >そもそもnpmからわからない <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 主要是讲npm的，但先装了nvm</p>
+]]></content>
+      <tags>
+        <tag>front-end</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>230715_SSH远程控制</title>
+    <url>/2023/07/15/230715_SSH%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6/</url>
+    <content><![CDATA[<p>OpenSSH是ssh协议的一种实现</p>
+<p>Linux的话一般随系统安装好openssh的。而openssl是实现了各种密码学算法的库，which被openssh调用，故openssl是openssh的依赖。</p>
+<p><strong>服务端</strong></p>
+<p>服务端OpenSSH Daemon的服务不跑起来的话，客户端也无法连接</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl status sshd</span><br><span class="line">systemctl start sshd</span><br><span class="line">systemctl stop sshd</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>客户端</strong></p>
+<p>通过SSH Client连接到运行了SSH Server的远程机器上的命令：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">ssh user@remote -p port</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>user 是你在远程机器上的用户名，如果不指定的话默认为当前用户</li>
+<li>remote 是远程机器的地址，可以是IP，域名</li>
+<li>port 是SSH Server监听的端口，如果不指定的话就为默认值22</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2023/07/15/230715_SSH%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6/2023-07-15_22-55-15%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<p>在远程机器上<code>ifconfig</code>查看服务端的ip；在远程机器上<code>whoami</code>查看服务端的用户名</p>
+<p>服务端<code>systemctl start sshd</code>了之后，客户端才可能ssh连接上，输入远程服务端的登录密码</p>
+<p>第一次远程登录成功后，客户端的~&#x2F;.ssh下的known_hosts会写入此次连接的远程服务端的信息</p>
+<p>之后的命令行操作就相当于是在敲远程机器的终端。</p>
+<p>真的在老电脑的桌面上创建了js文件</p>
+<p>退出</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">exit</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>ssh -v参数可以打印详细verbose信息，比如用了哪对公私钥。如果配置好后，还是连接不上可以-v来debug</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">ssh -v user@remote -p port</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">Causes ssh to print debugging messages about its progress. This is helpful in debugging connection, authentication, and configuration problems.</span><br></pre></td></tr></table></figure></div>
+
+<p>其他的都可以<code>man ssh</code>查看用法</p>
+<h2 id="scp传输文件"><a href="#scp传输文件" class="headerlink" title="scp传输文件"></a>scp传输文件</h2><p>scp就是scp命令，不是在ssh连接的条件下再执行。不过当然前提还是remote开启了sshd</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 把本地的 /path/to/local/file 文件传输到远程的 /path/to/remote/file</span><br><span class="line">scp /path/to/local/file user@remote:/path/to/remote/file</span><br><span class="line"></span><br><span class="line"># 把远程的 /path/to/remote/file 下载到本地的 /path/to/local/file</span><br><span class="line">scp user@remote:/path/to/remote/file /path/to/local/file</span><br></pre></td></tr></table></figure></div>
+
+<p><span style= 'color:black;background:LightPink'>就和cp一样，前面的复制到后面</span></p>
+<p>加上 -r 参数可以传送文件夹</p>
+<p>user@remote<span style= 'color:black;background:LightSalmon'>:</span> colon后啥都不写就默认是远程机器的home目录</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">scp -r 日向坂46 hl_tang@10.229.59.131:</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2023/07/15/230715_SSH%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6/2023-07-16_00-31-21%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<p>然后老电脑的~目录下确实有了蓝蓝的歌。不得不说是个好的传文件方式，以后就这样了。不用移动硬盘的媒介插线，速度也很快。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">scp -r ~/Music/乃木坂46 hl_tang@10.229.59.131:~/Music</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2023/07/15/230715_SSH%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6/2023-07-16_00-39-40%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<p>远程~&#x2F;Music下真的有紫歌了</p>
+<hr>
+<p><strong>再试试从远程下载</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">scp -r hl_tang@10.229.59.131:~/日向坂46 .</span><br></pre></td></tr></table></figure></div>
+
+<p>(. 可以指代当前目录)</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2023/07/15/230715_SSH%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6/2023-07-16_00-45-34%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<p>然后当前目录下真的有了</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a class="link"   href="https://qiita.com/tag1216/items/5d06bad7468f731f590e" >インフラエンジニアじゃなくても押さえておきたいSSHの基礎知識 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://www.bilibili.com/video/BV1nk4y1k742" >【大学计算机不会教的知识】Ep.5 远程服务器SSH 端口转发 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://zhuanlan.zhihu.com/p/21999778" >SSH 基本用法 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://wiki.archlinux.org/title/OpenSSH" >https://wiki.archlinux.org/title/OpenSSH <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>230716_再学docker</title>
+    <url>/2023/07/16/230716_%E5%86%8D%E5%AD%A6docker/</url>
+    <content><![CDATA[<h2 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h2><p>为什么需要docker？比如app在开发环境下能正常运行，但到了其他人的机器上因为各种环境问题导致跑不起来。</p>
+<p>一个image就是要运行的app和运行它所必要的dependency，打包在一起变成一个package。类似.iso image</p>
+<p>container是image的实际执行，就是一个进程（image是程序，container是进程）</p>
+<p>ちなみに、docker也只是容器技术的一种实现，其他还有比如containerd</p>
+<h3 id="Architecture"><a href="#Architecture" class="headerlink" title="Architecture"></a>Architecture</h3><p>Docker是client-server架构的</p>
+<p>server也就是Docker Engine (build &amp; run contianer)</p>
+<h3 id="为什么docker比虚拟机轻量，快？"><a href="#为什么docker比虚拟机轻量，快？" class="headerlink" title="为什么docker比虚拟机轻量，快？"></a>为什么docker比虚拟机轻量，快？</h3><p>docker engine启动的container其实共用本机操作系统的kernel。(默认本机是Linux，绝大部分的镜像应用都是基于linux的。而如果本机是win&#x2F;mac的话，其实需要起一个linux的虚拟机。这也许也是mac&#x2F;win安装docker需要docker-desktop，而linux并不需要docker-desktop的原因)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo docker run -t -d --name archtry archlinux</span><br><span class="line">sudo docker exec -it archtry bash</span><br><span class="line">uname -a</span><br><span class="line">cat /proc/version</span><br></pre></td></tr></table></figure></div>
+
+<p>查看到的内核信息和本机一样</p>
+<p>而虚拟机需要各自单独的内核，同时还需要一个hypervisor</p>
+<p>&#x3D;&#x3D;正是容器和虚拟机的本质区别在于，容器共用了本机OS的kernel，所以容器轻量快捷。但同时也是由于容器使用本机的内核，你是没办法在一台linux机器上运行windows server容器的。只能在windows机器上运行win的容器。win&#x2F;mac通常跑的docker应用，实际是建了个linux虚拟机，然后在上面运行的。&#x3D;&#x3D;</p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=eGz9DS-aIeY" >you need to learn Docker RIGHT NOW!! <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 解释得很好</p>
+<h2 id="Install-Docker"><a href="#Install-Docker" class="headerlink" title="Install Docker"></a>Install Docker</h2><p>安装的话，不同linux发行版的具体操作都不太一样。看<a class="link"   href="https://wiki.archlinux.org/title/Docker%E7%9A%84%E5%8F%82%E8%80%83%E4%BB%B7%E5%80%BC%E5%8F%AF%E8%83%BD%E6%AF%94%E7%9C%8B%E5%AE%98%E7%BD%91%E6%9B%B4%E5%A4%A7" >https://wiki.archlinux.org/title/Docker的参考价值可能比看官网更大 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S docker</span><br></pre></td></tr></table></figure></div>
+
+<p>实际就是装了Docker Engine</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker -v</span><br><span class="line">docker version	//docker server没运行的话，就只显示client的信息</span><br></pre></td></tr></table></figure></div>
+
+<p>启动Docker Engine</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl start docker</span><br></pre></td></tr></table></figure></div>
+
+<p>其实标准的应该是systemctl start docker.service，还有docker.socket（按tab键）</p>
+<p>但<code>systemctl start</code>了，<code>docker version</code>或者<code>docker info</code>报permission denied的错</p>
+<hr>
+<p>用户没被加入到docker group的话，各种docker操作都是需要<code>sudo</code>的。<code>sudo docker version</code>就显示出Server的信息了</p>
+<p><a class="link"   href="https://stackoverflow.com/questions/46202475/permission-denied-while-trying-to-connect-to-the-docker-daemon-socket" >https://stackoverflow.com/questions/46202475/permission-denied-while-trying-to-connect-to-the-docker-daemon-socket <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://wiki.archlinux.org/title/Users_and_groups#Group_management" >https://wiki.archlinux.org/title/Users_and_groups#Group_management <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h4 id="将用户加入到docker-group"><a href="#将用户加入到docker-group" class="headerlink" title="将用户加入到docker group"></a>将用户加入到docker group</h4><p>Add the user to the docker group to avoid permission issues:</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">sudo usermod -aG docker &lt;your_username&gt;</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl restart docker	//再不行就重启电脑</span><br></pre></td></tr></table></figure></div>
+
+<p>こうやって実行すれば、be able to run the docker CLI command as a non-root user</p>
+<p>之后的docker命令行操作就不需要<code>sudo</code>了</p>
+<p><font color="salmon">但最好不要为了少打个sudo，就这样操作。因为这个用户可能就有了系统权限。从安全的角度考虑别这样做。</font></p>
+<h3 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h3><div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">sudo pacman -S docker-compose</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">docker-compose -v</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="Docker-Desktop"><a href="#Docker-Desktop" class="headerlink" title="Docker Desktop"></a>Docker Desktop</h3><p><a class="link"   href="https://docs.docker.com/get-docker/" >https://docs.docker.com/get-docker/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 这里Docker Desktop就是Docker Engine加上a bunch of其他的tools</p>
+<p>An experimental package for Arch is provided directly by Docker; see <a class="link"   href="https://docs.docker.com/desktop/linux/install/archlinux/" >the manual <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> for more information. Unfortunately it contains files which conflict with the <a class="link"   href="https://archlinux.org/packages/?name=docker-compose" >docker-compose <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> package so you will first need to remove <a class="link"   href="https://archlinux.org/packages/?name=docker-compose" >docker-compose <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> if installed. Alternatively, you can install <a class="link"   href="https://aur.archlinux.org/packages/docker-desktop/" >docker-desktop <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>AUR package that does not conflict with existing packages.<br>(From <a class="link"   href="https://wiki.archlinux.org/title/Docker" >https://wiki.archlinux.org/title/Docker <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>)</p>
+<p>所以，装aur的docker-desktop</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">yay -S docker-desktop</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h2 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h2><p>docker image并不是一个存储在当前工作目录的单文件。how Docker stores image is very complex，我们也先不管它</p>
+<p><strong>查看本机的所有image</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure></div>
+
+<p>or ls(short for list)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker image ls</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>只pull下来镜像，但不运行</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker pull archlinux</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>Create and run a new container from an image</strong> (没有的话会自动pull)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run nginx</span><br></pre></td></tr></table></figure></div>
+
+<p>可以随便在什么目录下运行，因为必要的环境都在image里</p>
+<p><span style= 'color:black;background:PaleGreen'>docker run可以理解为docker create附带第一次执行</span></p>
+<p><a class="link"   href="https://docs.docker.com/engine/reference/commandline/create/" >https://docs.docker.com/engine/reference/commandline/create/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 搞明白create, run, start的联系</p>
+<p>交互式地运行，直接run会瞬间退出 (但也由此可见容器的启动速度比虚拟机快多了)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo docker run -it ubuntu</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>-d后台运行，–name给容器起名</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo docker run -t -d --name archtry archlinux</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<p>查看运行中的container</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure></div>
+
+<p>查看所有的container，包括停止的</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>Start one or more stopped containers</strong></p>
+<p><span style= 'color:black;background:LightPink'><code>run</code>每次会根据image创建一个新的container，对于已有的container之后每次启动应该用<code>start</code>，而非再用同样的image去run，docker run最好理解为创建容器的命令</span></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker start CONTAINER_NAME/ID</span><br></pre></td></tr></table></figure></div>
+
+<p>You can restart a stopped container with all its previous changes intact using <code>docker start</code>. Use <code>docker ps -a</code> to view a list of all containers, including those that are stopped.</p>
+<p><span style= 'color:black;background:MediumTurquoise'>startで运行一个Linux容器，不会像runのように瞬间就exit了，而是会停住，像是run -dみたい</span></p>
+<p><strong>Execute a command in a running container</strong></p>
+<p><code>docker exec</code>一定要先有一个运行中的容器</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">sudo docker run -t -d --name justTest alpine</span><br></pre></td></tr></table></figure></div>
+
+<p>(run的<code>-d</code>参数: Run container in background and print container ID</p>
+<p><code>-t</code>参数: Allocate a pseudo-TTY，分配一个终端，不然没有prompt)</p>
+<p>或者<code>start</code>起个容器 (start才是常态)</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">sudo docker exec -d justTest touch /tmp/execWorks</span><br><span class="line">sudo docker exec -it justTest sh</span><br></pre></td></tr></table></figure></div>
+
+<p>cd到tmp查看，真的有个execWorks文件</p>
+<p><span style= 'color:black;background:SkyBlue'>这样其实就相当于有了个服务器，可以练习运维基本功了，装nginx，配置文件</span></p>
+<p><strong>终止运行中的容器</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker stop CONTAINER_NAME/ID</span><br></pre></td></tr></table></figure></div>
+
+<p><code>docker kill</code>也行</p>
+<p>停止所有运行中的容器，省得一个个敲了</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo docker stop $(sudo docker ps -q)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>Remove one or more containers</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker rm CONTAINER_NAME/ID</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>Remove one or more images</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker rmi IMAGE_NAME/ID</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>Fetch the logs of a container 用来看报错信息</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker logs CONTAINER_NAME/ID</span><br></pre></td></tr></table></figure></div>
+
+<p>trouble shooting</p>
+<p><strong>查看运行中容器统计数据(CPU，内存，网络) Display a live stream of container(s) resource usage statistics</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker stats</span><br></pre></td></tr></table></figure></div>
+
+<p><code>Ctrl + c</code>退出</p>
+<p><strong>查看某个容器的更具体信息</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker inspect CONTAINER_NAME/ID</span><br></pre></td></tr></table></figure></div>
+
+<p>以JSON格式返回</p>
+<h3 id="Dockerfile-build"><a href="#Dockerfile-build" class="headerlink" title="Dockerfile &amp; build"></a>Dockerfile &amp; build</h3><p>试着给我的arxivkids的前端写个Dockerfile (其实还需要.dockerignore忽略掉node_modules)</p>
+<div class="highlight-container" data-rel="Dockerfile"><figure class="iseeu highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="keyword">FROM</span> node:alpine</span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /usr/app</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> package.json .</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> npm install</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> . .</span></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;npm&quot;</span>, <span class="string">&quot;run&quot;</span>, <span class="string">&quot;dev&quot;</span>]</span></span><br></pre></td></tr></table></figure></div>
+
+<p>FROM基于的依赖base</p>
+<p>WORKDIR指定(specify)要打包的东西都塞到这个目录里，防止和容器里原有的文件重名冲突</p>
+<p>COPY把要打包的东西都复制到容器里，第一个.指的是当前目录，也就是Dockerfile所在的目录，第二个.表示目标路径，它是相对于Docker镜像中的当前工作目录的路径。Docker镜像中的当前工作目录是通过<code>WORKDIR</code>指令设置的</p>
+<p>半成品image实例化的intermediate容器会执行RUN的命令，RUN通常用来装依赖。之所以是中间容器，是因为生成的文件目录还要被拷贝回镜像里面，还是属于生成image的阶段。</p>
+<p>CMD则是最终image实例化的容器执行的</p>
+<hr>
+<p>从Dockerfile构建image</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker build -t image_name .</span><br></pre></td></tr></table></figure></div>
+
+<p>.代表Dockerfile就在当前终端目录</p>
+<p>具体参考<code>man docker build</code></p>
+<p>生成的image似乎只能通过<code>docker images</code>查看，不知道被存放在本地的哪里</p>
+<p>注意把容器的端口绑定到本机的端口。不然不带<code>-p</code>的话直接浏览器输入<code>127.0.0.1：5173</code>啥都没有的，即使容器已经运行了。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo docker run -d --name container_name -p 8080:5173 image_name</span><br></pre></td></tr></table></figure></div>
+
+<p>这样浏览器里访问本机8080端口，本机8080端口请求都绑定到容器的5173端口，容器运行的端口是5173</p>
+<p>当然还是一样的端口更おすすめ吧</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo docker run -d --name frontend -p 5173:5173 arxivkids_client</span><br></pre></td></tr></table></figure></div>
+
+<p>但如果你要起多个容器，它们都用了80端口，那你就可以本机host的端口分别是80,81,82…，但不影响各个容器里面还是80端口</p>
+<h3 id="Docker-Compose-1"><a href="#Docker-Compose-1" class="headerlink" title="Docker Compose"></a>Docker Compose</h3><p>mkdir个文件夹，cd进去，写docker-compose.yaml</p>
+<p>例: <a class="link"   href="https://www.youtube.com/watch?v=DM65_JyGxCo" >Docker Compose will BLOW your MIND!! <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&quot;3&quot;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">website:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8081:80&quot;</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">  <span class="attr">website2:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8082:80&quot;</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br></pre></td></tr></table></figure></div>
+
+<p>然后可以不用传统的docker run方式起容器了，尤其是当参数多、起多个同样的容器时，用docker-compose更便捷</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">sudo docker run -itd --name web -p 8080:80 nginx</span><br></pre></td></tr></table></figure></div>
+
+<p><font color='tomato'>但注意: <strong><code>docker-compose</code>命令一定要在docker-compose.yaml的目录下执行</strong></font>，不然会报错<font color='coral'>no configuration file provided</font></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo docker-compose up -d	相当于按照.yaml配置のようにdocker run</span><br><span class="line">sudo docker-compose stop</span><br><span class="line">sudo docker-compose down	stop并且把容器remove了</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a class="link"   href="https://docs.docker.com/" >https://docs.docker.com/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 官方文档</p>
+<p><a class="link"   href="https://docs.docker.com/engine/reference/commandline/run/" >https://docs.docker.com/engine/reference/commandline/run/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 色々命令</p>
+<p><a class="link"   href="https://yeasy.gitbook.io/docker_practice/" >https://yeasy.gitbook.io/docker_practice/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> ある中文教程</p>
+<p><a class="link"   href="https://wiki.archlinux.org/title/Docker" >https://wiki.archlinux.org/title/Docker <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://hub.docker.com/" >https://hub.docker.com/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> docker hub</p>
+<p><a class="link"   href="https://github.com/docker/awesome-compose" >https://github.com/docker/awesome-compose <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> docker-compose的例子</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>230508_conda创建python虚拟环境</title>
+    <url>/2023/05/08/230508_conda%E5%88%9B%E5%BB%BApython%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/</url>
+    <content><![CDATA[<p>conda就和nvm一样，作为独立于系统的虚拟环境。conda可以看作是高于python一个层级，就像nvm高于node一级，可以管理着不同版本的node。</p>
+<p>conda创建不同的虚拟环境，各个虚拟环境要有一个名字，一个python版本号，然后各自的pip list，和本机系统无关。</p>
+<p>conda并不是一个python的包，所以pip list里是没有conda的。它是高于python一级的虚拟环境软件。</p>
+<p>开启conda后，<code>deactivate</code>就回到本机系统的python环境</p>
+<hr>
+<p>再强调下：conda的目的就是用来管理Python虚拟环境的，而不用conda来装或者管理python包，包管理还是用pip。</p>
+<p>Python虚拟环境管理还有venv之类的，但我还是倾向用conda，因为conda不需要记虚拟环境的绝对路径，任何目录下开终端都可以工作</p>
+<h2 id="安装conda"><a href="#安装conda" class="headerlink" title="安装conda"></a>安装conda</h2><p>可以装anaconda或者我只需要conda的功能就只装miniconda</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S miniconda</span><br></pre></td></tr></table></figure></div>
+
+<p>(上面是用了archlinuxcn的包)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">yay -S miniconda3</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>但是安装完以后，命令行shell还不能识别<code>conda</code>。其实安装完conda后会有提示信息告诉你怎么做</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">If your shell is Bash or a Bourne variant, enable conda for the current user with</span><br><span class="line"></span><br><span class="line">    $ echo &quot;[ -f /opt/miniconda3/etc/profile.d/conda.sh ] &amp;&amp; source /opt/miniconda3/etc/profile.d/conda.sh&quot; &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br><span class="line">or, for all users, enable conda with</span><br><span class="line"></span><br><span class="line">    $ sudo ln -s /opt/miniconda3/etc/profile.d/conda.sh /etc/profile.d/conda.sh</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>zsh需要在~&#x2F;.zshrc配置文件中，添加一句话</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">source /opt/miniconda3/etc/profile.d/conda.sh</span><br></pre></td></tr></table></figure></div>
+
+<p>复制到文件末尾就好了</p>
+<p>fish的话和配置nvm如出一辙，编辑~&#x2F;.config&#x2F;fish&#x2F;config.fish: (前提omf&#x2F;fisher装了bass)</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">function conda</span><br><span class="line">    bass source /opt/miniconda3/etc/profile.d/conda.sh &#x27;;&#x27; conda $argv</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<p>(或者<code>conda init fish</code>就好了)</p>
+<p><strong>でも、より良いやり方：和刚才zsh的办法对应</strong>，在~&#x2F;.config&#x2F;fish&#x2F;config.fish配置文件中，添加一句话</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">source /opt/miniconda3/etc/fish/conf.d/conda.fish</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>change owner以便可以修改文件たり，复制黏贴envs下的虚拟环境たり</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo chown -R hl_tang:hl_tang /opt/miniconda3</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="创建虚拟环境"><a href="#创建虚拟环境" class="headerlink" title="创建虚拟环境"></a>创建虚拟环境</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">conda create -n tf1 python=3.6</span><br></pre></td></tr></table></figure></div>
+
+<p>-n后面是虚拟环境的名称，这里叫tf1，是我想再安装个tensorflow1的环境，本机是tensorflow2</p>
+<p>然后指定python版本</p>
+<p>environment location在: <del>&#x2F;home&#x2F;hl_tang&#x2F;.conda&#x2F;envs&#x2F;tf1</del> &#x2F;opt&#x2F;miniconda&#x2F;envs&#x2F;tf1&#x2F;bin&#x2F;python</p>
+<p>activate后，用<code>which python</code>可以查看虚拟环境存放在哪里 (<code>whereis</code>列出更全)</p>
+<p>当我降级了&#x2F;opt的权限后，虚拟环境在&#x2F;opt&#x2F;miniconda&#x2F;envsにある</p>
+<h2 id="激活与关闭虚拟环境"><a href="#激活与关闭虚拟环境" class="headerlink" title="激活与关闭虚拟环境"></a>激活与关闭虚拟环境</h2><p>To activate this environment, use</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ conda activate tf1</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>To deactivate an active environment, use</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ conda deactivate</span><br></pre></td></tr></table></figure></div>
+
+<hr>
+<p>activate了以后，<code>python -V</code>就是虚拟环境的python版本了</p>
+<h2 id="删除虚拟环境"><a href="#删除虚拟环境" class="headerlink" title="删除虚拟环境"></a>删除虚拟环境</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">conda remove -n 需要删除的环境名 --all</span><br></pre></td></tr></table></figure></div>
+
+
+
+<hr>
+<p>ps: 一开始创建的虚拟环境是python3.9然后尝试pip install tensorflow，结果只能装tensorflow2</p>
+<p>后来删了重建虚拟环境python3.6，<code>pip install tensorflow==1.15</code>成功安装</p>
+<hr>
+<p>230815更新</p>
+<p>AUR中的<code>miniconda3</code>升级到23.5.2-1后出现问题<font color='salmon'>AttributeError: module ‘cryptography.hazmat.backends’ has no attribute ‘openssl’</font></p>
+<p>解决：</p>
+<p>进入conda安装目录下的bin目录，使用其下的pip删除旧版的包，然后重装新版的。</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">/opt/miniconda3/bin</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">./pip list | grep pyOpenSSL</span></span><br><span class="line">pyOpenSSL                23.0.0</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">./pip list | grep cryptography</span></span><br><span class="line">cryptography             39.0.1</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo ./pip uninstall cryptography pyOpenSSL</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo ./pip install cryptography pyOpenSSL</span></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">conda env list</span><br></pre></td></tr></table></figure></div>
+
+<p>就正常了</p>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>230721_初めてのNginx体験</title>
+    <url>/2023/07/21/230721_%E5%88%9D%E3%82%81%E3%81%A6%E3%81%AENginx%E4%BD%93%E9%A8%93/</url>
+    <content><![CDATA[<p>部署的流れ：把打包后的folder放到<code>/srv</code>下(这里就是放服务器的目录，虽说放哪里都行只要nginx.conf配置了对应的路径，但最好放&#x2F;srv下面吧)；配置<code>/etc/nginx</code>下的<code>nginx.conf</code>(&#x2F;etc就是放各种配置文件的)；<code>systemctl start nginx</code>开启服务，如果刚改完nginx.conf配置需要重启<code>systemctl restart nginx</code>；然后浏览器输入<code>http://127.0.0.1/</code>or<code>localhost</code>（127.0.0.1的域名）应该就能看到了，Nginx默认端口80</p>
+<hr>
+<p><strong>先下载Nginx</strong></p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">sudo pacman -S nginx</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong><code>systemctl</code>开启，关闭，查看状态</strong></p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl status nginx</span><br><span class="line">systemctl start nginx</span><br><span class="line">systemctl stop nginx</span><br></pre></td></tr></table></figure></div>
+
+<p>nginx后面省略不写的话，默认就是nginx.service</p>
+<p><strong>前端项目打包</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure></div>
+
+<p>生成了一个dist文件夹，把它<strong>复制到<code>/srv/http</code>下</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo cp -r dist /srv/http</span><br></pre></td></tr></table></figure></div>
+
+<p>或者</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo cp -r dist ~http/</span><br></pre></td></tr></table></figure></div>
+
+<p>http可以看做是一个用户，相当于是http的home目录（这里我也不懂）</p>
+<p><strong>修改nginx.conf配置文件</strong></p>
+<p>终端cd到<code>/etc/nginx</code>后敲<code>xdg-open .</code>就在文件管理器里打开了当前目录</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo gedit /etc/nginx/nginx.conf</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        #charset koi8-r;</span><br><span class="line"></span><br><span class="line">        #access_log  logs/host.access.log  main;</span><br><span class="line"></span><br><span class="line">       #location / &#123;</span><br><span class="line">       #    root   /usr/share/nginx/html;</span><br><span class="line">       #    index  index.html index.htm;</span><br><span class="line">       #&#125;</span><br><span class="line">	location / &#123;</span><br><span class="line">		# root /srv/http/helloworld;</span><br><span class="line">		root /srv/http/dist;</span><br><span class="line">		index  index.html index.htm;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>修改location</p>
+<p>如果要同时部署前端和后端的话，就要有两个server{}的配置信息</p>
+<p>每次修改nginx.conf后要<code>systemctl restart nginx</code></p>
+<p>然后浏览器访问localhost:80，应该就能看到了</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>230805_GNOME美化</title>
+    <url>/2023/08/05/230805_GNOME%E7%BE%8E%E5%8C%96/</url>
+    <content><![CDATA[<p>在家目录下创建<code>.themes</code>和<code>.icons</code></p>
+<p>从<a class="link"   href="https://www.gnome-look.org/" >https://www.gnome-look.org/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 下载后，放到对应的目录（鼠标、图标放~&#x2F;.icons）</p>
+<p>主要靠gnome-tweaks设置appearance。当然前提是gnome-extensions启用了User Themes，这样才可以在tweaks里面选择自己下载的主题。</p>
+<p>User Themes没装的话，可以pacman&#x2F;yay装上，或者<a class="link"   href="https://extensions.gnome.org/" >https://extensions.gnome.org/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 浏览器install，之后打开gnome-extensions作为手动安装的插件出现</p>
+<h2 id="通过tweak调整键盘布局"><a href="#通过tweak调整键盘布局" class="headerlink" title="通过tweak调整键盘布局"></a>通过tweak调整键盘布局</h2><p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2023/08/05/230805_GNOME%E7%BE%8E%E5%8C%96/2023-08-09_14-57-01%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a class="link"   href="https://www.bilibili.com/video/BV1B4411j77o" >VLOG 75 | 如何将 Linux 美化成 MacOS 风格？ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=OXWk_ItD6u0" >Beautify Gnome desktop. Make it more beautiful than KDE <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://zhuanlan.zhihu.com/p/409493039" >Ubuntu下Gnome界面美化、超好用插件 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 介绍了几个好用的Gnome扩展：Clipboard Indicator</p>
+<p><a class="link"   href="https://zhuanlan.zhihu.com/p/600276010" >Ubuntu 装逼 美化 好物分享 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> VScode透明插件</p>
+]]></content>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>230810_EndeavourOS折騰記</title>
+    <url>/2023/08/10/230810_EndeavourOS%E6%8A%98%E9%A8%B0%E8%A8%98/</url>
+    <content><![CDATA[<p>thinkbook BIOS【Secure Boot】设置成【Disabled】</p>
+<p>装机时系统引导booter选了grub</p>
+<h2 id="换源"><a href="#换源" class="headerlink" title="换源"></a>换源</h2><p>进系统后的欢迎界面有选项，选国家自动写入<code>/etc/pacman.d/mirrorlist</code></p>
+<p>注意archlinux和manjaro的软件仓库是不一样的地址</p>
+<h2 id="装yay"><a href="#装yay" class="headerlink" title="装yay"></a>装yay</h2><p><a class="link"   href="https://wiki.archlinux.org/title/Arch_User_Repository" >https://wiki.archlinux.org/title/Arch_User_Repository <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 先git clone(不一定就是在github上)，然后<code>makepkg</code>再<code>pacman -U</code></p>
+<p>装完之后，PKGBUILD文件和打包完的package包都可以删掉了</p>
+<p>&#x3D;&#x3D;yay装东西，除了remove make dependencies选y，其他都默认就好了&#x3D;&#x3D;</p>
+<h2 id="gnome-shell-extension"><a href="#gnome-shell-extension" class="headerlink" title="gnome-shell-extension"></a>gnome-shell-extension</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S gnome-shell-extensions</span><br><span class="line">yay -S gnome-shell-extension-dash-to-dock</span><br><span class="line">sudo pacman -S gnome-shell-extension-dash-to-panel</span><br><span class="line">yay -S gnome-shell-extension-gtk4-desktop-icons-ng</span><br><span class="line">sudo pacman -S gnome-shell-extension-appindicator</span><br><span class="line">sudo pacman -S gnome-shell-extension-gtile</span><br><span class="line">yay -S gnome-shell-extension-clipboard-indicator</span><br></pre></td></tr></table></figure></div>
+
+<p>extension开DING的时候，鼠标左上角切换到第二个桌面后开启，这样切到第2,3个桌面也会显示桌面图标了</p>
+<h2 id="some-problems-of-GNOME"><a href="#some-problems-of-GNOME" class="headerlink" title="some problems of GNOME"></a>some problems of GNOME</h2><p><a class="link"   href="https://askubuntu.com/questions/651347/how-to-bring-back-minimize-and-maximize-buttons-in-gnome-3" >https://askubuntu.com/questions/651347/how-to-bring-back-minimize-and-maximize-buttons-in-gnome-3 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>Tweaks</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2023/08/10/230810_EndeavourOS%E6%8A%98%E9%A8%B0%E8%A8%98/Screenshot_from_2023-08-10_20-34-16.png"
+                     
+                ></p>
+<p><a class="link"   href="https://askubuntu.com/questions/262373/why-cant-i-change-the-wallpaper-in-gnome-shell-and-unity" >https://askubuntu.com/questions/262373/why-cant-i-change-the-wallpaper-in-gnome-shell-and-unity <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>文件管理器Nautilus右击没有“新建文件的选项”</p>
+<p><a class="link"   href="https://zhuanlan.zhihu.com/p/78420821" >https://zhuanlan.zhihu.com/p/78420821 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>~&#x2F;Templates下放入当前manjaro的’Empty Bash’  ‘Empty Desktop File.desktop’  ‘Empty File’</p>
+<p>Nautilus checksums</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">yay -S nautilus-checksums</span><br></pre></td></tr></table></figure></div>
+
+<p>但其实也可以命令行看hash值</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sha512sum file_name</span><br><span class="line">sha256sum file_name</span><br><span class="line">md5sum file_name</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>gnome-terminal透明化</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">yay -S gnome-terminal-transparency</span><br></pre></td></tr></table></figure></div>
+
+<p>然后preferences -&gt; colors里设置</p>
+<p>桌面双击文件夹，默认用vscode打开，而非文件管理器(nautilus)</p>
+<p><a class="link"   href="https://askubuntu.com/questions/1256037/double-click-on-folders-opens-vscode" >https://askubuntu.com/questions/1256037/double-click-on-folders-opens-vscode <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://askubuntu.com/questions/1183260/vs-code-open-directory-instead-of-system-file-manager-in-ubuntu-19-10" >https://askubuntu.com/questions/1183260/vs-code-open-directory-instead-of-system-file-manager-in-ubuntu-19-10 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>修改文件<code>/usr/share/applications/code.desktop </code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">MimeType=text/plain;inode/directory;application/x-code-workspace;</span><br></pre></td></tr></table></figure></div>
+
+<p>把<code>inode/directory;</code>删了</p>
+<p>要是还不work的话:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo cp /usr/share/applications/code.desktop ~/.local/share/applications/code.desktop</span><br></pre></td></tr></table></figure></div>
+
+<p>And edit <code>~/.local/share/applications/code.desktop</code>:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">MimeType=text/plain;inode/directory;application/x-code-workspace;</span><br></pre></td></tr></table></figure></div>
+
+<p>to</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">MimeType=text/plain;application/x-code-workspace;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>flameshot没反应</p>
+<p>终端输入flameshot，报错</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">Warning: Ignoring XDG_SESSION_TYPE=wayland on Gnome. Use QT_QPA_PLATFORM=wayland to run on Wayland anyway.</span><br></pre></td></tr></table></figure></div>
+
+<p>check现在用的是Wayland or Xorg: <code>echo $XDG_SESSION_TYPE</code></p>
+<p>去flameshot的github issue看看，是gnome的问题。</p>
+<p><code>flameshot gui</code>至少终端敲了可以run</p>
+<h2 id="GUI-Package-Manager"><a href="#GUI-Package-Manager" class="headerlink" title="GUI Package Manager"></a>GUI Package Manager</h2><p>用了bauh</p>
+<p>也可以装个pamac-all (同时在extensions里开启Pamac Updates Indicator)</p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=StHVU-Zvacs&t=2s" >7 Things After Installing EndeavourOS (MUST DO!) <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 就用了pamac</p>
+<p><a class="link"   href="https://www.debugpoint.com/arch-linux-gui-package-managers/" >https://www.debugpoint.com/arch-linux-gui-package-managers/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://wiki.archlinux.org/title/Pacman/Tips_and_tricks#Graphical" >https://wiki.archlinux.org/title/Pacman/Tips_and_tricks#Graphical <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://www.reddit.com/r/archlinux/comments/nponlx/what_is_the_best_gui_package_manager/" >https://www.reddit.com/r/archlinux/comments/nponlx/what_is_the_best_gui_package_manager/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h2 id="shell"><a href="#shell" class="headerlink" title="shell"></a>shell</h2><h3 id="fish"><a href="#fish" class="headerlink" title="fish"></a>fish</h3><p>装fish <code>sudo pacman -S fish</code></p>
+<p>查看可用的shell: <code>cat /etc/shells</code> or <code>chsh -l</code></p>
+<p>change shell: <code>chsh -s /bin/fish</code></p>
+<hr>
+<p>装oh-my-fish (github搜)</p>
+<p>omf的插件 wttr, weather, bass</p>
+<p>主题也都用oh-my-fish管理，不要用<code>fish_config</code>会有冲突</p>
+<p><a class="link"   href="https://alancorn.github.io/blogs/2022/LinuxFishConfig.html#%E9%85%8D%E7%BD%AEtheme%E4%B8%8Ecolor-scheme" >https://alancorn.github.io/blogs/2022/LinuxFishConfig.html#%E9%85%8D%E7%BD%AEtheme%E4%B8%8Ecolor-scheme <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://alancorn.github.io/blogs/2022/Fisher.html" >https://alancorn.github.io/blogs/2022/Fisher.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<hr>
+<h4 id="fisher"><a href="#fisher" class="headerlink" title="fisher"></a>fisher</h4><p>弃用omf，改为fisher(主要为了fish的Powerlevel10k——Tide)</p>
+<p><a class="link"   href="https://github.com/jorgebucaran/fisher" >https://github.com/jorgebucaran/fisher <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 安装看github主页</p>
+<p>fisher中切换已经装了的theme，依然用<code>fisher install</code>命令 <a class="link"   href="https://github.com/jorgebucaran/fisher/issues/111" >https://github.com/jorgebucaran/fisher/issues/111 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">fisher install oh-my-fish/theme-agnoster</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>更多插件 <a class="link"   href="https://github.com/jorgebucaran/awsm.fish" >https://github.com/jorgebucaran/awsm.fish <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><code>fisher update</code>更新所有installed packages</p>
+<h5 id="tide"><a href="#tide" class="headerlink" title="tide"></a>tide</h5><p>安装tide <a class="link"   href="https://github.com/IlanCosman/tide" >https://github.com/IlanCosman/tide <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">fisher install IlanCosman/tide@v5</span><br></pre></td></tr></table></figure></div>
+
+<p>命令行<code>tide configure</code>，选择配置</p>
+<p>修改变量例子：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">set --universal tide_git_bg_color_unstable F79732</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>但很遗憾tide毕竟还是不如Powerlevel10k那么完善，anacondaのbuilt-in high quality segments没有，只有venv的virtualenv。</p>
+<p>不过命令行<code>conda init fish</code>后，终端prompt也有提示了。</p>
+<p>但<code>conda init fish</code>実行された後，终端连续回车会报错，并且<code>clear</code>会报<code>terminals database is inaccessible</code>，<code>~/.config/fish/config.fish</code>新增的部分删掉后恢复正常</p>
+<p>或者在<code>~/.config/fish/config.fish</code>后面加上<code>export TERMINFO=/usr/share/terminfo</code>能解决clear的问题</p>
+<p>所以，fish用conda，不要<code>conda init fish</code>，<strong>还是用类似zsh在配置文件里加source…的仕方</strong></p>
+<h5 id="fish-color-scheme-switcher"><a href="#fish-color-scheme-switcher" class="headerlink" title="fish-color-scheme-switcher"></a>fish-color-scheme-switcher</h5><p><a class="link"   href="https://github.com/h-matsuo/fish-color-scheme-switcher" >https://github.com/h-matsuo/fish-color-scheme-switcher <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ fisher install h-matsuo/fish-color-scheme-switcher</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">scheme list</span><br><span class="line">scheme preview xxx</span><br><span class="line">scheme set xxx</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Set color scheme to `tokyonight` automatically on new session</span><br><span class="line">$ echo &#x27;scheme set tokyonight&#x27; &gt;&gt; &quot;$HOME/.config/fish/config.fish&quot;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h5 id="z"><a href="#z" class="headerlink" title="z"></a>z</h5><p><a class="link"   href="https://github.com/jethrokuan/z" >https://github.com/jethrokuan/z <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">fisher install jethrokuan/z</span><br></pre></td></tr></table></figure></div>
+
+<p>使用：</p>
+<ul>
+<li><code>z foo</code>: Goes to directory best matching <code>foo</code>.</li>
+<li><code>zo foo</code>: Opens file manager of directory best matching <code>foo</code>.</li>
+</ul>
+<h5 id="nvm"><a href="#nvm" class="headerlink" title="nvm"></a>nvm</h5><p><a class="link"   href="https://github.com/jorgebucaran/nvm.fish" >https://github.com/jorgebucaran/nvm.fish <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 原生支持fish，不需要装原版nvm再bass配置了</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">fisher install jorgebucaran/nvm.fish</span><br></pre></td></tr></table></figure></div>
+
+<p>可以使用<code>node use system</code>切换回系统的nodejs</p>
+<h5 id="bass"><a href="#bass" class="headerlink" title="bass"></a>bass</h5><p><a class="link"   href="https://github.com/edc/bass" >https://github.com/edc/bass <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="zsh"><a href="#zsh" class="headerlink" title="zsh"></a>zsh</h3><p>装zsh插件: <code>zsh</code>, <code>zsh-autosuggestions</code>, <code>zsh-completions</code>, <code>zsh-history-substring-search</code>, <code>zsh-syntax-highlighting</code>, <code>zsh-theme-powerlevel10k-git</code></p>
+<p>p10k的github主页也写了推荐用git的包</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme&#x27;</span> &gt;&gt;~/.zshrc</span><br></pre></td></tr></table></figure></div>
+
+<p>终端<code>p10k configure</code>选择式配置，完了后~&#x2F;.p10k.zsh就用了（.zshrc也会有改动）</p>
+<p><code>p10k -h</code>查看可用的命令</p>
+<p>要改prompt前面的icon的话，编辑<code>~/.p10k.zsh</code>的Custom iconのOS_ICON_CONTENT_EXPANSION</p>
+<p>照搬manjaro的配置，在~&#x2F;.zshrc添加 </p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Source manjaro-zsh-configuration</span></span><br><span class="line"><span class="keyword">if</span> [[ -e /usr/share/zsh/manjaro-zsh-config ]]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">source</span> /usr/share/zsh/manjaro-zsh-config</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">source</span> /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh</span><br></pre></td></tr></table></figure></div>
+
+<p>复制&#x2F;usr&#x2F;share&#x2F;zsh&#x2F;manjaro-zsh-config过来</p>
+<h2 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S fcitx5-im fcitx5-rime fcitx5-pinyin-zhwiki fcitx5-mozc</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><a class="link"   href="https://wiki.archlinux.org/title/Fcitx5" >https://wiki.archlinux.org/title/Fcitx5 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://wiki.archlinuxcn.org/wiki/Fcitx5" >https://wiki.archlinuxcn.org/wiki/Fcitx5 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://archlinuxstudio.github.io/ArchLinuxTutorial/#/rookie/DE&App?id=_11%E5%AE%89%E8%A3%85%E8%BE%93%E5%85%A5%E6%B3%95" >https://archlinuxstudio.github.io/ArchLinuxTutorial/#/rookie/DE&amp;App?id=_11安装输入法 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>中文的教程都是说写在<code>/etc/environment</code>下。然而英文的wiki只说了set环境变量，具体放在哪里と言うと、lph教我的是放在最近的一层，<code>/etc/environment</code>太全局了虽然能work但不是最佳实践。lph是根据<a class="link"   href="https://wiki.archlinux.org/title/Environment_variables#Per_Wayland_session" >https://wiki.archlinux.org/title/Environment_variables#Per_Wayland_session <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> Wayland的配置，放在<code>~/.config/environment.d/fcitx5.conf</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">GTK_IM_MODULE=fcitx</span><br><span class="line">QT_IM_MODULE=fcitx</span><br><span class="line">XMODIFIERS=@im=fcitx</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="fcitx5-configtool"><a href="#fcitx5-configtool" class="headerlink" title="fcitx5-configtool"></a>fcitx5-configtool</h3><p>记得手动把rime，mozc加到左边的current input method</p>
+<h3 id="fcitx5主题"><a href="#fcitx5主题" class="headerlink" title="fcitx5主题"></a>fcitx5主题</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S fcitx5-material-color</span><br></pre></td></tr></table></figure></div>
+
+<p><a class="link"   href="https://github.com/hosxy/Fcitx5-Material-Color" >https://github.com/hosxy/Fcitx5-Material-Color <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://github.com/thep0y/fcitx5-themes" >https://github.com/thep0y/fcitx5-themes <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>问题：<del>1. 输入法icon没有显示在top bar</del>(安装<code>gnome-shell-extension-appindicator</code>后解决)； <del>2. 浏览器或者vscode打中文，没有显示配置的主题</del>(重启后好了)</p>
+<p>rime默认是繁体，要简体的话需要Ctrl+&#96;一起按，如果是top panel config的话只有单次有效</p>
+<h3 id="雾凇拼音"><a href="#雾凇拼音" class="headerlink" title="雾凇拼音"></a>雾凇拼音</h3><p><a class="link"   href="https://github.com/iDvel/rime-ice" >https://github.com/iDvel/rime-ice <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://manateelazycat.github.io/2023/09/11/fcitx-best-config/" >https://manateelazycat.github.io/2023/09/11/fcitx-best-config/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">yay -S rime-ice-git</span><br></pre></td></tr></table></figure></div>
+
+<p>补丁方式启用</p>
+<p><code>~/.local/share/fcitx5/rime/</code>下的<code>default.custom.yaml</code>文件，具体见github主页</p>
+<h2 id="字体"><a href="#字体" class="headerlink" title="字体"></a>字体</h2><p><a class="link"   href="https://wiki.archlinuxcn.org/wiki/%E5%AD%97%E4%BD%93" >https://wiki.archlinuxcn.org/wiki/字体 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S ttf-hack</span><br><span class="line">sudo pacman -S ttf-hack-nerd</span><br><span class="line">sudo pacman -S gnome-font-viewer</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">ttf-dejavu</span><br><span class="line">ttf-droid</span><br><span class="line">ttf-inconsolata</span><br><span class="line">ttf-indic-otf</span><br><span class="line">ttf-liberation</span><br><span class="line">ttf-meslo-nerd-font-powerlevel10k</span><br><span class="line">ttf-terminus-nerd</span><br><span class="line">adobe-source-code-pro-fonts</span><br><span class="line">adobe-source-han-sans-cn-fonts</span><br><span class="line">adobe-source-han-sans-jp-fonts</span><br><span class="line">adobe-source-han-sans-kr-fonts</span><br><span class="line">adobe-source-sans-fonts</span><br><span class="line">cantarell-fonts</span><br><span class="line">gsfonts</span><br><span class="line">noto-fonts</span><br><span class="line">noto-fonts-cjk</span><br><span class="line">noto-fonts-emoji</span><br><span class="line">xorg-fonts-encodings</span><br></pre></td></tr></table></figure></div>
+
+<hr>
+<p>其实tide的配置文件rainbow.fishなだ一开始打开有些图标显示是乱码，当然终端fish开了tide主题后也是图标乱码，原因就是缺少支持图标的字体（大概是nerd-font）。</p>
+<p><del>于是我就直接一股脑把当前manjaro的&#x2F;usr&#x2F;share&#x2F;fonts全部复制到新机的相同目录。然后就图标显示正常了</del></p>
+<p>上記字体安装了后，&#x2F;usr&#x2F;share&#x2F;fonts下也就有了</p>
+<h2 id="其他软件"><a href="#其他软件" class="headerlink" title="其他软件"></a>其他软件</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S gnome-system-monitor</span><br><span class="line">yay -S wps-office ttf-wps-fonts wps-office-mui-zh-cn</span><br><span class="line">sudo pacman -S libreoffice 选still</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S obs-studio</span><br></pre></td></tr></table></figure></div>
+
+<p>但装完按obs的图标没反应，然后根据终端输入obs后的报错提示，网上搜了要再装<code>qt6-wayland</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">endeavour</span><br><span class="line">seahorse</span><br><span class="line">baobab</span><br><span class="line">gnome-disk-utility</span><br><span class="line">gnome-logs</span><br><span class="line">gnome-firmware</span><br><span class="line">gnome-calculator</span><br><span class="line">gnome-screenshot</span><br><span class="line">gthumb</span><br><span class="line">flameshot</span><br><span class="line">gufw</span><br><span class="line">etcher</span><br><span class="line">gnome-sound-recorder</span><br><span class="line">gitg</span><br><span class="line">evince</span><br><span class="line">foliate</span><br><span class="line">okular</span><br><span class="line">python-pip</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="外设键盘唤醒-wake-from-suspend"><a href="#外设键盘唤醒-wake-from-suspend" class="headerlink" title="外设键盘唤醒 wake from suspend"></a>外设键盘唤醒 wake from suspend</h2><p><a class="link"   href="https://unix.stackexchange.com/questions/609438/how-can-i-use-a-usb-keyboard-or-mouse-to-wake-from-suspend" >https://unix.stackexchange.com/questions/609438/how-can-i-use-a-usb-keyboard-or-mouse-to-wake-from-suspend <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://askubuntu.com/questions/848698/wake-up-from-suspend-using-wireless-usb-keyboard-or-mouse-for-any-linux-distro" >https://askubuntu.com/questions/848698/wake-up-from-suspend-using-wireless-usb-keyboard-or-mouse-for-any-linux-distro <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://cn.linux-console.net/?p=12183#gsc.tab=0" >https://cn.linux-console.net/?p=12183#gsc.tab=0 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>这三个帖子很instructive</p>
+<p>本来打算照着askubuntu的最高赞回答做的，然后看了下评论区</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">If this still doesn&#x27;t work, make sure your device (keyboard / mouse) still has power when the PC is in sleep mode.</span><br></pre></td></tr></table></figure></div>
+
+<p>一想这台thinkbook好像确实只有一个USBtypeA的口是suspend还通电的。估计就是专门用来插外接键盘的。</p>
+<p>把键盘插到通电的typeA口，然后就好了，挂起后可以敲外设键盘唤醒了。</p>
+<h2 id="remap键位on-operating-system-level"><a href="#remap键位on-operating-system-level" class="headerlink" title="remap键位on operating system level"></a>remap键位on operating system level</h2><p>在Tweaks里设置Keyboard&amp;Mouse -&gt; Additional Layout Options</p>
+<p>CapsLock behavior从默认的Disabled改为<del>Swap Esc and CapsLock</del> Capslock变为额外的Esc,但Shfit+Capslock等于正常的Capslock</p>
+<p>这样方便vim从insert模式切回normal模式</p>
+]]></content>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>231003_Linux上跑KVM虚拟机</title>
+    <url>/2023/10/03/231003_Linux%E4%B8%8A%E8%B7%91KVM%E8%99%9A%E6%8B%9F%E6%9C%BA/</url>
+    <content><![CDATA[<p>既然我本机是Linux，那运行虚拟机何不用KVM呢。如果是win&#x2F;mac，那还用不了KVM(1类虚拟机)，只能用virtualbox,vmware(2类虚拟机)。</p>
+<p>流れ简单说就是：安装环境；启动libvirt daemon；开启虚拟网络；virt-manager作为前端界面可以在里面操作了</p>
+<p>检查处理器是否支持硬件虚拟化</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">LC_ALL=C lscpu | grep Virtualization</span><br></pre></td></tr></table></figure></div>
+
+<p>现在的处理器肯定都是支持的，If it looks like your processor does not support virtualization, it is almost certainly turned off in the BIOS.</p>
+<p>KVM(Kernel-based Virtual Machine)集中在Linux内核里了，不需要安装</p>
+<p>安装qemu</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S qemu</span><br></pre></td></tr></table></figure></div>
+
+<p>选qemu-full</p>
+<p>安装libvert (检查<a class="link"   href="https://archlinux.org/packages/?name=iptables-nft" >iptables-nft <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>有没有，没的话装上)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S libvirt</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>安装virt-manager</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S virt-manager</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>&#x3D;&#x3D;<strong>开启libvirt daemon</strong> (不然之后的virshなど都用不了)&#x3D;&#x3D;</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl start libvirtd</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>加入libvirt user group (archwiki写了，<del>但我没这样做</del> 担心和虚拟机的稳定性有关，还是加入了)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo usermod -a -G libvirt $(whoami)</span><br></pre></td></tr></table></figure></div>
+
+<p>应该打开virt-manager不需要输入口令了</p>
+<p>安装其他可能有用的包</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S ovmf vde2 dnsmasq bridge-utils openbsd-netcat</span><br></pre></td></tr></table></figure></div>
+
+<p>(archwikiによると、ebtables已经被iptables的功能包含了，所以不需要了)</p>
+<p>创建的虚拟机的<span style= 'color:black;background:LightPink'>虚拟硬盘存放在&#x2F;var&#x2F;lib&#x2F;libvirt&#x2F;images</span>下面.qcow2文件</p>
+<p>用virt-manager创建虚拟机，startしようとするところ、虚拟网络报错：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">Requested operation is not valid: network &#x27;default&#x27; is not active</span><br></pre></td></tr></table></figure></div>
+
+<p>解决：<a class="link"   href="https://askubuntu.com/questions/1036297/cant-start-kvm-guest-network-default-is-not-active" >https://askubuntu.com/questions/1036297/cant-start-kvm-guest-network-default-is-not-active <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>First, confirm that the default network is indeed inactive:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo virsh net-list --all</span><br></pre></td></tr></table></figure></div>
+
+<p>If so, &#x3D;&#x3D;start the default network&#x3D;&#x3D;:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo virsh net-start default</span><br></pre></td></tr></table></figure></div>
+
+<p>Run the first command line again to see if it worked.</p>
+<p><a class="link"   href="https://github.com/kubernetes/minikube/issues/828" >https://github.com/kubernetes/minikube/issues/828 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 这里还看到了</p>
+<p>First time users need currently do:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">virsh net-autostart default</span><br><span class="line">virsh net-start default</span><br></pre></td></tr></table></figure></div>
+
+<p>虽然我net-autostart就没実行了</p>
+<hr>
+<p>但我<code>sudo virsh net-start default</code>又报错：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">error: Failed to start network default</span><br><span class="line">error: internal error: firewalld is set to use the nftables backend, but the required firewalld &#x27;libvirt&#x27; zone is missing. Either set the firewalld backend to &#x27;iptables&#x27;, or ensure that firewalld has a &#x27;libvirt&#x27; zone by upgrading firewalld to a version supporting rule priorities (0.7.0+) and/or rebuilding libvirt with --with-firewalld-zone</span><br></pre></td></tr></table></figure></div>
+
+<p>问了chatgpt，我就试着开启iptables</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl start iptables</span><br></pre></td></tr></table></figure></div>
+
+<p>然后再尝试运行虚拟机，结果它就起来了</p>
+<h2 id="macOS虚拟机を環境構築してみる"><a href="#macOS虚拟机を環境構築してみる" class="headerlink" title="macOS虚拟机を環境構築してみる"></a>macOS虚拟机を環境構築してみる</h2><p><a class="link"   href="https://christitus.com/macos-on-linux/" >https://christitus.com/macos-on-linux/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> &amp; <a class="link"   href="https://www.youtube.com/watch?v=dMLNP6FfhkI" >https://www.youtube.com/watch?v=dMLNP6FfhkI <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 但用的仓库有点旧了</p>
+<p>需要安装dmg2img</p>
+<p><a class="link"   href="https://github.com/kholia/OSX-KVM" >https://github.com/kholia/OSX-KVM <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> これにしよう</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a class="link"   href="https://wiki.archlinux.org/title/KVM" >https://wiki.archlinux.org/title/KVM <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://wiki.archlinux.org/title/QEMU" >https://wiki.archlinux.org/title/QEMU <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://wiki.archlinux.org/title/Libvirt" >https://wiki.archlinux.org/title/Libvirt <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://wiki.archlinux.org/title/Virt-manager" >https://wiki.archlinux.org/title/Virt-manager <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=p1d_b_91YlU" >Virt-Manager Is The Better Way To Manage VMs <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=itZf5FpDcV0" >KVM - A great virtualization solution for Linux <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 用的不是default的虚拟网络</p>
+<p><a class="link"   href="https://computingforgeeks.com/install-kvm-qemu-virt-manager-arch-manjar/" >https://computingforgeeks.com/install-kvm-qemu-virt-manager-arch-manjar/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+]]></content>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>230912_再学vim</title>
+    <url>/2023/09/12/230912_%E5%86%8D%E5%AD%A6vim/</url>
+    <content><![CDATA[<p>最早接触vim这个词是在看HBO的Silicon Valley里的emacs和vim之争，由于我很憧れのRichard Hendricks是emacs党，于是我也暗暗决心当个emacs党。</p>
+<p>初めての使用と言うと、大三OS课，就会个最简单的：<code>i</code>插入，<code>:wq</code>保存退出</p>
+<p>Why现在决定重新开学vim了?</p>
+<p>vim的这套文本编辑的philosophy可能是编辑效率最快的，使いこなせば真的健步如飞。而も不局限于死的快捷键key binding，命令的组合可以玩出各种花样(eg.数字+<code>dd</code>：删多少行)，这应该其他编辑器都做不到key binding命令如此强大。</p>
+<p>只学一套快捷键key binding。vscode, jetbrains…都有自己的快捷键key binding (而且听说emacs的快捷键key binding很凌乱)，不想用一个编辑器&#x2F;IDE就要熟悉一套肌肉记忆。而且常见的编辑器&#x2F;IDE都有vim插件，vscode的Vim, jetbrains的IdeaVim, emacs也有evil。</p>
+<p>上次做AWS的OA算是第一次本机ssh连接服务器，纯命令行环境，要编辑nginx的配置文件只能用vim, nano之类的终端下的文本编辑器了。</p>
+<p>所以，不管怎么样，vim都是必须身に付けるskillだ</p>
+<hr>
+<h3 id="普通模式-Normal-mode"><a href="#普通模式-Normal-mode" class="headerlink" title="普通模式 Normal mode"></a>普通模式 Normal mode</h3><h4 id="移动系"><a href="#移动系" class="headerlink" title="移动系"></a>移动系</h4><p>行首: <code>0</code>	<code>Home</code>	本行第一个字符: <code>^</code></p>
+<p>行尾: <code>$</code>	<code>End</code></p>
+<p>文件头: <code>gg</code></p>
+<p>文件尾: <code>G</code></p>
+<p>光标跳转到某一行: <code>绝对行号gg / 绝对行号G</code> or <code>:绝对行号</code>，命令模式</p>
+<p>光标向后移动一个单词: <code>w</code>(word)	<code>W</code>(<code>Shift + w</code>以空格分割)	<code>Ctrl + ➡️</code></p>
+<p>光标向前移动一个单词: <code>b</code>(back word)	<code>B</code>(<code>Shift + b</code>以空格分割)	<code>Ctrl + ⬅️</code></p>
+<p>单词尾: <code>e</code></p>
+<p>查找: <code>/ 然后输入要搜的东西，之后Enter</code>，用<code>n</code>来跳转到下一个match，<code>N</code>上一个	<code>Ctrl + f</code></p>
+<p>如果此时光标已经在想查找的单词上了，<code>*</code>跳转到下一个匹配，<code>#</code>上一个	(可以方便找div, class之类的)</p>
+<h4 id="编辑系"><a href="#编辑系" class="headerlink" title="编辑系"></a>编辑系</h4><p>撤销undo: <code>u</code>	<code>Ctrl + z</code></p>
+<p>重做redo: <code>Ctrl + r</code> or 命令模式<code>:redo</code></p>
+<p>删字符: <code>x</code>	改字符<code>s</code></p>
+<p>删单词: <code>dw</code>　<code>de</code>(这俩其实都是只从当前光标位置删到末尾)	<code>diw</code>(inner 光标在中间としても删整个单词)	<code>daw</code>(带后接空格)</p>
+<p>删到某个特定字符为止: <code>dt某特定字符</code> to <code>dt)</code></p>
+<p>删到行尾: <code>d$</code>	(<code>$</code>移动到行尾)	类似还有<code>d0</code> <code>dG</code> <code>dgg</code></p>
+<p>删当前行: <code>dd</code>	(其实相当于剪切<code>Ctrl + x</code>，<code>p</code>paste后复制)</p>
+<p>删tag&lt;&gt;中包起来的内容（即使有多行）(delete inner): <code>dit</code> <code>cit</code>(删完进insert模式)	(前端常用)	删除整个tag: <code>dat</code>	注意和<code>di&lt;</code>的区别</p>
+<p>类似还有<code>di&quot;</code>, <code>di(</code>	 <font color="tomato">注意是左括号</font></p>
+<p>修改: <code>c</code> change其实就相当于是delete后进insert模式，命令和删除差不多，把d换成c即可</p>
+<p>复制当前单词: <code>yaw</code>(yank )</p>
+<p>复制到某个字符: <code>yf某字符</code>	<code>yt某字符</code>的话，那个字符没有被包含进来</p>
+<p>缩进: <code>&gt;&gt;</code>, <code>&lt;&lt;</code>	用法类似<code>dd</code>，可以<code>&gt;行数&gt;</code> or <code>行数&gt;&gt;</code></p>
+<h3 id="插入模式-Insert-mode"><a href="#插入模式-Insert-mode" class="headerlink" title="插入模式 Insert mode"></a>插入模式 Insert mode</h3><p><code>i</code>: 光标前插入</p>
+<p><code>a</code>: 光标后插入</p>
+<p><code>I</code>: 行首插入</p>
+<p><code>A</code>: 行尾插入</p>
+<p><code>o</code>: 向下新开一行</p>
+<p><code>O</code>: 向上新开一行</p>
+<p>Insert模式下可以<code>Ctrl + w</code>删除单词，就像终端里的操作一样</p>
+<h3 id="命令模式-Command-mode"><a href="#命令模式-Command-mode" class="headerlink" title="命令模式 Command mode"></a>命令模式 Command mode</h3><p>不保存修改，强制退出用<code>:q!</code></p>
+<p>注意是先q后!，如果先!的话，后面接的会被认为是终端shell命令，比如<code>:!ls</code></p>
+<p>一些设置</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">:set number</span><br><span class="line">:set relativenumber		:set norelativenumber</span><br></pre></td></tr></table></figure></div>
+
+<p>在命令模式敲的设置只是一次性有效的。退出vim后，这些设置不会被保留。</p>
+<p>所以需要一个设置的配置文件 <code>~/.vimrc</code></p>
+<h3 id="可视模式-Visual-mode"><a href="#可视模式-Visual-mode" class="headerlink" title="可视模式 Visual mode"></a>可视模式 Visual mode</h3><p>从normal mode按<code>v / V /Ctrl + v</code>进入visual mode，然后主要做选中文本的操作</p>
+<p>也有<code>vi(</code>, <code>vi&quot;</code>之类的操作</p>
+<p>选中的部分一个<code>d</code>全部删除，一个<code>y</code>全部复制，一个<code>c</code>修改…<code>&lt; &gt;</code>缩进</p>
+<p>全选: <code>ggVG</code>	<code>Ctrl + a</code></p>
+<p>注釈: gg移动到首行，v &#x2F; V &#x2F;Ctrl + v进可视模式<font color="LightPink">(v选中字符，V选中行，Ctrl + v矩形块选)</font>，G光标移到最后一行，即全选</p>
+<p>(<code>ggvG</code>的话最后一行只选中了第一个字符，<code>ggVG</code>才真正全部选中，因为<code>V</code>是行选)</p>
+<p>选中内容以后就可以其他的操作了，比如：</p>
+<ul>
+<li>d  删除选中内容</li>
+<li>y  复制选中内容，仅vim内</li>
+<li>“+y  复制选中内容到系统的剪贴板，供其他程序用</li>
+</ul>
+<p>不过其实可以不用visual mode，就<code>gg&quot;+yG</code>。原理就是<code>ggyG</code>，只不过调用了+寄存器(系统的剪贴板)</p>
+<p><font color="PaleGreen">Ctrl + v块选，可以做到连续多行的同一位置的相同操作。方向键精调选中后，<code>d</code>删除，<code>c</code>修改，<code>A</code>光标后多行插入，<code>I</code>光标前多行插入</font></p>
+<p>块选中一列数字后，<code>g然后Ctrl+a</code>循环递增</p>
+<h2 id="宏-Macros"><a href="#宏-Macros" class="headerlink" title="宏 Macros"></a>宏 Macros</h2><p><a class="link"   href="https://www.youtube.com/watch?v=mYUk9N-1JZ8" >https://www.youtube.com/watch?v=mYUk9N-1JZ8 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 最后两分钟的技巧</p>
+<p>待续</p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=RZ4p-saaQkc" >https://www.youtube.com/watch?v=RZ4p-saaQkc <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://zhuanlan.zhihu.com/p/188499395" >https://zhuanlan.zhihu.com/p/188499395 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=80mWp6H4zEw" >https://www.youtube.com/watch?v=80mWp6H4zEw <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>TheCW的视频</p>
+<p>自分の知乎收藏夹</p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=RZ4p-saaQkc" >Vim Tutorial for Beginners <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=a6Q8Na575qc&t=2173s" >Lecture 3: Editors (vim) (2020) <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://missing.csail.mit.edu/2020/editors/" >https://missing.csail.mit.edu/2020/editors/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://www.zhihu.com/tardis/zm/art/579636452" >上手 IdeaVim 插件：在 WebStorm 和其他 JetBrains IDE 中获得 Vim 的强大功能 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://www.bilibili.com/video/BV1T14y1X7CW" >21天学会Emacs之第十三天：使用Evil <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://www.bilibili.com/video/BV1z541177Jy" >指尖飞舞：vscode + vim 高效开发（系列视频） <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>cheet sheet <a class="link"   href="https://vim.rtorr.com/lang/en_us/" >https://vim.rtorr.com/lang/en_us/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>231101_hexo+GitHubPages搭建个人博客</title>
+    <url>/2023/11/01/231101_hexo+GitHubPages%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<p>作为准备就活的一部分，いよいよ要部署个人博客了。感觉hexo的主题还是比vuepress更丰富，就先用hexo吧。之后可能自己写一个前端主题界面，然后买服务器换自己的域名。</p>
+<p>总体跟着hexo官网的文档做就行了</p>
+<h2 id="環境構築"><a href="#環境構築" class="headerlink" title="環境構築"></a>環境構築</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br><span class="line">hexo init blog</span><br><span class="line">cd blog</span><br><span class="line">npm install</span><br><span class="line">hexo server</span><br></pre></td></tr></table></figure></div>
+
+<p>官方文档是这样的流れ，但我不喜欢<code>-g</code>全局安装。还好文档也给了其他办法</p>
+<h3 id="Advanced-installation-and-usage"><a href="#Advanced-installation-and-usage" class="headerlink" title="Advanced installation and usage"></a>Advanced installation and usage</h3><p>Advanced users may prefer to install and use <code>hexo</code> package instead.</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ npm install hexo</span><br></pre></td></tr></table></figure></div>
+
+<p>Once installed, you can run Hexo in two ways:</p>
+<ol>
+<li><code>npx hexo &lt;command&gt;</code></li>
+<li>Linux users can set relative path of <code>node_modules/</code> folder:</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">echo &#x27;PATH=&quot;$PATH:./node_modules/.bin&quot;&#x27; &gt;&gt; ~/.profile</span><br></pre></td></tr></table></figure></div>
+
+<p>  then run Hexo using <code>hexo &lt;command&gt;</code></p>
+<hr>
+<p>因为没有全局安装hexo-cli，所以直接命令行hexoを打つ，<code>hexo -v</code>, shell是不识别的。</p>
+<p>但<code>npx hexo</code>就可以了。<code>npx hexo -v</code>有输出则安装成功</p>
+<p><em>关于npx，参考記事</em>：</p>
+<p><a class="link"   href="https://zhuanlan.zhihu.com/p/397286775" >记录一下 npx 的使用场景 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://qiita.com/tatakahashiap/items/1c4ab221c4993e7c4ebf" >npxでnodeモジュールを実行する <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">npx hexo init blog</span><br><span class="line">cd blog</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure></div>
+
+<p>然后<code>npx hexo server</code>本地启动看看。(<code>npm run server</code>也可以，もしpackage.json的scripts定義されれば)</p>
+<h2 id="写文章"><a href="#写文章" class="headerlink" title="写文章"></a>写文章</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">npx hexo new &quot;230810_EndeavourOS折騰記&quot;</span><br></pre></td></tr></table></figure></div>
+
+<p>当然也可以不<code>new</code>，而直接把本地写好的記事复制到<code>/source/_posts</code>下，只要编辑先頭的title, dateすればいい</p>
+<p>注意：<code>.md</code>放在<code>_posts</code>根下面，图片等asset(注意文件名不要有空格)有的话就記事ごとに开一个folder，然后<code>.md</code>里用相对路径引用</p>
+<h3 id="关于显示图片"><a href="#关于显示图片" class="headerlink" title="关于显示图片"></a>关于显示图片</h3><p><a class="link"   href="https://hexo.io/docs/asset-folders" >https://hexo.io/docs/asset-folders <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 优先参考官网，网上記事的一些方法过时了</p>
+<p>把<code>_config.yml</code>配置文件中的<code>post_asset_folder</code>改为true</p>
+<p>然后注意图片文件名不要有空格</p>
+<p>但<a class="link"   href="https://hexo.io/docs/asset-folders" >官方文档 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>也说了：</p>
+<p>正确的引用图片方式是使用下列的<code>asset_img</code>标签插件而不是markdown：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% asset_img example.jpg %&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>但这种办法改起来很操蛋</p>
+<p><a class="link"   href="https://zhuanlan.zhihu.com/p/265077468" >hexo博客如何插入图片 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>启用<a class="link"   href="https://github.com/hexojs/hexo-renderer-marked" >hexo-renderer-marked <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">_config.yml</span><br><span class="line"></span><br><span class="line">post_asset_folder: true</span><br><span class="line">marked:</span><br><span class="line">  prependRoot: true</span><br><span class="line">  postAsset: true</span><br></pre></td></tr></table></figure></div>
+
+<p>这样就还可以用md语法了，但注意相对路径相对的是那个同名的assets目录，所以直接<code>![](image.jpg)</code>就可以了 (但其实<code>![](./image.jpg)</code>也对)</p>
+<p><code>hexo server</code>前最好先<code>clean</code>一下</p>
+<h2 id="换主题"><a href="#换主题" class="headerlink" title="换主题"></a>换主题</h2><p><a class="link"   href="https://github.com/EvanNotFound/hexo-theme-redefine" >https://github.com/EvanNotFound/hexo-theme-redefine <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://redefine.ohevan.com/" >https://redefine.ohevan.com/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>把主题clone到themes文件夹下 (cd到hexo项目根目录执行下記コマンド，即有themes的目录)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/EvanNotFound/hexo-theme-redefine.git themes/redefine</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>修改<code>_config.yml</code>配置文件</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">theme: redefine</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><code>npx hexo clean</code>, <code>npx hexo generate</code>, <code>npx hexo server</code>三连</p>
+<p>更多配置跟着 <a class="link"   href="https://redefine-docs.ohevan.com/getting-started" >https://redefine-docs.ohevan.com/getting-started <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 文档做就好了</p>
+<p>注意：在hexo项目根目录下创建 <code>_config.redefine.yml</code> 文件。所有改动都在 <code>_config.redefine.yml</code> 文件中进行，不建议直接修改主题文件，因为更新主题时会覆盖你的改动。</p>
+<h2 id="about-page"><a href="#about-page" class="headerlink" title="about page"></a>about page</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo new page &quot;about&quot;</span><br></pre></td></tr></table></figure></div>
+
+<p>然后修改所用主题的配置文件<code>_config.redefine.yml</code>，把<code>about</code>前的注释去掉</p>
+<p>修改<code>source/about/</code>目录中的<code>index.md</code>文件即可</p>
+<h2 id="部署到GitHub-Pages"><a href="#部署到GitHub-Pages" class="headerlink" title="部署到GitHub Pages"></a>部署到GitHub Pages</h2><p>github上新建一个<strong>username.github.io</strong>的仓库</p>
+<p>使用hexo-deployer-git来<a class="link"   href="https://hexo.io/docs/github-pages#One-command-deployment" >One-command deployment <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<ol>
+<li>Install <a class="link"   href="https://github.com/hexojs/hexo-deployer-git" >hexo-deployer-git <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>.</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure></div>
+
+<ol start="2">
+<li>修改<code>_config.yml</code>配置文件</li>
+</ol>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:hl-tang/hl-tang.github.io.git</span><br><span class="line">  branch: gh-pages</span><br></pre></td></tr></table></figure></div>
+
+<p>branch名是main啥的也行</p>
+<ol start="3">
+<li>Run <code>hexo clean &amp;&amp; hexo deploy</code>.</li>
+<li>Check the webpage at <em>username</em>.github.io.</li>
+</ol>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a class="link"   href="https://hexo.io/" >https://hexo.io/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://www.bilibili.com/video/BV1Yb411a7ty" >手把手教你从0开始搭建自己的个人博客 |无坑版视频教程| hexo <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 羊哥</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>231018_EndeavourOS上安装OpenJDK</title>
+    <url>/2023/10/18/231018_EndeavourOS%E4%B8%8A%E5%AE%89%E8%A3%85OpenJDK/</url>
+    <content><![CDATA[<p>两年前在manjaro上配过Java环境，当时是下载的OracleJDK 8。现在尝试在新机上安装OpenJDK 21。</p>
+<p>参考<a class="link"   href="https://wiki.archlinux.org/title/Java" >https://wiki.archlinux.org/title/Java <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>在arch官网的Packages搜索jdk，得知我们要的包名是<code>jdk-openjdk</code></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">sudo pacman -S jdk-openjdk</span><br></pre></td></tr></table></figure></div>
+
+<p><code>jre-openjdk</code>もちろん也被包含了</p>
+<p>验证</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><code>java-runtime-common</code>也在下载jdk时被一同包括了，里面有一个arch系的helper script，可以<code>archlinux-java &lt;COMMAND&gt;</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">archlinux-java status	列出可用的java环境</span><br><span class="line">archlinux-java set &lt;JAVA_ENV_NAME&gt;	切换不同版本java</span><br></pre></td></tr></table></figure></div>
+
+<hr>
+<p>再尝试安装个jdk8。All these JVM can be installed without conflict and switched between using helper script <code>archlinux-java</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S jdk8-openjdk</span><br></pre></td></tr></table></figure></div>
+
+<p>然后就可以切换了</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo archlinux-java set java-8-openjdk</span><br></pre></td></tr></table></figure></div>
+
+<p>查看，确实变java8了</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure></div>
+
+]]></content>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+</search>

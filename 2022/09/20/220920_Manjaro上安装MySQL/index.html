@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Haoliang Tang">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2022/09/20/220920_manjaro上安装mysql/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="19年的大三冬季初学数据库时，在matebook win10上安装了微软的SQL Server。之后20年疫情宅家时，跟着一本小册子SQL必知必会(这本书的MySQL安装内容太旧了)还有网上教程，在老ideapad win7上安装了MySQL，但并不一定是最佳的安装方式，书上和网上教程并不完美适配，有冲突的地方。当时记得是在win7 cmd里运行sql命令，看得是真难受。当时也没有安装MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="220920_Manjaro上安装MySQL">
+<meta property="og:url" content="http://example.com/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/index.html">
+<meta property="og:site_name" content="Haoliang Tang&#39;s blog">
+<meta property="og:description" content="19年的大三冬季初学数据库时，在matebook win10上安装了微软的SQL Server。之后20年疫情宅家时，跟着一本小册子SQL必知必会(这本书的MySQL安装内容太旧了)还有网上教程，在老ideapad win7上安装了MySQL，但并不一定是最佳的安装方式，书上和网上教程并不完美适配，有冲突的地方。当时记得是在win7 cmd里运行sql命令，看得是真难受。当时也没有安装MySQL">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_18-37-49%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-11-58%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-16.png">
+<meta property="og:image" content="http://example.com/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-23-36%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-37.jpg">
+<meta property="og:image" content="http://example.com/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_22-08-01%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-49-53%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_22-30.jpg">
+<meta property="og:image" content="http://example.com/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-23_02-10.jpg">
+<meta property="og:image" content="http://example.com/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-23_17-44.jpg">
+<meta property="og:image" content="http://example.com/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-23_17-37.jpg">
+<meta property="og:image" content="http://example.com/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-23_17-53.jpg">
+<meta property="article:published_time" content="2022-09-19T15:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-02T11:09:19.769Z">
+<meta property="article:author" content="Haoliang Tang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_18-37-49%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/chibimon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/chibimon.png">
+    <meta name="theme-color" content="#008080">
+    <link rel="shortcut icon" href="/images/chibimon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            220920_Manjaro上安装MySQL -
+        
+        Haoliang Tang&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":true,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#008080","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallroom-1920x1200-bg-11b87d0.jpg","dark":"/images/wallhaven-rreg9j.png"},"title":"一生懸命","subtitle":{"text":["live a life you will never regret"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#708090 ","dark":"#d3d3d3"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/hl-tang","instagram":null,"zhihu":null,"twitter":null,"email":"haoliangtang0@gmail.com"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"About":{"path":"/about","icon":"fa-regular fa-user"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":null},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/chibimon.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Haoliang Tang&#39;s blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/about"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/about"  >
+                             
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">220920_Manjaro上安装MySQL</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/chibimon.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">Haoliang Tang</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2022-09-20</span>
+        <span class="mobile">2022-09-20</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-11-02 20:09:19</span>
+            <span class="mobile">2023-11-02 20:09:19</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <p>19年的大三冬季初学数据库时，在matebook win10上安装了微软的SQL Server。之后20年疫情宅家时，跟着一本小册子SQL必知必会(这本书的MySQL安装内容太旧了)还有网上教程，在老ideapad win7上安装了MySQL，但并不一定是最佳的安装方式，书上和网上教程并不完美适配，有冲突的地方。当时记得是在win7 cmd里运行sql命令，看得是真难受。当时也没有安装MySQL Workbench这样的图形界面工具。不过当时安装了mysql倒是在后来的夏季学期に役立った，不用再次安装了，就pip install个django的mysql，让django连上本地的mysql就好了。然后用了navicat的30天免费试用，撑过了夏季学期。</p>
+<hr>
+<h2 id="一些闲言碎语"><a href="#一些闲言碎语" class="headerlink" title="一些闲言碎语"></a>一些闲言碎语</h2><p>读wikipedia上MySQL及び其作者Michael Widenius的词条，获得的一些豆知識</p>
+<p>起初以为mysql的my是“我的”的意思，其实Its name is a combination of “My”, the name of co-founder <a class="link"   target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Michael_Widenius" >Michael Widenius <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>‘s daughter My, and “SQL”, the abbreviation for <a class="link"   target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Structured_Query_Language" >Structured Query Language <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>.原来是name after作者女儿的名字。そして，Widenius has three children – My, Max, and Maria – who inspired the names for <a class="link"   target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/MySQL" >MySQL <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>, <a class="link"   target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/MaxDB" >MaxDB <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> and the MySQL-Max distribution, and <a class="link"   target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/MariaDB" >MariaDB <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>.他还用另外两个子女的名字来命名其他数据库。</p>
+<p>MariaDB就是MySQL被Oracle收购后的一个开源复刻，与MySQL高度兼容。甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险，因此社区采用分支的方式来避开这个风险。MariaDB的目的是完全兼容MySQL，包括API和命令行，使之能轻松成为MySQL的代替品。</p>
+<p>聊聊作者Michael Widenius吧。芬兰人，Helsinki University of Technolog辍学(说来另一个赫尔辛基的狠人就是linus)。33岁时开始写mysql，1年后发布。</p>
+<p>之后mysql被Sun收购，然后又被Oracle收购。</p>
+<h2 id="安装MySQL及初始化"><a href="#安装MySQL及初始化" class="headerlink" title="安装MySQL及初始化"></a>安装MySQL及初始化</h2><h3 id="查看软件仓库MySQL版本"><a href="#查看软件仓库MySQL版本" class="headerlink" title="查看软件仓库MySQL版本"></a>查看软件仓库MySQL版本</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -Si mysql</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_18-37-49%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<h3 id="安装MySQL"><a href="#安装MySQL" class="headerlink" title="安装MySQL"></a>安装MySQL</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S mysql</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-11-58%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-16.png"
+                     
+                ></p>
+<h3 id="确认安装成功-mysql版本"><a href="#确认安装成功-mysql版本" class="headerlink" title="确认安装成功&amp;mysql版本"></a>确认安装成功&amp;mysql版本</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql --version</span><br></pre></td></tr></table></figure></div>
+
+<p>or</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqladmin --version</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="初始化MySQL"><a href="#初始化MySQL" class="headerlink" title="初始化MySQL"></a>初始化MySQL</h3><p>第一次使用前先初始化</p>
+<p>安装mysql后的输出信息已经说了要这样初始化</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mysqld --initialize --user=mysql --basedir=/usr --datadir=/var/lib/mysql</span><br></pre></td></tr></table></figure></div>
+
+<p>&#x3D;&#x3D;执行后会产生一个<strong>临时password</strong>&#x3D;&#x3D;</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-23-36%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<p>error了，试试加上sudo</p>
+<p>OK，刚才应该是权限不够操作&#x2F;var&#x2F;lib里的文件。<code>sudo rm -rf mysql</code>把刚才失败的文件夹删掉。加上sudo初始化后成功了。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-37.jpg"
+                     
+                ></p>
+<p>用户名：root@localhost</p>
+<p>临时口令：S4ypiYr8gt.S</p>
+<h3 id="启动MySQL服务"><a href="#启动MySQL服务" class="headerlink" title="启动MySQL服务"></a>启动MySQL服务</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start mysqld</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="启动mysql服务后，secure-installation"><a href="#启动mysql服务后，secure-installation" class="headerlink" title="启动mysql服务后，secure installation"></a>启动mysql服务后，secure installation</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql_secure_installation</span><br></pre></td></tr></table></figure></div>
+
+<p>事实上我把这步放在修改完root口令后再执行</p>
+<p>输入了新的root口令</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_22-08-01%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<p>这个好像会按照密码强度，设置密码，要8位以上。那就不弄了。</p>
+<h3 id="查看MySQL运行状态"><a href="#查看MySQL运行状态" class="headerlink" title="查看MySQL运行状态"></a>查看MySQL运行状态</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status mysqld</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="修改root用户的password"><a href="#修改root用户的password" class="headerlink" title="修改root用户的password"></a>修改root用户的password</h3><p>initialize时生成了一个临时的口令，现在修改口令，就改为和linux的登录口令一样好了</p>
+<p><code>mysql -u root -p</code>，输入initialize时的临时口令，进入mysql</p>
+<p>修改root口令</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; alter user &#x27;root&#x27;@&#x27;localhost&#x27; identified by &#x27;新密码&#x27;;</span><br></pre></td></tr></table></figure></div>
+
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_21-49-53%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"
+                     
+                ></p>
+<p>然后退出，再用新口令登录mysql试试</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; exit;</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure></div>
+
+<p>输入新口令，成功登入</p>
+<p><em><strong>よし、到这里就算安装与初始化结束了</strong></em></p>
+<h2 id="卸载MySQL"><a href="#卸载MySQL" class="headerlink" title="卸载MySQL"></a>卸载MySQL</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -Rsn mysql</span><br></pre></td></tr></table></figure></div>
+
+<p>注：-s参数删除没有被其他已安装软件包使用的依赖	-n参数删除相应的配置文件</p>
+<p>然后删除&#x2F;var&#x2F;lib&#x2F;mysql目录</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rm -rf /var/lib/mysql</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h2 id="MySQL简单使用"><a href="#MySQL简单使用" class="headerlink" title="MySQL简单使用"></a>MySQL简单使用</h2><h3 id="1-启动MySQL"><a href="#1-启动MySQL" class="headerlink" title="1.启动MySQL"></a>1.启动MySQL</h3><p>若没有设置开机自动启动mysql服务，那么当要使用mysql时需手动启动服务 <code>systemctl start mysqld</code></p>
+<p>关掉mysql服务：<code>systemctl stop mysqld</code>  以减少内存占用</p>
+<p>mysql服务没开启时，就没法连接mysql数据库</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-22_22-30.jpg"
+                     
+                ></p>
+<p>ちなみに、mariadb数据库的相关命令是：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">systemctl start mariadb  #启动MariaDB</span><br><span class="line">systemctl stop mariadb  #停止MariaDB</span><br><span class="line">systemctl restart mariadb  #重启MariaDB</span><br><span class="line">systemctl enable mariadb  #设置开机启动</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="2-登录MySQL"><a href="#2-登录MySQL" class="headerlink" title="2.登录MySQL"></a>2.登录MySQL</h3><p>当MySQL服务已经运行时, 我们可以通过MySQL自带的客户端工具登录到MySQL数据库中, 打开命令行, 输入以下格式的命名:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h 主机名 -u 用户名 -p</span><br></pre></td></tr></table></figure></div>
+
+<p>参数说明：</p>
+<ul>
+<li><strong>-h</strong>: 指定客户端所要登录的MySQL主机名, 登录本机(localhost 或 127.0.0.1)该参数可以省略</li>
+<li><strong>-u</strong>: 登录的用户名</li>
+<li><strong>-p</strong>: 告诉服务器将会使用一个密码来登录, 如果所要登录的用户名密码为空, 可以忽略此选项</li>
+</ul>
+<p>如果我们要登录本机的MySQL数据库，只需要输入以下命令即可：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="3-管理MySQL的命令"><a href="#3-管理MySQL的命令" class="headerlink" title="3.管理MySQL的命令"></a>3.管理MySQL的命令</h3><p><strong>注意:</strong> MySQL的SQL语句以分号 (;) 作为结束标识	大小写構いません</p>
+<p>下面列举一些常用命令：</p>
+<ul>
+<li><p><code>show databases;</code></p>
+<p>列出MySQL数据库管理系统的数据库列表</p>
+</li>
+</ul>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-23_02-10.jpg"
+                     
+                ></p>
+<p>​	mysqlDBMS中最初是这4个数据库</p>
+<ul>
+<li><p><code>use 数据库名;</code></p>
+<p>在连接到 MySQL 数据库后，可能有多个可以操作的数据库，所以需要选择要操作的数据库</p>
+<p><code>use</code>选择要操作的数据库，使用该命令后所有SQL命令都只针对该数据库</p>
+</li>
+</ul>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; use RUNOOB;</span><br><span class="line">Database changed</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+<ul>
+<li><p><code>show tables;</code></p>
+<p>显示指定数据库的所有表，使用该命令前需要使用 use 命令来选择要操作的数据库</p>
+</li>
+<li><p><code>show columns from 表名;</code></p>
+<p>显示数据表的属性，属性类型，主键信息 ，是否为 NULL，默认值等其他信息</p>
+</li>
+</ul>
+<p>跟着菜鸟教程试了试增删改查语句，查询的语句select from where在终端中敲，输出会对不齐，不如在可视化界面里操作。</p>
+<h2 id="安装与使用MySQL-Workbench"><a href="#安装与使用MySQL-Workbench" class="headerlink" title="安装与使用MySQL Workbench"></a>安装与使用MySQL Workbench</h2><p>MySQL Workbench是专门面向mysql的可视化数据库管理工具，就是个DBMS的gui。也是甲骨文公司旗下的产品，属于mysql套件中的一部分。</p>
+<p>安装mysql-workbench</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S mysql-workbench</span><br></pre></td></tr></table></figure></div>
+
+<p>启动程序可以终端敲<code>mysql-workbench</code></p>
+<p>进入程序后默认的连接一般是Local instance 3306。如果要自己新建一个连接的话，本地端口好像也是3306。</p>
+<p>输入root口令后连接mysql</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-23_17-44.jpg"
+                     
+                ></p>
+<p>这个窗口从Adminisration调到Schemas，可以看到目前在mysql中的数据库。しかし、内置的4个数据库中只有sys显示了出来。RUNOOB是跟着菜鸟教程做的。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-23_17-37.jpg"
+                     
+                ></p>
+<p>在图形界面里SQL命令不加;也能跑，终端是一定要有;的</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2022/09/20/220920_Manjaro%E4%B8%8A%E5%AE%89%E8%A3%85MySQL/2022-09-23_17-53.jpg"
+                     
+                ></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40468936/article/details/114964412" >https://blog.csdn.net/qq_40468936/article/details/114964412 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/422931126" >https://zhuanlan.zhihu.com/p/422931126 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h2 id="230429更新-nodejs连接mysql数据库，报错Client-does-not-support-authentication-protocol-requested-by-server"><a href="#230429更新-nodejs连接mysql数据库，报错Client-does-not-support-authentication-protocol-requested-by-server" class="headerlink" title="230429更新 nodejs连接mysql数据库，报错Client does not support authentication protocol requested by server"></a>230429更新 nodejs连接mysql数据库，报错Client does not support authentication protocol requested by server</h2><p>尝试nodejs连接mysql数据库</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install mysql</span><br></pre></td></tr></table></figure></div>
+
+<p>建了一个db.js文件</p>
+<div class="highlight-container" data-rel="Js"><figure class="iseeu highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mysql = <span class="built_in">require</span>(<span class="string">&quot;mysql&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> connection = mysql.<span class="title function_">createConnection</span>(&#123;</span><br><span class="line">    <span class="attr">host</span>:<span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">port</span>:<span class="number">3306</span>,</span><br><span class="line">    <span class="attr">user</span>:<span class="string">&quot;root&quot;</span>,</span><br><span class="line">    <span class="attr">password</span>:<span class="string">&quot;thl5160&quot;</span>,</span><br><span class="line">    <span class="attr">database</span>:<span class="string">&quot;idol&quot;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">connection.<span class="title function_">connect</span>()</span><br><span class="line"></span><br><span class="line">connection.<span class="title function_">query</span>(<span class="string">&quot;select * from idol.group&quot;</span>, <span class="keyword">function</span>(<span class="params">error,results,fields</span>)&#123;</span><br><span class="line">    <span class="keyword">if</span>(error) <span class="keyword">throw</span> error</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;results = &quot;</span>, results)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">connection.<span class="title function_">end</span>()</span><br></pre></td></tr></table></figure></div>
+
+<p>然后<code>node db.js</code>运行，报错<font color='salmon'>‘Client does not support authentication protocol requested by server; consider upgrading MySQL client’</font></p>
+<p>网上查到两个解决方法的帖子</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://stackoverflow.com/questions/51008807/nodejs-mysql-client-does-not-support-authentication-protocol" >https://stackoverflow.com/questions/51008807/nodejs-mysql-client-does-not-support-authentication-protocol <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/airdark_long/article/details/82588064" >https://blog.csdn.net/airdark_long/article/details/82588064 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>Try change the password as below:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ALTER USER &#x27;root&#x27;@&#x27;localhost&#x27; IDENTIFIED BY &#x27;your new password&#x27;; </span><br><span class="line">ALTER USER &#x27;root&#x27;@&#x27;localhost&#x27; IDENTIFIED WITH mysql_native_password BY &#x27;your new password&#x27;;</span><br><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure></div>
+
+<p>再び<code>node db.js</code>，输出成功</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a class="link"   target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=chezeWdTHbo" >MySQL Workbench Tutorial <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>  11min左右讲了个通过右击table来自动生成sql语句</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=C0y35FpiLRA" >How to Use VS Code to Run SQL on a Database <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>  用SQLToolsという插件</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1sr4y1V7PV" >ArchLinux安装mysql <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://developer.aliyun.com/article/809624" >MySQL Workbench 使用教程 - 如何使用 Workbench 操作 MySQL &#x2F; MariaDB 数据库中文指南 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/UNIONDONG/article/details/98392738" >Manjaro安装Mysql8.0（血泪篇） <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://linuxhint.com/install-mysql-workbench-manjaro-linux/" >How to install MySQL Workbench on Manjaro Linux <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>  后半有详细的怎么使用workbench</p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 220920_Manjaro上安装MySQL</li>
+        <li><strong>Author:</strong> Haoliang Tang</li>
+        <li><strong>Created at
+                :</strong> 2022-09-20 00:00:00</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2023-11-02 20:09:19
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://hl-tang.github.io/2022/09/20/220920_Manjaro上安装MySQL/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+            This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0</a>.
+            
+
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                        rel="prev"
+                        href="/2023/04/29/230429_nvm%E5%B0%9D%E8%AF%95node%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%EF%BC%8C%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E8%B7%91github%E5%88%AB%E4%BA%BA%E5%86%99%E7%9A%84repo/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">230429_nvm尝试node版本管理</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+ 
+    <div id="waline"></div>
+    <script type="module"  data-swup-reload-script>
+        import { init } from '/js/libs/waline.mjs';
+
+        function loadWaline() {
+            init({
+                el: '#waline',
+                serverURL: 'https://example.example.com',
+                lang: 'zh-CN',
+                dark: 'body[class~="dark-mode"]',
+                requiredMeta: ['nick','mail'], // cannot customize by theme config, change it yourself
+            });
+        }
+
+        if ('true') {
+            const loadWalineTimeout = setTimeout(() => {
+                loadWaline();
+                clearTimeout(loadWalineTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadWaline);
+        }
+        
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">220920_Manjaro上安装MySQL</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E9%97%B2%E8%A8%80%E7%A2%8E%E8%AF%AD"><span class="nav-text">一些闲言碎语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85MySQL%E5%8F%8A%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">安装MySQL及初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%BD%AF%E4%BB%B6%E4%BB%93%E5%BA%93MySQL%E7%89%88%E6%9C%AC"><span class="nav-text">查看软件仓库MySQL版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85MySQL"><span class="nav-text">安装MySQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AE%E8%AE%A4%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F-mysql%E7%89%88%E6%9C%AC"><span class="nav-text">确认安装成功&amp;mysql版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96MySQL"><span class="nav-text">初始化MySQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8MySQL%E6%9C%8D%E5%8A%A1"><span class="nav-text">启动MySQL服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8mysql%E6%9C%8D%E5%8A%A1%E5%90%8E%EF%BC%8Csecure-installation"><span class="nav-text">启动mysql服务后，secure installation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8BMySQL%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81"><span class="nav-text">查看MySQL运行状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9root%E7%94%A8%E6%88%B7%E7%9A%84password"><span class="nav-text">修改root用户的password</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%B8%E8%BD%BDMySQL"><span class="nav-text">卸载MySQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="nav-text">MySQL简单使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%90%AF%E5%8A%A8MySQL"><span class="nav-text">1.启动MySQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%99%BB%E5%BD%95MySQL"><span class="nav-text">2.登录MySQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%AE%A1%E7%90%86MySQL%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-text">3.管理MySQL的命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8MySQL-Workbench"><span class="nav-text">安装与使用MySQL Workbench</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#230429%E6%9B%B4%E6%96%B0-nodejs%E8%BF%9E%E6%8E%A5mysql%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%8C%E6%8A%A5%E9%94%99Client-does-not-support-authentication-protocol-requested-by-server"><span class="nav-text">230429更新 nodejs连接mysql数据库，报错Client does not support authentication protocol requested by server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-text">参考资料</span></a></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Haoliang Tang</a>
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>

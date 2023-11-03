@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Haoliang Tang">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2023/08/10/230810_endeavouros折騰記/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="thinkbook BIOS【Secure Boot】设置成【Disabled】 装机时系统引导booter选了grub 换源进系统后的欢迎界面有选项，选国家自动写入&#x2F;etc&#x2F;pacman.d&#x2F;mirrorlist 注意archlinux和manjaro的软件仓库是不一样的地址 装yayhttps:&#x2F;&#x2F;wiki.archlinux.org&#x2F;title&#x2F;Arch_User_Repository  先">
+<meta property="og:type" content="article">
+<meta property="og:title" content="230810_EndeavourOS折騰記">
+<meta property="og:url" content="http://example.com/2023/08/10/230810_EndeavourOS%E6%8A%98%E9%A8%B0%E8%A8%98/index.html">
+<meta property="og:site_name" content="Haoliang Tang&#39;s blog">
+<meta property="og:description" content="thinkbook BIOS【Secure Boot】设置成【Disabled】 装机时系统引导booter选了grub 换源进系统后的欢迎界面有选项，选国家自动写入&#x2F;etc&#x2F;pacman.d&#x2F;mirrorlist 注意archlinux和manjaro的软件仓库是不一样的地址 装yayhttps:&#x2F;&#x2F;wiki.archlinux.org&#x2F;title&#x2F;Arch_User_Repository  先">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2023/08/10/230810_EndeavourOS%E6%8A%98%E9%A8%B0%E8%A8%98/Screenshot_from_2023-08-10_20-34-16.png">
+<meta property="article:published_time" content="2023-08-09T15:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-02T11:32:00.821Z">
+<meta property="article:author" content="Haoliang Tang">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/08/10/230810_EndeavourOS%E6%8A%98%E9%A8%B0%E8%A8%98/Screenshot_from_2023-08-10_20-34-16.png">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/chibimon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/chibimon.png">
+    <meta name="theme-color" content="#008080">
+    <link rel="shortcut icon" href="/images/chibimon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            230810_EndeavourOS折騰記 -
+        
+        Haoliang Tang&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":true,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#008080","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallroom-1920x1200-bg-11b87d0.jpg","dark":"/images/wallhaven-rreg9j.png"},"title":"一生懸命","subtitle":{"text":["live a life you will never regret"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#708090 ","dark":"#d3d3d3"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/hl-tang","instagram":null,"zhihu":null,"twitter":null,"email":"haoliangtang0@gmail.com"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"About":{"path":"/about","icon":"fa-regular fa-user"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":null},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/chibimon.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Haoliang Tang&#39;s blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/about"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/about"  >
+                             
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">230810_EndeavourOS折騰記</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/chibimon.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">Haoliang Tang</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2023-08-10</span>
+        <span class="mobile">2023-08-10</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-11-02 20:32</span>
+            <span class="mobile">2023-11-02 20:32</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Linux/">Linux</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <p>thinkbook BIOS【Secure Boot】设置成【Disabled】</p>
+<p>装机时系统引导booter选了grub</p>
+<h2 id="换源"><a href="#换源" class="headerlink" title="换源"></a>换源</h2><p>进系统后的欢迎界面有选项，选国家自动写入<code>/etc/pacman.d/mirrorlist</code></p>
+<p>注意archlinux和manjaro的软件仓库是不一样的地址</p>
+<h2 id="装yay"><a href="#装yay" class="headerlink" title="装yay"></a>装yay</h2><p><a class="link"   target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Arch_User_Repository" >https://wiki.archlinux.org/title/Arch_User_Repository <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 先git clone(不一定就是在github上)，然后<code>makepkg</code>再<code>pacman -U</code></p>
+<p>装完之后，PKGBUILD文件和打包完的package包都可以删掉了</p>
+<p>&#x3D;&#x3D;yay装东西，除了remove make dependencies选y，其他都默认就好了&#x3D;&#x3D;</p>
+<h2 id="gnome-shell-extension"><a href="#gnome-shell-extension" class="headerlink" title="gnome-shell-extension"></a>gnome-shell-extension</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S gnome-shell-extensions</span><br><span class="line">yay -S gnome-shell-extension-dash-to-dock</span><br><span class="line">sudo pacman -S gnome-shell-extension-dash-to-panel</span><br><span class="line">yay -S gnome-shell-extension-gtk4-desktop-icons-ng</span><br><span class="line">sudo pacman -S gnome-shell-extension-appindicator</span><br><span class="line">sudo pacman -S gnome-shell-extension-gtile</span><br><span class="line">yay -S gnome-shell-extension-clipboard-indicator</span><br></pre></td></tr></table></figure></div>
+
+<p>extension开DING的时候，鼠标左上角切换到第二个桌面后开启，这样切到第2,3个桌面也会显示桌面图标了</p>
+<h2 id="some-problems-of-GNOME"><a href="#some-problems-of-GNOME" class="headerlink" title="some problems of GNOME"></a>some problems of GNOME</h2><p><a class="link"   target="_blank" rel="noopener" href="https://askubuntu.com/questions/651347/how-to-bring-back-minimize-and-maximize-buttons-in-gnome-3" >https://askubuntu.com/questions/651347/how-to-bring-back-minimize-and-maximize-buttons-in-gnome-3 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>Tweaks</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2023/08/10/230810_EndeavourOS%E6%8A%98%E9%A8%B0%E8%A8%98/Screenshot_from_2023-08-10_20-34-16.png"
+                     
+                ></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://askubuntu.com/questions/262373/why-cant-i-change-the-wallpaper-in-gnome-shell-and-unity" >https://askubuntu.com/questions/262373/why-cant-i-change-the-wallpaper-in-gnome-shell-and-unity <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>文件管理器Nautilus右击没有“新建文件的选项”</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/78420821" >https://zhuanlan.zhihu.com/p/78420821 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>~&#x2F;Templates下放入当前manjaro的’Empty Bash’  ‘Empty Desktop File.desktop’  ‘Empty File’</p>
+<p>Nautilus checksums</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yay -S nautilus-checksums</span><br></pre></td></tr></table></figure></div>
+
+<p>但其实也可以命令行看hash值</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sha512sum file_name</span><br><span class="line">sha256sum file_name</span><br><span class="line">md5sum file_name</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>gnome-terminal透明化</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yay -S gnome-terminal-transparency</span><br></pre></td></tr></table></figure></div>
+
+<p>然后preferences -&gt; colors里设置</p>
+<p>桌面双击文件夹，默认用vscode打开，而非文件管理器(nautilus)</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://askubuntu.com/questions/1256037/double-click-on-folders-opens-vscode" >https://askubuntu.com/questions/1256037/double-click-on-folders-opens-vscode <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://askubuntu.com/questions/1183260/vs-code-open-directory-instead-of-system-file-manager-in-ubuntu-19-10" >https://askubuntu.com/questions/1183260/vs-code-open-directory-instead-of-system-file-manager-in-ubuntu-19-10 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>修改文件<code>/usr/share/applications/code.desktop </code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MimeType=text/plain;inode/directory;application/x-code-workspace;</span><br></pre></td></tr></table></figure></div>
+
+<p>把<code>inode/directory;</code>删了</p>
+<p>要是还不work的话:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp /usr/share/applications/code.desktop ~/.local/share/applications/code.desktop</span><br></pre></td></tr></table></figure></div>
+
+<p>And edit <code>~/.local/share/applications/code.desktop</code>:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MimeType=text/plain;inode/directory;application/x-code-workspace;</span><br></pre></td></tr></table></figure></div>
+
+<p>to</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MimeType=text/plain;application/x-code-workspace;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>flameshot没反应</p>
+<p>终端输入flameshot，报错</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Warning: Ignoring XDG_SESSION_TYPE=wayland on Gnome. Use QT_QPA_PLATFORM=wayland to run on Wayland anyway.</span><br></pre></td></tr></table></figure></div>
+
+<p>check现在用的是Wayland or Xorg: <code>echo $XDG_SESSION_TYPE</code></p>
+<p>去flameshot的github issue看看，是gnome的问题。</p>
+<p><code>flameshot gui</code>至少终端敲了可以run</p>
+<h2 id="GUI-Package-Manager"><a href="#GUI-Package-Manager" class="headerlink" title="GUI Package Manager"></a>GUI Package Manager</h2><p>用了bauh</p>
+<p>也可以装个pamac-all (同时在extensions里开启Pamac Updates Indicator)</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=StHVU-Zvacs&t=2s" >7 Things After Installing EndeavourOS (MUST DO!) <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 就用了pamac</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.debugpoint.com/arch-linux-gui-package-managers/" >https://www.debugpoint.com/arch-linux-gui-package-managers/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Pacman/Tips_and_tricks#Graphical" >https://wiki.archlinux.org/title/Pacman/Tips_and_tricks#Graphical <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.reddit.com/r/archlinux/comments/nponlx/what_is_the_best_gui_package_manager/" >https://www.reddit.com/r/archlinux/comments/nponlx/what_is_the_best_gui_package_manager/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h2 id="shell"><a href="#shell" class="headerlink" title="shell"></a>shell</h2><h3 id="fish"><a href="#fish" class="headerlink" title="fish"></a>fish</h3><p>装fish <code>sudo pacman -S fish</code></p>
+<p>查看可用的shell: <code>cat /etc/shells</code> or <code>chsh -l</code></p>
+<p>change shell: <code>chsh -s /bin/fish</code></p>
+<hr>
+<p>装oh-my-fish (github搜)</p>
+<p>omf的插件 wttr, weather, bass</p>
+<p>主题也都用oh-my-fish管理，不要用<code>fish_config</code>会有冲突</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://alancorn.github.io/blogs/2022/LinuxFishConfig.html#%E9%85%8D%E7%BD%AEtheme%E4%B8%8Ecolor-scheme" >https://alancorn.github.io/blogs/2022/LinuxFishConfig.html#%E9%85%8D%E7%BD%AEtheme%E4%B8%8Ecolor-scheme <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://alancorn.github.io/blogs/2022/Fisher.html" >https://alancorn.github.io/blogs/2022/Fisher.html <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<hr>
+<h4 id="fisher"><a href="#fisher" class="headerlink" title="fisher"></a>fisher</h4><p>弃用omf，改为fisher(主要为了fish的Powerlevel10k——Tide)</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://github.com/jorgebucaran/fisher" >https://github.com/jorgebucaran/fisher <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 安装看github主页</p>
+<p>fisher中切换已经装了的theme，依然用<code>fisher install</code>命令 <a class="link"   target="_blank" rel="noopener" href="https://github.com/jorgebucaran/fisher/issues/111" >https://github.com/jorgebucaran/fisher/issues/111 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fisher install oh-my-fish/theme-agnoster</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>更多插件 <a class="link"   target="_blank" rel="noopener" href="https://github.com/jorgebucaran/awsm.fish" >https://github.com/jorgebucaran/awsm.fish <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><code>fisher update</code>更新所有installed packages</p>
+<h5 id="tide"><a href="#tide" class="headerlink" title="tide"></a>tide</h5><p>安装tide <a class="link"   target="_blank" rel="noopener" href="https://github.com/IlanCosman/tide" >https://github.com/IlanCosman/tide <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fisher install IlanCosman/tide@v5</span><br></pre></td></tr></table></figure></div>
+
+<p>命令行<code>tide configure</code>，选择配置</p>
+<p>修改变量例子：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set --universal tide_git_bg_color_unstable F79732</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>但很遗憾tide毕竟还是不如Powerlevel10k那么完善，anacondaのbuilt-in high quality segments没有，只有venv的virtualenv。</p>
+<p>不过命令行<code>conda init fish</code>后，终端prompt也有提示了。</p>
+<p>但<code>conda init fish</code>実行された後，终端连续回车会报错，并且<code>clear</code>会报<code>terminals database is inaccessible</code>，<code>~/.config/fish/config.fish</code>新增的部分删掉后恢复正常</p>
+<p>或者在<code>~/.config/fish/config.fish</code>后面加上<code>export TERMINFO=/usr/share/terminfo</code>能解决clear的问题</p>
+<p>所以，fish用conda，不要<code>conda init fish</code>，<strong>还是用类似zsh在配置文件里加source…的仕方</strong></p>
+<h5 id="fish-color-scheme-switcher"><a href="#fish-color-scheme-switcher" class="headerlink" title="fish-color-scheme-switcher"></a>fish-color-scheme-switcher</h5><p><a class="link"   target="_blank" rel="noopener" href="https://github.com/h-matsuo/fish-color-scheme-switcher" >https://github.com/h-matsuo/fish-color-scheme-switcher <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ fisher install h-matsuo/fish-color-scheme-switcher</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scheme list</span><br><span class="line">scheme preview xxx</span><br><span class="line">scheme set xxx</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># Set color scheme to `tokyonight` automatically on new session</span><br><span class="line">$ echo &#x27;scheme set tokyonight&#x27; &gt;&gt; &quot;$HOME/.config/fish/config.fish&quot;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h5 id="z"><a href="#z" class="headerlink" title="z"></a>z</h5><p><a class="link"   target="_blank" rel="noopener" href="https://github.com/jethrokuan/z" >https://github.com/jethrokuan/z <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fisher install jethrokuan/z</span><br></pre></td></tr></table></figure></div>
+
+<p>使用：</p>
+<ul>
+<li><code>z foo</code>: Goes to directory best matching <code>foo</code>.</li>
+<li><code>zo foo</code>: Opens file manager of directory best matching <code>foo</code>.</li>
+</ul>
+<h5 id="nvm"><a href="#nvm" class="headerlink" title="nvm"></a>nvm</h5><p><a class="link"   target="_blank" rel="noopener" href="https://github.com/jorgebucaran/nvm.fish" >https://github.com/jorgebucaran/nvm.fish <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 原生支持fish，不需要装原版nvm再bass配置了</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fisher install jorgebucaran/nvm.fish</span><br></pre></td></tr></table></figure></div>
+
+<p>可以使用<code>node use system</code>切换回系统的nodejs</p>
+<h5 id="bass"><a href="#bass" class="headerlink" title="bass"></a>bass</h5><p><a class="link"   target="_blank" rel="noopener" href="https://github.com/edc/bass" >https://github.com/edc/bass <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="zsh"><a href="#zsh" class="headerlink" title="zsh"></a>zsh</h3><p>装zsh插件: <code>zsh</code>, <code>zsh-autosuggestions</code>, <code>zsh-completions</code>, <code>zsh-history-substring-search</code>, <code>zsh-syntax-highlighting</code>, <code>zsh-theme-powerlevel10k-git</code></p>
+<p>p10k的github主页也写了推荐用git的包</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme&#x27;</span> &gt;&gt;~/.zshrc</span><br></pre></td></tr></table></figure></div>
+
+<p>终端<code>p10k configure</code>选择式配置，完了后~&#x2F;.p10k.zsh就用了（.zshrc也会有改动）</p>
+<p><code>p10k -h</code>查看可用的命令</p>
+<p>要改prompt前面的icon的话，编辑<code>~/.p10k.zsh</code>的Custom iconのOS_ICON_CONTENT_EXPANSION</p>
+<p>照搬manjaro的配置，在~&#x2F;.zshrc添加 </p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Source manjaro-zsh-configuration</span></span><br><span class="line"><span class="keyword">if</span> [[ -e /usr/share/zsh/manjaro-zsh-config ]]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">source</span> /usr/share/zsh/manjaro-zsh-config</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">source</span> /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh</span><br></pre></td></tr></table></figure></div>
+
+<p>复制&#x2F;usr&#x2F;share&#x2F;zsh&#x2F;manjaro-zsh-config过来</p>
+<h2 id="输入法"><a href="#输入法" class="headerlink" title="输入法"></a>输入法</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S fcitx5-im fcitx5-rime fcitx5-pinyin-zhwiki fcitx5-mozc</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><a class="link"   target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Fcitx5" >https://wiki.archlinux.org/title/Fcitx5 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/Fcitx5" >https://wiki.archlinuxcn.org/wiki/Fcitx5 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://archlinuxstudio.github.io/ArchLinuxTutorial/#/rookie/DE&App?id=_11%E5%AE%89%E8%A3%85%E8%BE%93%E5%85%A5%E6%B3%95" >https://archlinuxstudio.github.io/ArchLinuxTutorial/#/rookie/DE&amp;App?id=_11安装输入法 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>中文的教程都是说写在<code>/etc/environment</code>下。然而英文的wiki只说了set环境变量，具体放在哪里と言うと、lph教我的是放在最近的一层，<code>/etc/environment</code>太全局了虽然能work但不是最佳实践。lph是根据<a class="link"   target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Environment_variables#Per_Wayland_session" >https://wiki.archlinux.org/title/Environment_variables#Per_Wayland_session <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> Wayland的配置，放在<code>~/.config/environment.d/fcitx5.conf</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GTK_IM_MODULE=fcitx</span><br><span class="line">QT_IM_MODULE=fcitx</span><br><span class="line">XMODIFIERS=@im=fcitx</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="fcitx5-configtool"><a href="#fcitx5-configtool" class="headerlink" title="fcitx5-configtool"></a>fcitx5-configtool</h3><p>记得手动把rime，mozc加到左边的current input method</p>
+<h3 id="fcitx5主题"><a href="#fcitx5主题" class="headerlink" title="fcitx5主题"></a>fcitx5主题</h3><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S fcitx5-material-color</span><br></pre></td></tr></table></figure></div>
+
+<p><a class="link"   target="_blank" rel="noopener" href="https://github.com/hosxy/Fcitx5-Material-Color" >https://github.com/hosxy/Fcitx5-Material-Color <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://github.com/thep0y/fcitx5-themes" >https://github.com/thep0y/fcitx5-themes <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>问题：<del>1. 输入法icon没有显示在top bar</del>(安装<code>gnome-shell-extension-appindicator</code>后解决)； <del>2. 浏览器或者vscode打中文，没有显示配置的主题</del>(重启后好了)</p>
+<p>rime默认是繁体，要简体的话需要Ctrl+&#96;一起按，如果是top panel config的话只有单次有效</p>
+<h3 id="雾凇拼音"><a href="#雾凇拼音" class="headerlink" title="雾凇拼音"></a>雾凇拼音</h3><p><a class="link"   target="_blank" rel="noopener" href="https://github.com/iDvel/rime-ice" >https://github.com/iDvel/rime-ice <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://manateelazycat.github.io/2023/09/11/fcitx-best-config/" >https://manateelazycat.github.io/2023/09/11/fcitx-best-config/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yay -S rime-ice-git</span><br></pre></td></tr></table></figure></div>
+
+<p>补丁方式启用</p>
+<p><code>~/.local/share/fcitx5/rime/</code>下的<code>default.custom.yaml</code>文件，具体见github主页</p>
+<h2 id="字体"><a href="#字体" class="headerlink" title="字体"></a>字体</h2><p><a class="link"   target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/%E5%AD%97%E4%BD%93" >https://wiki.archlinuxcn.org/wiki/字体 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S ttf-hack</span><br><span class="line">sudo pacman -S ttf-hack-nerd</span><br><span class="line">sudo pacman -S gnome-font-viewer</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">ttf-dejavu</span><br><span class="line">ttf-droid</span><br><span class="line">ttf-inconsolata</span><br><span class="line">ttf-indic-otf</span><br><span class="line">ttf-liberation</span><br><span class="line">ttf-meslo-nerd-font-powerlevel10k</span><br><span class="line">ttf-terminus-nerd</span><br><span class="line">adobe-source-code-pro-fonts</span><br><span class="line">adobe-source-han-sans-cn-fonts</span><br><span class="line">adobe-source-han-sans-jp-fonts</span><br><span class="line">adobe-source-han-sans-kr-fonts</span><br><span class="line">adobe-source-sans-fonts</span><br><span class="line">cantarell-fonts</span><br><span class="line">gsfonts</span><br><span class="line">noto-fonts</span><br><span class="line">noto-fonts-cjk</span><br><span class="line">noto-fonts-emoji</span><br><span class="line">xorg-fonts-encodings</span><br></pre></td></tr></table></figure></div>
+
+<hr>
+<p>其实tide的配置文件rainbow.fishなだ一开始打开有些图标显示是乱码，当然终端fish开了tide主题后也是图标乱码，原因就是缺少支持图标的字体（大概是nerd-font）。</p>
+<p><del>于是我就直接一股脑把当前manjaro的&#x2F;usr&#x2F;share&#x2F;fonts全部复制到新机的相同目录。然后就图标显示正常了</del></p>
+<p>上記字体安装了后，&#x2F;usr&#x2F;share&#x2F;fonts下也就有了</p>
+<h2 id="其他软件"><a href="#其他软件" class="headerlink" title="其他软件"></a>其他软件</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S gnome-system-monitor</span><br><span class="line">yay -S wps-office ttf-wps-fonts wps-office-mui-zh-cn</span><br><span class="line">sudo pacman -S libreoffice 选still</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S obs-studio</span><br></pre></td></tr></table></figure></div>
+
+<p>但装完按obs的图标没反应，然后根据终端输入obs后的报错提示，网上搜了要再装<code>qt6-wayland</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">endeavour</span><br><span class="line">seahorse</span><br><span class="line">baobab</span><br><span class="line">gnome-disk-utility</span><br><span class="line">gnome-logs</span><br><span class="line">gnome-firmware</span><br><span class="line">gnome-calculator</span><br><span class="line">gnome-screenshot</span><br><span class="line">gthumb</span><br><span class="line">flameshot</span><br><span class="line">gufw</span><br><span class="line">etcher</span><br><span class="line">gnome-sound-recorder</span><br><span class="line">gitg</span><br><span class="line">evince</span><br><span class="line">foliate</span><br><span class="line">okular</span><br><span class="line">python-pip</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="外设键盘唤醒-wake-from-suspend"><a href="#外设键盘唤醒-wake-from-suspend" class="headerlink" title="外设键盘唤醒 wake from suspend"></a>外设键盘唤醒 wake from suspend</h2><p><a class="link"   target="_blank" rel="noopener" href="https://unix.stackexchange.com/questions/609438/how-can-i-use-a-usb-keyboard-or-mouse-to-wake-from-suspend" >https://unix.stackexchange.com/questions/609438/how-can-i-use-a-usb-keyboard-or-mouse-to-wake-from-suspend <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://askubuntu.com/questions/848698/wake-up-from-suspend-using-wireless-usb-keyboard-or-mouse-for-any-linux-distro" >https://askubuntu.com/questions/848698/wake-up-from-suspend-using-wireless-usb-keyboard-or-mouse-for-any-linux-distro <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://cn.linux-console.net/?p=12183#gsc.tab=0" >https://cn.linux-console.net/?p=12183#gsc.tab=0 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>这三个帖子很instructive</p>
+<p>本来打算照着askubuntu的最高赞回答做的，然后看了下评论区</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">If this still doesn&#x27;t work, make sure your device (keyboard / mouse) still has power when the PC is in sleep mode.</span><br></pre></td></tr></table></figure></div>
+
+<p>一想这台thinkbook好像确实只有一个USBtypeA的口是suspend还通电的。估计就是专门用来插外接键盘的。</p>
+<p>把键盘插到通电的typeA口，然后就好了，挂起后可以敲外设键盘唤醒了。</p>
+<h2 id="remap键位on-operating-system-level"><a href="#remap键位on-operating-system-level" class="headerlink" title="remap键位on operating system level"></a>remap键位on operating system level</h2><p>在Tweaks里设置Keyboard&amp;Mouse -&gt; Additional Layout Options</p>
+<p>CapsLock behavior从默认的Disabled改为<del>Swap Esc and CapsLock</del> Capslock变为额外的Esc,但Shfit+Capslock等于正常的Capslock</p>
+<p>这样方便vim从insert模式切回normal模式</p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 230810_EndeavourOS折騰記</li>
+        <li><strong>Author:</strong> Haoliang Tang</li>
+        <li><strong>Created at
+                :</strong> 2023-08-10 00:00:00</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2023-11-02 20:32:00
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://hl-tang.github.io/2023/08/10/230810_EndeavourOS折騰記/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+            This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0</a>.
+            
+
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/Linux/">#Linux</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                        rel="prev"
+                        href="/2023/09/12/230912_%E5%86%8D%E5%AD%A6vim/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">230912_再学vim</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/2023/08/05/230805_GNOME%E7%BE%8E%E5%8C%96/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">230805_GNOME美化</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+ 
+    <div id="waline"></div>
+    <script type="module"  data-swup-reload-script>
+        import { init } from '/js/libs/waline.mjs';
+
+        function loadWaline() {
+            init({
+                el: '#waline',
+                serverURL: 'https://example.example.com',
+                lang: 'zh-CN',
+                dark: 'body[class~="dark-mode"]',
+                requiredMeta: ['nick','mail'], // cannot customize by theme config, change it yourself
+            });
+        }
+
+        if ('true') {
+            const loadWalineTimeout = setTimeout(() => {
+                loadWaline();
+                clearTimeout(loadWalineTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadWaline);
+        }
+        
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">230810_EndeavourOS折騰記</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8D%A2%E6%BA%90"><span class="nav-text">换源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A3%85yay"><span class="nav-text">装yay</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gnome-shell-extension"><span class="nav-text">gnome-shell-extension</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#some-problems-of-GNOME"><span class="nav-text">some problems of GNOME</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GUI-Package-Manager"><span class="nav-text">GUI Package Manager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#shell"><span class="nav-text">shell</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#fish"><span class="nav-text">fish</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zsh"><span class="nav-text">zsh</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%B3%95"><span class="nav-text">输入法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fcitx5-configtool"><span class="nav-text">fcitx5-configtool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fcitx5%E4%B8%BB%E9%A2%98"><span class="nav-text">fcitx5主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%BE%E5%87%87%E6%8B%BC%E9%9F%B3"><span class="nav-text">雾凇拼音</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E4%BD%93"><span class="nav-text">字体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E8%BD%AF%E4%BB%B6"><span class="nav-text">其他软件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%96%E8%AE%BE%E9%94%AE%E7%9B%98%E5%94%A4%E9%86%92-wake-from-suspend"><span class="nav-text">外设键盘唤醒 wake from suspend</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#remap%E9%94%AE%E4%BD%8Don-operating-system-level"><span class="nav-text">remap键位on operating system level</span></a></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Haoliang Tang</a>
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>

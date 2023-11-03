@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Haoliang Tang">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2023/07/16/230716_再学docker/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+        <meta name="description" content="原理介绍为什么需要docker？比如app在开发环境下能正常运行，但到了其他人的机器上因为各种环境问题导致跑不起来。 一个image就是要运行的app和运行它所必要的dependency，打包在一起变成一个package。类似.iso image container是image的实际执行，就是一个进程（image是程序，container是进程） ちなみに、docker也只是容器技术的一种实现，其">
+<meta property="og:type" content="article">
+<meta property="og:title" content="230716_再学docker">
+<meta property="og:url" content="http://example.com/2023/07/16/230716_%E5%86%8D%E5%AD%A6docker/index.html">
+<meta property="og:site_name" content="Haoliang Tang&#39;s blog">
+<meta property="og:description" content="原理介绍为什么需要docker？比如app在开发环境下能正常运行，但到了其他人的机器上因为各种环境问题导致跑不起来。 一个image就是要运行的app和运行它所必要的dependency，打包在一起变成一个package。类似.iso image container是image的实际执行，就是一个进程（image是程序，container是进程） ちなみに、docker也只是容器技术的一种实现，其">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-15T15:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-02T11:24:18.583Z">
+<meta property="article:author" content="Haoliang Tang">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/chibimon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/chibimon.png">
+    <meta name="theme-color" content="#008080">
+    <link rel="shortcut icon" href="/images/chibimon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            230716_再学docker -
+        
+        Haoliang Tang&#39;s blog
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/assets/build/styles.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/fonts.css">
+
+    
+<link rel="stylesheet" href="/fonts/Satoshi/satoshi.css">
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+
+    <!--- Inject Part-->
+    
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":true,"lazyload":true,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#008080","secondary":null},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallroom-1920x1200-bg-11b87d0.jpg","dark":"/images/wallhaven-rreg9j.png"},"title":"一生懸命","subtitle":{"text":["live a life you will never regret"],"hitokoto":{"enable":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#708090 ","dark":"#d3d3d3"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"links":{"github":"https://github.com/hl-tang","instagram":null,"zhihu":null,"twitter":null,"email":"haoliangtang0@gmail.com"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.5.0","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"About":{"path":"/about","icon":"fa-regular fa-user"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"links":null},"article_date_format":"auto","categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="swup-progress-icon">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container" id="swup">
+
+    
+
+    <div class="main-content-container">
+
+
+        <div class="main-content-header">
+            <header class="navbar-container">
+    
+    <div class="navbar-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/chibimon.png">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Haoliang Tang&#39;s blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-house"></i>
+                                        
+                                        HOME
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/archives"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-archive"></i>
+                                        
+                                        ARCHIVES
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="" 
+                                    href="/about"  >
+                                    
+                                        
+                                            <i class="fa-regular fa-user"></i>
+                                        
+                                        ABOUT
+                                    
+                                </a>
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i></div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="navbar-drawer w-full absolute top-0 left-0 bg-background-color">
+        <ul class="drawer-navbar-list flex flex-col justify-start items-center">
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/"  >
+                             
+                                
+                                    <i class="fa-regular fa-house"></i>
+                                
+                                HOME
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/archives"  >
+                             
+                                
+                                    <i class="fa-regular fa-archive"></i>
+                                
+                                ARCHIVES
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+                
+                    <li class="drawer-navbar-item text-base my-1.5 flex justify-center items-center">
+                        <a class="rounded-3xl py-1.5 px-5 hover:border hover:!text-primary active:!text-primary group " 
+                        href="/about"  >
+                             
+                                
+                                    <i class="fa-regular fa-user"></i>
+                                
+                                ABOUT
+                            
+                        </a>
+                    </li>
+                    <!-- Submenu -->
+                    
+            
+
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="main-content-body">
+
+            
+
+            <div class="main-content">
+
+                
+                    <div class="post-page-container">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            
+                <h1 class="article-title-regular">230716_再学docker</h1>
+            
+            </div>
+            
+                    
+        
+        
+            <div class="article-header flex flex-row gap-2 items-center">
+                <div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+                    <img src="/images/chibimon.png">
+                </div>
+                <div class="info flex flex-col justify-between">
+                    <div class="author flex items-center">
+                        <span class="name text-default-text-color text-lg font-semibold">Haoliang Tang</span>
+                        
+                            <span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2023-07-16</span>
+        <span class="mobile">2023-07-16</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2023-11-02 20:24:18</span>
+            <span class="mobile">2023-11-02 20:24:18</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+
+    
+    
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        
+
+
+        <div class="article-content markdown-body">
+            <h2 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h2><p>为什么需要docker？比如app在开发环境下能正常运行，但到了其他人的机器上因为各种环境问题导致跑不起来。</p>
+<p>一个image就是要运行的app和运行它所必要的dependency，打包在一起变成一个package。类似.iso image</p>
+<p>container是image的实际执行，就是一个进程（image是程序，container是进程）</p>
+<p>ちなみに、docker也只是容器技术的一种实现，其他还有比如containerd</p>
+<h3 id="Architecture"><a href="#Architecture" class="headerlink" title="Architecture"></a>Architecture</h3><p>Docker是client-server架构的</p>
+<p>server也就是Docker Engine (build &amp; run contianer)</p>
+<h3 id="为什么docker比虚拟机轻量，快？"><a href="#为什么docker比虚拟机轻量，快？" class="headerlink" title="为什么docker比虚拟机轻量，快？"></a>为什么docker比虚拟机轻量，快？</h3><p>docker engine启动的container其实共用本机操作系统的kernel。(默认本机是Linux，绝大部分的镜像应用都是基于linux的。而如果本机是win&#x2F;mac的话，其实需要起一个linux的虚拟机。这也许也是mac&#x2F;win安装docker需要docker-desktop，而linux并不需要docker-desktop的原因)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -t -d --name archtry archlinux</span><br><span class="line">sudo docker exec -it archtry bash</span><br><span class="line">uname -a</span><br><span class="line">cat /proc/version</span><br></pre></td></tr></table></figure></div>
+
+<p>查看到的内核信息和本机一样</p>
+<p>而虚拟机需要各自单独的内核，同时还需要一个hypervisor</p>
+<p>&#x3D;&#x3D;正是容器和虚拟机的本质区别在于，容器共用了本机OS的kernel，所以容器轻量快捷。但同时也是由于容器使用本机的内核，你是没办法在一台linux机器上运行windows server容器的。只能在windows机器上运行win的容器。win&#x2F;mac通常跑的docker应用，实际是建了个linux虚拟机，然后在上面运行的。&#x3D;&#x3D;</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=eGz9DS-aIeY" >you need to learn Docker RIGHT NOW!! <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 解释得很好</p>
+<h2 id="Install-Docker"><a href="#Install-Docker" class="headerlink" title="Install Docker"></a>Install Docker</h2><p>安装的话，不同linux发行版的具体操作都不太一样。看<a class="link"   target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Docker%E7%9A%84%E5%8F%82%E8%80%83%E4%BB%B7%E5%80%BC%E5%8F%AF%E8%83%BD%E6%AF%94%E7%9C%8B%E5%AE%98%E7%BD%91%E6%9B%B4%E5%A4%A7" >https://wiki.archlinux.org/title/Docker的参考价值可能比看官网更大 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S docker</span><br></pre></td></tr></table></figure></div>
+
+<p>实际就是装了Docker Engine</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker -v</span><br><span class="line">docker version	//docker server没运行的话，就只显示client的信息</span><br></pre></td></tr></table></figure></div>
+
+<p>启动Docker Engine</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start docker</span><br></pre></td></tr></table></figure></div>
+
+<p>其实标准的应该是systemctl start docker.service，还有docker.socket（按tab键）</p>
+<p>但<code>systemctl start</code>了，<code>docker version</code>或者<code>docker info</code>报permission denied的错</p>
+<hr>
+<p>用户没被加入到docker group的话，各种docker操作都是需要<code>sudo</code>的。<code>sudo docker version</code>就显示出Server的信息了</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://stackoverflow.com/questions/46202475/permission-denied-while-trying-to-connect-to-the-docker-daemon-socket" >https://stackoverflow.com/questions/46202475/permission-denied-while-trying-to-connect-to-the-docker-daemon-socket <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Users_and_groups#Group_management" >https://wiki.archlinux.org/title/Users_and_groups#Group_management <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<h4 id="将用户加入到docker-group"><a href="#将用户加入到docker-group" class="headerlink" title="将用户加入到docker group"></a>将用户加入到docker group</h4><p>Add the user to the docker group to avoid permission issues:</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo usermod -aG docker &lt;your_username&gt;</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart docker	//再不行就重启电脑</span><br></pre></td></tr></table></figure></div>
+
+<p>こうやって実行すれば、be able to run the docker CLI command as a non-root user</p>
+<p>之后的docker命令行操作就不需要<code>sudo</code>了</p>
+<p><font color="salmon">但最好不要为了少打个sudo，就这样操作。因为这个用户可能就有了系统权限。从安全的角度考虑别这样做。</font></p>
+<h3 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h3><div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S docker-compose</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose -v</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="Docker-Desktop"><a href="#Docker-Desktop" class="headerlink" title="Docker Desktop"></a>Docker Desktop</h3><p><a class="link"   target="_blank" rel="noopener" href="https://docs.docker.com/get-docker/" >https://docs.docker.com/get-docker/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 这里Docker Desktop就是Docker Engine加上a bunch of其他的tools</p>
+<p>An experimental package for Arch is provided directly by Docker; see <a class="link"   target="_blank" rel="noopener" href="https://docs.docker.com/desktop/linux/install/archlinux/" >the manual <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> for more information. Unfortunately it contains files which conflict with the <a class="link"   target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=docker-compose" >docker-compose <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> package so you will first need to remove <a class="link"   target="_blank" rel="noopener" href="https://archlinux.org/packages/?name=docker-compose" >docker-compose <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> if installed. Alternatively, you can install <a class="link"   target="_blank" rel="noopener" href="https://aur.archlinux.org/packages/docker-desktop/" >docker-desktop <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>AUR package that does not conflict with existing packages.<br>(From <a class="link"   target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Docker" >https://wiki.archlinux.org/title/Docker <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>)</p>
+<p>所以，装aur的docker-desktop</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yay -S docker-desktop</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h2 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h2><p>docker image并不是一个存储在当前工作目录的单文件。how Docker stores image is very complex，我们也先不管它</p>
+<p><strong>查看本机的所有image</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure></div>
+
+<p>or ls(short for list)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image ls</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>只pull下来镜像，但不运行</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull archlinux</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>Create and run a new container from an image</strong> (没有的话会自动pull)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run nginx</span><br></pre></td></tr></table></figure></div>
+
+<p>可以随便在什么目录下运行，因为必要的环境都在image里</p>
+<p><span style= 'color:black;background:PaleGreen'>docker run可以理解为docker create附带第一次执行</span></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/commandline/create/" >https://docs.docker.com/engine/reference/commandline/create/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 搞明白create, run, start的联系</p>
+<p>交互式地运行，直接run会瞬间退出 (但也由此可见容器的启动速度比虚拟机快多了)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -it ubuntu</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>-d后台运行，–name给容器起名</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -t -d --name archtry archlinux</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<p>查看运行中的container</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure></div>
+
+<p>查看所有的container，包括停止的</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>Start one or more stopped containers</strong></p>
+<p><span style= 'color:black;background:LightPink'><code>run</code>每次会根据image创建一个新的container，对于已有的container之后每次启动应该用<code>start</code>，而非再用同样的image去run，docker run最好理解为创建容器的命令</span></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start CONTAINER_NAME/ID</span><br></pre></td></tr></table></figure></div>
+
+<p>You can restart a stopped container with all its previous changes intact using <code>docker start</code>. Use <code>docker ps -a</code> to view a list of all containers, including those that are stopped.</p>
+<p><span style= 'color:black;background:MediumTurquoise'>startで运行一个Linux容器，不会像runのように瞬间就exit了，而是会停住，像是run -dみたい</span></p>
+<p><strong>Execute a command in a running container</strong></p>
+<p><code>docker exec</code>一定要先有一个运行中的容器</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -t -d --name justTest alpine</span><br></pre></td></tr></table></figure></div>
+
+<p>(run的<code>-d</code>参数: Run container in background and print container ID</p>
+<p><code>-t</code>参数: Allocate a pseudo-TTY，分配一个终端，不然没有prompt)</p>
+<p>或者<code>start</code>起个容器 (start才是常态)</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo docker exec -d justTest touch /tmp/execWorks</span><br><span class="line">sudo docker exec -it justTest sh</span><br></pre></td></tr></table></figure></div>
+
+<p>cd到tmp查看，真的有个execWorks文件</p>
+<p><span style= 'color:black;background:SkyBlue'>这样其实就相当于有了个服务器，可以练习运维基本功了，装nginx，配置文件</span></p>
+<p><strong>终止运行中的容器</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop CONTAINER_NAME/ID</span><br></pre></td></tr></table></figure></div>
+
+<p><code>docker kill</code>也行</p>
+<p>停止所有运行中的容器，省得一个个敲了</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker stop $(sudo docker ps -q)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>Remove one or more containers</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm CONTAINER_NAME/ID</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>Remove one or more images</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi IMAGE_NAME/ID</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>Fetch the logs of a container 用来看报错信息</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker logs CONTAINER_NAME/ID</span><br></pre></td></tr></table></figure></div>
+
+<p>trouble shooting</p>
+<p><strong>查看运行中容器统计数据(CPU，内存，网络) Display a live stream of container(s) resource usage statistics</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stats</span><br></pre></td></tr></table></figure></div>
+
+<p><code>Ctrl + c</code>退出</p>
+<p><strong>查看某个容器的更具体信息</strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect CONTAINER_NAME/ID</span><br></pre></td></tr></table></figure></div>
+
+<p>以JSON格式返回</p>
+<h3 id="Dockerfile-build"><a href="#Dockerfile-build" class="headerlink" title="Dockerfile &amp; build"></a>Dockerfile &amp; build</h3><p>试着给我的arxivkids的前端写个Dockerfile (其实还需要.dockerignore忽略掉node_modules)</p>
+<div class="highlight-container" data-rel="Dockerfile"><figure class="iseeu highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> node:alpine</span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /usr/app</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> package.json .</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> npm install</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> . .</span></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;npm&quot;</span>, <span class="string">&quot;run&quot;</span>, <span class="string">&quot;dev&quot;</span>]</span></span><br></pre></td></tr></table></figure></div>
+
+<p>FROM基于的依赖base</p>
+<p>WORKDIR指定(specify)要打包的东西都塞到这个目录里，防止和容器里原有的文件重名冲突</p>
+<p>COPY把要打包的东西都复制到容器里，第一个.指的是当前目录，也就是Dockerfile所在的目录，第二个.表示目标路径，它是相对于Docker镜像中的当前工作目录的路径。Docker镜像中的当前工作目录是通过<code>WORKDIR</code>指令设置的</p>
+<p>半成品image实例化的intermediate容器会执行RUN的命令，RUN通常用来装依赖。之所以是中间容器，是因为生成的文件目录还要被拷贝回镜像里面，还是属于生成image的阶段。</p>
+<p>CMD则是最终image实例化的容器执行的</p>
+<hr>
+<p>从Dockerfile构建image</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t image_name .</span><br></pre></td></tr></table></figure></div>
+
+<p>.代表Dockerfile就在当前终端目录</p>
+<p>具体参考<code>man docker build</code></p>
+<p>生成的image似乎只能通过<code>docker images</code>查看，不知道被存放在本地的哪里</p>
+<p>注意把容器的端口绑定到本机的端口。不然不带<code>-p</code>的话直接浏览器输入<code>127.0.0.1：5173</code>啥都没有的，即使容器已经运行了。</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -d --name container_name -p 8080:5173 image_name</span><br></pre></td></tr></table></figure></div>
+
+<p>这样浏览器里访问本机8080端口，本机8080端口请求都绑定到容器的5173端口，容器运行的端口是5173</p>
+<p>当然还是一样的端口更おすすめ吧</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -d --name frontend -p 5173:5173 arxivkids_client</span><br></pre></td></tr></table></figure></div>
+
+<p>但如果你要起多个容器，它们都用了80端口，那你就可以本机host的端口分别是80,81,82…，但不影响各个容器里面还是80端口</p>
+<h3 id="Docker-Compose-1"><a href="#Docker-Compose-1" class="headerlink" title="Docker Compose"></a>Docker Compose</h3><p>mkdir个文件夹，cd进去，写docker-compose.yaml</p>
+<p>例: <a class="link"   target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=DM65_JyGxCo" >Docker Compose will BLOW your MIND!! <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Yaml"><figure class="iseeu highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&quot;3&quot;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">website:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8081:80&quot;</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">  <span class="attr">website2:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8082:80&quot;</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br></pre></td></tr></table></figure></div>
+
+<p>然后可以不用传统的docker run方式起容器了，尤其是当参数多、起多个同样的容器时，用docker-compose更便捷</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -itd --name web -p 8080:80 nginx</span><br></pre></td></tr></table></figure></div>
+
+<p><font color='tomato'>但注意: <strong><code>docker-compose</code>命令一定要在docker-compose.yaml的目录下执行</strong></font>，不然会报错<font color='coral'>no configuration file provided</font></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo docker-compose up -d	相当于按照.yaml配置のようにdocker run</span><br><span class="line">sudo docker-compose stop</span><br><span class="line">sudo docker-compose down	stop并且把容器remove了</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a class="link"   target="_blank" rel="noopener" href="https://docs.docker.com/" >https://docs.docker.com/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 官方文档</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/commandline/run/" >https://docs.docker.com/engine/reference/commandline/run/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 色々命令</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://yeasy.gitbook.io/docker_practice/" >https://yeasy.gitbook.io/docker_practice/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> ある中文教程</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Docker" >https://wiki.archlinux.org/title/Docker <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://hub.docker.com/" >https://hub.docker.com/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> docker hub</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://github.com/docker/awesome-compose" >https://github.com/docker/awesome-compose <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> docker-compose的例子</p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 230716_再学docker</li>
+        <li><strong>Author:</strong> Haoliang Tang</li>
+        <li><strong>Created at
+                :</strong> 2023-07-16 00:00:00</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2023-11-02 20:24:18
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://hl-tang.github.io/2023/07/16/230716_再学docker/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+            This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0</a>.
+            
+
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                        rel="prev"
+                        href="/2023/07/21/230721_%E5%88%9D%E3%82%81%E3%81%A6%E3%81%AENginx%E4%BD%93%E9%A8%93/"
+                        >
+                            <span class="left arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">230721_初めてのNginx体験</span>
+                                <span class="post-nav-item">Prev posts</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                        rel="next"
+                        href="/2023/07/15/230715_SSH%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6/"
+                        >
+                            <span class="title flex justify-center items-center">
+                                <span class="post-nav-title-item">230715_SSH远程控制</span>
+                                <span class="post-nav-item">Next posts</span>
+                            </span>
+                            <span class="right arrow-icon flex justify-center items-center">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+
+        
+            <div class="comment-container">
+                <div class="comments-container pjax">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fa-solid fa-comments"></i>&nbsp;Comments
+    </div>
+    
+
+        
+            
+ 
+    <div id="waline"></div>
+    <script type="module"  data-swup-reload-script>
+        import { init } from '/js/libs/waline.mjs';
+
+        function loadWaline() {
+            init({
+                el: '#waline',
+                serverURL: 'https://example.example.com',
+                lang: 'zh-CN',
+                dark: 'body[class~="dark-mode"]',
+                requiredMeta: ['nick','mail'], // cannot customize by theme config, change it yourself
+            });
+        }
+
+        if ('true') {
+            const loadWalineTimeout = setTimeout(() => {
+                loadWaline();
+                clearTimeout(loadWalineTimeout);
+            }, 1000);
+        } else {
+            window.addEventListener('DOMContentLoaded', loadWaline);
+        }
+        
+    </script>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+
+    
+        <div class="toc-content-container">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <div class="toc-title">On this page</div>
+        <div class="page-title">230716_再学docker</div>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D"><span class="nav-text">原理介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Architecture"><span class="nav-text">Architecture</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88docker%E6%AF%94%E8%99%9A%E6%8B%9F%E6%9C%BA%E8%BD%BB%E9%87%8F%EF%BC%8C%E5%BF%AB%EF%BC%9F"><span class="nav-text">为什么docker比虚拟机轻量，快？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-Docker"><span class="nav-text">Install Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-Compose"><span class="nav-text">Docker Compose</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-Desktop"><span class="nav-text">Docker Desktop</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C"><span class="nav-text">操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Dockerfile-build"><span class="nav-text">Dockerfile &amp; build</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-Compose-1"><span class="nav-text">Docker Compose</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-text">参考资料</span></a></li></ol>
+
+    </div>
+</div>
+        </div>
+    
+</div>
+
+
+
+                
+
+            </div>
+
+            
+
+        </div>
+
+        <div class="main-content-footer">
+            <footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2023&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Haoliang Tang</a>
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.5.0</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="article-tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="right-bottom-tools page-aside-toggle">
+                <i class="fa-regular fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fa-regular fa-comments"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-side-tools-container">
+        <div class="side-tools-container">
+    <ul class="hidden-tools-list">
+        <li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-plus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+            <i class="fa-regular fa-magnifying-glass-minus"></i>
+        </li>
+
+        <li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+            <i class="fa-regular fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+
+        <li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+            <i class="fa-regular fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="visible-tools-list">
+        <li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+            <i class="fa-regular fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fa-solid fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="Search..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fa-solid fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+    
+<script src="/js/libs/Swup.min.js"></script>
+
+<script src="/js/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+
+
+
+<script src="/js/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/utils.js" type="module"></script>
+
+<script src="/js/main.js" type="module"></script>
+
+<script src="/js/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/tools/runtime.js"></script>
+
+    
+<script src="/js/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/libs/Typed.min.js"></script>
+
+  
+<script src="/js/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+<div class="post-scripts" data-swup-reload-script>
+    
+        
+<script src="/js/libs/anime.min.js"></script>
+
+        
+<script src="/js/tools/tocToggle.js" type="module"></script>
+
+<script src="/js/layouts/toc.js" type="module"></script>
+
+<script src="/js/plugins/tabs.js" type="module"></script>
+
+    
+</div>
+
+
+</body>
+</html>
