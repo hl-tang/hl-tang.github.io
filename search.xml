@@ -280,6 +280,87 @@
       </tags>
   </entry>
   <entry>
+    <title>230508_conda创建python虚拟环境</title>
+    <url>/2023/05/08/230508_conda%E5%88%9B%E5%BB%BApython%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/</url>
+    <content><![CDATA[<p>conda就和nvm一样，作为独立于系统的虚拟环境。conda可以看作是高于python一个层级，就像nvm高于node一级，可以管理着不同版本的node。</p>
+<p>conda创建不同的虚拟环境，各个虚拟环境要有一个名字，一个python版本号，然后各自的pip list，和本机系统无关。</p>
+<p>conda并不是一个python的包，所以pip list里是没有conda的。它是高于python一级的虚拟环境软件。</p>
+<p>开启conda后，<code>deactivate</code>就回到本机系统的python环境</p>
+<hr>
+<p>再强调下：conda的目的就是用来管理Python虚拟环境的，而不用conda来装或者管理python包，包管理还是用pip。</p>
+<p>Python虚拟环境管理还有venv之类的，但我还是倾向用conda，因为conda不需要记虚拟环境的绝对路径，任何目录下开终端都可以工作</p>
+<h2 id="安装conda"><a href="#安装conda" class="headerlink" title="安装conda"></a>安装conda</h2><p>可以装anaconda或者我只需要conda的功能就只装miniconda</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S miniconda</span><br></pre></td></tr></table></figure></div>
+
+<p>(上面是用了archlinuxcn的包)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">yay -S miniconda3</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>但是安装完以后，命令行shell还不能识别<code>conda</code>。其实安装完conda后会有提示信息告诉你怎么做</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">If your shell is Bash or a Bourne variant, enable conda for the current user with</span><br><span class="line"></span><br><span class="line">    $ echo &quot;[ -f /opt/miniconda3/etc/profile.d/conda.sh ] &amp;&amp; source /opt/miniconda3/etc/profile.d/conda.sh&quot; &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br><span class="line">or, for all users, enable conda with</span><br><span class="line"></span><br><span class="line">    $ sudo ln -s /opt/miniconda3/etc/profile.d/conda.sh /etc/profile.d/conda.sh</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>zsh需要在~&#x2F;.zshrc配置文件中，添加一句话</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">source /opt/miniconda3/etc/profile.d/conda.sh</span><br></pre></td></tr></table></figure></div>
+
+<p>复制到文件末尾就好了</p>
+<p>fish的话和配置nvm如出一辙，编辑~&#x2F;.config&#x2F;fish&#x2F;config.fish: (前提omf&#x2F;fisher装了bass)</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">function conda</span><br><span class="line">    bass source /opt/miniconda3/etc/profile.d/conda.sh &#x27;;&#x27; conda $argv</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
+
+<p>(或者<code>conda init fish</code>就好了)</p>
+<p><strong>でも、より良いやり方：和刚才zsh的办法对应</strong>，在~&#x2F;.config&#x2F;fish&#x2F;config.fish配置文件中，添加一句话</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">source /opt/miniconda3/etc/fish/conf.d/conda.fish</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>change owner以便可以修改文件たり，复制黏贴envs下的虚拟环境たり</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo chown -R hl_tang:hl_tang /opt/miniconda3</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="创建虚拟环境"><a href="#创建虚拟环境" class="headerlink" title="创建虚拟环境"></a>创建虚拟环境</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">conda create -n tf1 python=3.6</span><br></pre></td></tr></table></figure></div>
+
+<p>-n后面是虚拟环境的名称，这里叫tf1，是我想再安装个tensorflow1的环境，本机是tensorflow2</p>
+<p>然后指定python版本</p>
+<p>environment location在: <del>&#x2F;home&#x2F;hl_tang&#x2F;.conda&#x2F;envs&#x2F;tf1</del> &#x2F;opt&#x2F;miniconda&#x2F;envs&#x2F;tf1&#x2F;bin&#x2F;python</p>
+<p>activate后，用<code>which python</code>可以查看虚拟环境存放在哪里 (<code>whereis</code>列出更全)</p>
+<p>当我降级了&#x2F;opt的权限后，虚拟环境在&#x2F;opt&#x2F;miniconda&#x2F;envsにある</p>
+<h2 id="激活与关闭虚拟环境"><a href="#激活与关闭虚拟环境" class="headerlink" title="激活与关闭虚拟环境"></a>激活与关闭虚拟环境</h2><p>To activate this environment, use</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ conda activate tf1</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>To deactivate an active environment, use</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ conda deactivate</span><br></pre></td></tr></table></figure></div>
+
+<hr>
+<p>activate了以后，<code>python -V</code>就是虚拟环境的python版本了</p>
+<h2 id="删除虚拟环境"><a href="#删除虚拟环境" class="headerlink" title="删除虚拟环境"></a>删除虚拟环境</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">conda remove -n 需要删除的环境名 --all</span><br></pre></td></tr></table></figure></div>
+
+
+
+<hr>
+<p>ps: 一开始创建的虚拟环境是python3.9然后尝试pip install tensorflow，结果只能装tensorflow2</p>
+<p>后来删了重建虚拟环境python3.6，<code>pip install tensorflow==1.15</code>成功安装</p>
+<hr>
+<p>230815更新</p>
+<p>AUR中的<code>miniconda3</code>升级到23.5.2-1后出现问题<font color='salmon'>AttributeError: module ‘cryptography.hazmat.backends’ has no attribute ‘openssl’</font></p>
+<p>解决：</p>
+<p>进入conda安装目录下的bin目录，使用其下的pip删除旧版的包，然后重装新版的。</p>
+<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">/opt/miniconda3/bin</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">./pip list | grep pyOpenSSL</span></span><br><span class="line">pyOpenSSL                23.0.0</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">./pip list | grep cryptography</span></span><br><span class="line">cryptography             39.0.1</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo ./pip uninstall cryptography pyOpenSSL</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo ./pip install cryptography pyOpenSSL</span></span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">conda env list</span><br></pre></td></tr></table></figure></div>
+
+<p>就正常了</p>
+]]></content>
+      <tags>
+        <tag>Python</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>230715_SSH远程控制</title>
     <url>/2023/07/15/230715_SSH%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6/</url>
     <content><![CDATA[<p>OpenSSH是ssh协议的一种实现</p>
@@ -549,87 +630,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>230508_conda创建python虚拟环境</title>
-    <url>/2023/05/08/230508_conda%E5%88%9B%E5%BB%BApython%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/</url>
-    <content><![CDATA[<p>conda就和nvm一样，作为独立于系统的虚拟环境。conda可以看作是高于python一个层级，就像nvm高于node一级，可以管理着不同版本的node。</p>
-<p>conda创建不同的虚拟环境，各个虚拟环境要有一个名字，一个python版本号，然后各自的pip list，和本机系统无关。</p>
-<p>conda并不是一个python的包，所以pip list里是没有conda的。它是高于python一级的虚拟环境软件。</p>
-<p>开启conda后，<code>deactivate</code>就回到本机系统的python环境</p>
-<hr>
-<p>再强调下：conda的目的就是用来管理Python虚拟环境的，而不用conda来装或者管理python包，包管理还是用pip。</p>
-<p>Python虚拟环境管理还有venv之类的，但我还是倾向用conda，因为conda不需要记虚拟环境的绝对路径，任何目录下开终端都可以工作</p>
-<h2 id="安装conda"><a href="#安装conda" class="headerlink" title="安装conda"></a>安装conda</h2><p>可以装anaconda或者我只需要conda的功能就只装miniconda</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S miniconda</span><br></pre></td></tr></table></figure></div>
-
-<p>(上面是用了archlinuxcn的包)</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">yay -S miniconda3</span><br></pre></td></tr></table></figure></div>
-
-
-
-<p>但是安装完以后，命令行shell还不能识别<code>conda</code>。其实安装完conda后会有提示信息告诉你怎么做</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">If your shell is Bash or a Bourne variant, enable conda for the current user with</span><br><span class="line"></span><br><span class="line">    $ echo &quot;[ -f /opt/miniconda3/etc/profile.d/conda.sh ] &amp;&amp; source /opt/miniconda3/etc/profile.d/conda.sh&quot; &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br><span class="line">or, for all users, enable conda with</span><br><span class="line"></span><br><span class="line">    $ sudo ln -s /opt/miniconda3/etc/profile.d/conda.sh /etc/profile.d/conda.sh</span><br></pre></td></tr></table></figure></div>
-
-
-
-<p>zsh需要在~&#x2F;.zshrc配置文件中，添加一句话</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">source /opt/miniconda3/etc/profile.d/conda.sh</span><br></pre></td></tr></table></figure></div>
-
-<p>复制到文件末尾就好了</p>
-<p>fish的话和配置nvm如出一辙，编辑~&#x2F;.config&#x2F;fish&#x2F;config.fish: (前提omf&#x2F;fisher装了bass)</p>
-<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line">function conda</span><br><span class="line">    bass source /opt/miniconda3/etc/profile.d/conda.sh &#x27;;&#x27; conda $argv</span><br><span class="line">end</span><br></pre></td></tr></table></figure></div>
-
-<p>(或者<code>conda init fish</code>就好了)</p>
-<p><strong>でも、より良いやり方：和刚才zsh的办法对应</strong>，在~&#x2F;.config&#x2F;fish&#x2F;config.fish配置文件中，添加一句话</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">source /opt/miniconda3/etc/fish/conf.d/conda.fish</span><br></pre></td></tr></table></figure></div>
-
-
-
-<p>change owner以便可以修改文件たり，复制黏贴envs下的虚拟环境たり</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo chown -R hl_tang:hl_tang /opt/miniconda3</span><br></pre></td></tr></table></figure></div>
-
-
-
-<h2 id="创建虚拟环境"><a href="#创建虚拟环境" class="headerlink" title="创建虚拟环境"></a>创建虚拟环境</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">conda create -n tf1 python=3.6</span><br></pre></td></tr></table></figure></div>
-
-<p>-n后面是虚拟环境的名称，这里叫tf1，是我想再安装个tensorflow1的环境，本机是tensorflow2</p>
-<p>然后指定python版本</p>
-<p>environment location在: <del>&#x2F;home&#x2F;hl_tang&#x2F;.conda&#x2F;envs&#x2F;tf1</del> &#x2F;opt&#x2F;miniconda&#x2F;envs&#x2F;tf1&#x2F;bin&#x2F;python</p>
-<p>activate后，用<code>which python</code>可以查看虚拟环境存放在哪里 (<code>whereis</code>列出更全)</p>
-<p>当我降级了&#x2F;opt的权限后，虚拟环境在&#x2F;opt&#x2F;miniconda&#x2F;envsにある</p>
-<h2 id="激活与关闭虚拟环境"><a href="#激活与关闭虚拟环境" class="headerlink" title="激活与关闭虚拟环境"></a>激活与关闭虚拟环境</h2><p>To activate this environment, use</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ conda activate tf1</span><br></pre></td></tr></table></figure></div>
-
-
-
-<p>To deactivate an active environment, use</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ conda deactivate</span><br></pre></td></tr></table></figure></div>
-
-<hr>
-<p>activate了以后，<code>python -V</code>就是虚拟环境的python版本了</p>
-<h2 id="删除虚拟环境"><a href="#删除虚拟环境" class="headerlink" title="删除虚拟环境"></a>删除虚拟环境</h2><div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">conda remove -n 需要删除的环境名 --all</span><br></pre></td></tr></table></figure></div>
-
-
-
-<hr>
-<p>ps: 一开始创建的虚拟环境是python3.9然后尝试pip install tensorflow，结果只能装tensorflow2</p>
-<p>后来删了重建虚拟环境python3.6，<code>pip install tensorflow==1.15</code>成功安装</p>
-<hr>
-<p>230815更新</p>
-<p>AUR中的<code>miniconda3</code>升级到23.5.2-1后出现问题<font color='salmon'>AttributeError: module ‘cryptography.hazmat.backends’ has no attribute ‘openssl’</font></p>
-<p>解决：</p>
-<p>进入conda安装目录下的bin目录，使用其下的pip删除旧版的包，然后重装新版的。</p>
-<div class="highlight-container" data-rel="Shell"><figure class="iseeu highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">/opt/miniconda3/bin</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">./pip list | grep pyOpenSSL</span></span><br><span class="line">pyOpenSSL                23.0.0</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">./pip list | grep cryptography</span></span><br><span class="line">cryptography             39.0.1</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo ./pip uninstall cryptography pyOpenSSL</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo ./pip install cryptography pyOpenSSL</span></span><br></pre></td></tr></table></figure></div>
-
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">conda env list</span><br></pre></td></tr></table></figure></div>
-
-<p>就正常了</p>
-]]></content>
-      <tags>
-        <tag>Python</tag>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>230721_初めてのNginx体験</title>
     <url>/2023/07/21/230721_%E5%88%9D%E3%82%81%E3%81%A6%E3%81%AENginx%E4%BD%93%E9%A8%93/</url>
     <content><![CDATA[<p>部署的流れ：把打包后的folder放到<code>/srv</code>下(这里就是放服务器的目录，虽说放哪里都行只要nginx.conf配置了对应的路径，但最好放&#x2F;srv下面吧)；配置<code>/etc/nginx</code>下的<code>nginx.conf</code>(&#x2F;etc就是放各种配置文件的)；<code>systemctl start nginx</code>开启服务，如果刚改完nginx.conf配置需要重启<code>systemctl restart nginx</code>；然后浏览器输入<code>http://127.0.0.1/</code>or<code>localhost</code>（127.0.0.1的域名）应该就能看到了，Nginx默认端口80</p>
@@ -882,83 +882,6 @@
       </tags>
   </entry>
   <entry>
-    <title>231003_Linux上跑KVM虚拟机</title>
-    <url>/2023/10/03/231003_Linux%E4%B8%8A%E8%B7%91KVM%E8%99%9A%E6%8B%9F%E6%9C%BA/</url>
-    <content><![CDATA[<p>既然我本机是Linux，那运行虚拟机何不用KVM呢。如果是win&#x2F;mac，那还用不了KVM(1类虚拟机)，只能用virtualbox,vmware(2类虚拟机)。</p>
-<p>流れ简单说就是：安装环境；启动libvirt daemon；开启虚拟网络；virt-manager作为前端界面可以在里面操作了</p>
-<p>检查处理器是否支持硬件虚拟化</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">LC_ALL=C lscpu | grep Virtualization</span><br></pre></td></tr></table></figure></div>
-
-<p>现在的处理器肯定都是支持的，If it looks like your processor does not support virtualization, it is almost certainly turned off in the BIOS.</p>
-<p>KVM(Kernel-based Virtual Machine)集中在Linux内核里了，不需要安装</p>
-<p>安装qemu</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S qemu</span><br></pre></td></tr></table></figure></div>
-
-<p>选qemu-full</p>
-<p>安装libvert (检查<a class="link"   href="https://archlinux.org/packages/?name=iptables-nft" >iptables-nft <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>有没有，没的话装上)</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S libvirt</span><br></pre></td></tr></table></figure></div>
-
-
-
-<p>安装virt-manager</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S virt-manager</span><br></pre></td></tr></table></figure></div>
-
-
-
-<p>&#x3D;&#x3D;<strong>开启libvirt daemon</strong> (不然之后的virshなど都用不了)&#x3D;&#x3D;</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl start libvirtd</span><br></pre></td></tr></table></figure></div>
-
-
-
-<p>加入libvirt user group (archwiki写了，<del>但我没这样做</del> 担心和虚拟机的稳定性有关，还是加入了)</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo usermod -a -G libvirt $(whoami)</span><br></pre></td></tr></table></figure></div>
-
-<p>应该打开virt-manager不需要输入口令了</p>
-<p>安装其他可能有用的包</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S ovmf vde2 dnsmasq bridge-utils openbsd-netcat</span><br></pre></td></tr></table></figure></div>
-
-<p>(archwikiによると、ebtables已经被iptables的功能包含了，所以不需要了)</p>
-<p>创建的虚拟机的<span style= 'color:black;background:LightPink'>虚拟硬盘存放在&#x2F;var&#x2F;lib&#x2F;libvirt&#x2F;images</span>下面.qcow2文件</p>
-<p>用virt-manager创建虚拟机，startしようとするところ、虚拟网络报错：</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">Requested operation is not valid: network &#x27;default&#x27; is not active</span><br></pre></td></tr></table></figure></div>
-
-<p>解决：<a class="link"   href="https://askubuntu.com/questions/1036297/cant-start-kvm-guest-network-default-is-not-active" >https://askubuntu.com/questions/1036297/cant-start-kvm-guest-network-default-is-not-active <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<p>First, confirm that the default network is indeed inactive:</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo virsh net-list --all</span><br></pre></td></tr></table></figure></div>
-
-<p>If so, &#x3D;&#x3D;start the default network&#x3D;&#x3D;:</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo virsh net-start default</span><br></pre></td></tr></table></figure></div>
-
-<p>Run the first command line again to see if it worked.</p>
-<p><a class="link"   href="https://github.com/kubernetes/minikube/issues/828" >https://github.com/kubernetes/minikube/issues/828 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 这里还看到了</p>
-<p>First time users need currently do:</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">virsh net-autostart default</span><br><span class="line">virsh net-start default</span><br></pre></td></tr></table></figure></div>
-
-<p>虽然我net-autostart就没実行了</p>
-<hr>
-<p>但我<code>sudo virsh net-start default</code>又报错：</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">error: Failed to start network default</span><br><span class="line">error: internal error: firewalld is set to use the nftables backend, but the required firewalld &#x27;libvirt&#x27; zone is missing. Either set the firewalld backend to &#x27;iptables&#x27;, or ensure that firewalld has a &#x27;libvirt&#x27; zone by upgrading firewalld to a version supporting rule priorities (0.7.0+) and/or rebuilding libvirt with --with-firewalld-zone</span><br></pre></td></tr></table></figure></div>
-
-<p>问了chatgpt，我就试着开启iptables</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl start iptables</span><br></pre></td></tr></table></figure></div>
-
-<p>然后再尝试运行虚拟机，结果它就起来了</p>
-<h2 id="macOS虚拟机を環境構築してみる"><a href="#macOS虚拟机を環境構築してみる" class="headerlink" title="macOS虚拟机を環境構築してみる"></a>macOS虚拟机を環境構築してみる</h2><p><a class="link"   href="https://christitus.com/macos-on-linux/" >https://christitus.com/macos-on-linux/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> &amp; <a class="link"   href="https://www.youtube.com/watch?v=dMLNP6FfhkI" >https://www.youtube.com/watch?v=dMLNP6FfhkI <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 但用的仓库有点旧了</p>
-<p>需要安装dmg2img</p>
-<p><a class="link"   href="https://github.com/kholia/OSX-KVM" >https://github.com/kholia/OSX-KVM <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> これにしよう</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a class="link"   href="https://wiki.archlinux.org/title/KVM" >https://wiki.archlinux.org/title/KVM <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<p><a class="link"   href="https://wiki.archlinux.org/title/QEMU" >https://wiki.archlinux.org/title/QEMU <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<p><a class="link"   href="https://wiki.archlinux.org/title/Libvirt" >https://wiki.archlinux.org/title/Libvirt <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<p><a class="link"   href="https://wiki.archlinux.org/title/Virt-manager" >https://wiki.archlinux.org/title/Virt-manager <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<p><a class="link"   href="https://www.youtube.com/watch?v=p1d_b_91YlU" >Virt-Manager Is The Better Way To Manage VMs <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<p><a class="link"   href="https://www.youtube.com/watch?v=itZf5FpDcV0" >KVM - A great virtualization solution for Linux <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 用的不是default的虚拟网络</p>
-<p><a class="link"   href="https://computingforgeeks.com/install-kvm-qemu-virt-manager-arch-manjar/" >https://computingforgeeks.com/install-kvm-qemu-virt-manager-arch-manjar/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-]]></content>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>230912_再学vim</title>
     <url>/2023/09/12/230912_%E5%86%8D%E5%AD%A6vim/</url>
     <content><![CDATA[<p>最早接触vim这个词是在看HBO的Silicon Valley里的emacs和vim之争，由于我很憧れのRichard Hendricks是emacs党，于是我也暗暗决心当个emacs党。</p>
@@ -1036,6 +959,116 @@
 <p><a class="link"   href="https://www.bilibili.com/video/BV1z541177Jy" >指尖飞舞：vscode + vim 高效开发（系列视频） <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
 <p>cheet sheet <a class="link"   href="https://vim.rtorr.com/lang/en_us/" >https://vim.rtorr.com/lang/en_us/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>231003_Linux上跑KVM虚拟机</title>
+    <url>/2023/10/03/231003_Linux%E4%B8%8A%E8%B7%91KVM%E8%99%9A%E6%8B%9F%E6%9C%BA/</url>
+    <content><![CDATA[<p>既然我本机是Linux，那运行虚拟机何不用KVM呢。如果是win&#x2F;mac，那还用不了KVM(1类虚拟机)，只能用virtualbox,vmware(2类虚拟机)。</p>
+<p>流れ简单说就是：安装环境；启动libvirt daemon；开启虚拟网络；virt-manager作为前端界面可以在里面操作了</p>
+<p>检查处理器是否支持硬件虚拟化</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">LC_ALL=C lscpu | grep Virtualization</span><br></pre></td></tr></table></figure></div>
+
+<p>现在的处理器肯定都是支持的，If it looks like your processor does not support virtualization, it is almost certainly turned off in the BIOS.</p>
+<p>KVM(Kernel-based Virtual Machine)集中在Linux内核里了，不需要安装</p>
+<p>安装qemu</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S qemu</span><br></pre></td></tr></table></figure></div>
+
+<p>选qemu-full</p>
+<p>安装libvert (检查<a class="link"   href="https://archlinux.org/packages/?name=iptables-nft" >iptables-nft <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>有没有，没的话装上)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S libvirt</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>安装virt-manager</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S virt-manager</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>&#x3D;&#x3D;<strong>开启libvirt daemon</strong> (不然之后的virshなど都用不了)&#x3D;&#x3D;</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl start libvirtd</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>加入libvirt user group (archwiki写了，<del>但我没这样做</del> 担心和虚拟机的稳定性有关，还是加入了)</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo usermod -a -G libvirt $(whoami)</span><br></pre></td></tr></table></figure></div>
+
+<p>应该打开virt-manager不需要输入口令了</p>
+<p>安装其他可能有用的包</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S ovmf vde2 dnsmasq bridge-utils openbsd-netcat</span><br></pre></td></tr></table></figure></div>
+
+<p>(archwikiによると、ebtables已经被iptables的功能包含了，所以不需要了)</p>
+<p>创建的虚拟机的<span style= 'color:black;background:LightPink'>虚拟硬盘存放在&#x2F;var&#x2F;lib&#x2F;libvirt&#x2F;images</span>下面.qcow2文件</p>
+<p>用virt-manager创建虚拟机，startしようとするところ、虚拟网络报错：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">Requested operation is not valid: network &#x27;default&#x27; is not active</span><br></pre></td></tr></table></figure></div>
+
+<p>解决：<a class="link"   href="https://askubuntu.com/questions/1036297/cant-start-kvm-guest-network-default-is-not-active" >https://askubuntu.com/questions/1036297/cant-start-kvm-guest-network-default-is-not-active <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>First, confirm that the default network is indeed inactive:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo virsh net-list --all</span><br></pre></td></tr></table></figure></div>
+
+<p>If so, &#x3D;&#x3D;start the default network&#x3D;&#x3D;:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo virsh net-start default</span><br></pre></td></tr></table></figure></div>
+
+<p>Run the first command line again to see if it worked.</p>
+<p><a class="link"   href="https://github.com/kubernetes/minikube/issues/828" >https://github.com/kubernetes/minikube/issues/828 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 这里还看到了</p>
+<p>First time users need currently do:</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">virsh net-autostart default</span><br><span class="line">virsh net-start default</span><br></pre></td></tr></table></figure></div>
+
+<p>虽然我net-autostart就没実行了</p>
+<hr>
+<p>但我<code>sudo virsh net-start default</code>又报错：</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">error: Failed to start network default</span><br><span class="line">error: internal error: firewalld is set to use the nftables backend, but the required firewalld &#x27;libvirt&#x27; zone is missing. Either set the firewalld backend to &#x27;iptables&#x27;, or ensure that firewalld has a &#x27;libvirt&#x27; zone by upgrading firewalld to a version supporting rule priorities (0.7.0+) and/or rebuilding libvirt with --with-firewalld-zone</span><br></pre></td></tr></table></figure></div>
+
+<p>问了chatgpt，我就试着开启iptables</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl start iptables</span><br></pre></td></tr></table></figure></div>
+
+<p>然后再尝试运行虚拟机，结果它就起来了</p>
+<h2 id="macOS虚拟机を環境構築してみる"><a href="#macOS虚拟机を環境構築してみる" class="headerlink" title="macOS虚拟机を環境構築してみる"></a>macOS虚拟机を環境構築してみる</h2><p><a class="link"   href="https://christitus.com/macos-on-linux/" >https://christitus.com/macos-on-linux/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> &amp; <a class="link"   href="https://www.youtube.com/watch?v=dMLNP6FfhkI" >https://www.youtube.com/watch?v=dMLNP6FfhkI <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 但用的仓库有点旧了</p>
+<p>需要安装dmg2img</p>
+<p><a class="link"   href="https://github.com/kholia/OSX-KVM" >https://github.com/kholia/OSX-KVM <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> これにしよう</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a class="link"   href="https://wiki.archlinux.org/title/KVM" >https://wiki.archlinux.org/title/KVM <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://wiki.archlinux.org/title/QEMU" >https://wiki.archlinux.org/title/QEMU <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://wiki.archlinux.org/title/Libvirt" >https://wiki.archlinux.org/title/Libvirt <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://wiki.archlinux.org/title/Virt-manager" >https://wiki.archlinux.org/title/Virt-manager <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=p1d_b_91YlU" >Virt-Manager Is The Better Way To Manage VMs <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=itZf5FpDcV0" >KVM - A great virtualization solution for Linux <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 用的不是default的虚拟网络</p>
+<p><a class="link"   href="https://computingforgeeks.com/install-kvm-qemu-virt-manager-arch-manjar/" >https://computingforgeeks.com/install-kvm-qemu-virt-manager-arch-manjar/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+]]></content>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>231018_EndeavourOS上安装OpenJDK</title>
+    <url>/2023/10/18/231018_EndeavourOS%E4%B8%8A%E5%AE%89%E8%A3%85OpenJDK/</url>
+    <content><![CDATA[<p>两年前在manjaro上配过Java环境，当时是下载的OracleJDK 8。现在尝试在新机上安装OpenJDK 21。</p>
+<p>参考<a class="link"   href="https://wiki.archlinux.org/title/Java" >https://wiki.archlinux.org/title/Java <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>在arch官网的Packages搜索jdk，得知我们要的包名是<code>jdk-openjdk</code></p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">sudo pacman -S jdk-openjdk</span><br></pre></td></tr></table></figure></div>
+
+<p><code>jre-openjdk</code>もちろん也被包含了</p>
+<p>验证</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><code>java-runtime-common</code>也在下载jdk时被一同包括了，里面有一个arch系的helper script，可以<code>archlinux-java &lt;COMMAND&gt;</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">archlinux-java status	列出可用的java环境</span><br><span class="line">archlinux-java set &lt;JAVA_ENV_NAME&gt;	切换不同版本java</span><br></pre></td></tr></table></figure></div>
+
+<hr>
+<p>再尝试安装个jdk8。All these JVM can be installed without conflict and switched between using helper script <code>archlinux-java</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S jdk8-openjdk</span><br></pre></td></tr></table></figure></div>
+
+<p>然后就可以切换了</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo archlinux-java set java-8-openjdk</span><br></pre></td></tr></table></figure></div>
+
+<p>查看，确实变java8了</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure></div>
+
+]]></content>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Java</tag>
+      </tags>
   </entry>
   <entry>
     <title>231101_hexo+GitHubPages搭建个人博客</title>
@@ -1124,36 +1157,93 @@
 ]]></content>
   </entry>
   <entry>
-    <title>231018_EndeavourOS上安装OpenJDK</title>
-    <url>/2023/10/18/231018_EndeavourOS%E4%B8%8A%E5%AE%89%E8%A3%85OpenJDK/</url>
-    <content><![CDATA[<p>两年前在manjaro上配过Java环境，当时是下载的OracleJDK 8。现在尝试在新机上安装OpenJDK 21。</p>
-<p>参考<a class="link"   href="https://wiki.archlinux.org/title/Java" >https://wiki.archlinux.org/title/Java <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
-<p>在arch官网的Packages搜索jdk，得知我们要的包名是<code>jdk-openjdk</code></p>
-<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">sudo pacman -S jdk-openjdk</span><br></pre></td></tr></table></figure></div>
+    <title>231219_学习React Native</title>
+    <url>/2023/12/19/231219_%E5%AD%A6%E4%B9%A0React%20Native/</url>
+    <content><![CDATA[<p>跟着<a class="link"   href="https://www.youtube.com/watch?v=1oYw1uwDZb8" >https://www.youtube.com/watch?v=1oYw1uwDZb8 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 边做边学，然后自己魔改一个</p>
+<h2 id="環境構築"><a href="#環境構築" class="headerlink" title="環境構築"></a>環境構築</h2><p>正如 <a class="link"   href="https://reactnative.dev/docs/environment-setup" >https://reactnative.dev/docs/environment-setup <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 官方文档通り，有两种方式。</p>
+<ul>
+<li>新手适合用<code>Expo Go</code>，类似一个沙盒环境</li>
+<li>移动端ベテラン可以考虑用<code>React Native CLI</code>。需要安装配置好<code>Android Studio</code>或<code>Xcode</code></li>
+</ul>
+<p>我是移动端初心者，今の所就用<code>Expo Go</code>吧</p>
+<hr />
 
-<p><code>jre-openjdk</code>もちろん也被包含了</p>
-<p>验证</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure></div>
+<p><code>create-expo-app</code>创建React Native project</p>
+<p><code>expo start</code>会让<code>Expo CLI</code>起一个development server，并生成一个二维码</p>
+<div class="highlight-container" data-rel="Sh"><figure class="iseeu highlight sh"><table><tr><td class="code"><pre><span class="line">npx create-expo-app AwesomeProject</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> AwesomeProject</span><br><span class="line">npx expo start</span><br></pre></td></tr></table></figure></div>
 
 
 
-<p><code>java-runtime-common</code>也在下载jdk时被一同包括了，里面有一个arch系的helper script，可以<code>archlinux-java &lt;COMMAND&gt;</code></p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">archlinux-java status	列出可用的java环境</span><br><span class="line">archlinux-java set &lt;JAVA_ENV_NAME&gt;	切换不同版本java</span><br></pre></td></tr></table></figure></div>
+<p>然后手机上安装<code>Expo Go</code> app，手机和电脑连上相同的wifi，扫二维码，运行项目</p>
+<p>如果扫二维码后连接不上项目，log里报错failed to connect to，参考 <a class="link"   href="https://stackoverflow.com/questions/66573454/expo-go-cant-connect-with-project" >https://stackoverflow.com/questions/66573454/expo-go-cant-connect-with-project <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> ，用tunnel隧道连接。<em>用了tunnel也不需要手机电脑连相同wifi了</em></p>
+<p>但expo文档也说了Using the <strong>Tunnel</strong> connection type will make the app reloads considerably slower than on <strong>LAN</strong> or <strong>Local</strong>, so it’s best to avoid tunnel when possible. You may want to install an emulator&#x2F;simulator to speed up development if <strong>Tunnel</strong> is required for accessing your machine from another device on your network.</p>
+<h4 id="Develop-for-Web"><a href="#Develop-for-Web" class="headerlink" title="Develop for Web"></a>Develop for Web</h4><p><a class="link"   href="https://docs.expo.dev/workflow/web/" >https://docs.expo.dev/workflow/web/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">npx expo install react-dom react-native-web @expo/webpack-config</span><br></pre></td></tr></table></figure></div>
 
-<hr>
-<p>再尝试安装个jdk8。All these JVM can be installed without conflict and switched between using helper script <code>archlinux-java</code></p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo pacman -S jdk8-openjdk</span><br></pre></td></tr></table></figure></div>
+<p>可以尝试web打开，<code>npm run web</code>实质就是<code>expo start --web</code>（但不知道为啥<code>npx expo start --web</code>才work）</p>
+<h4 id="Android-Studio-Emulator"><a href="#Android-Studio-Emulator" class="headerlink" title="Android Studio Emulator"></a>Android Studio Emulator</h4><p><a class="link"   href="https://docs.expo.dev/workflow/android-studio-emulator/" >https://docs.expo.dev/workflow/android-studio-emulator/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">yay -S android-studio</span><br></pre></td></tr></table></figure></div>
 
-<p>然后就可以切换了</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo archlinux-java set java-8-openjdk</span><br></pre></td></tr></table></figure></div>
+<p>然后照着文档做</p>
+<p>kvm硬件加速安卓模拟器  <a class="link"   href="https://developer.android.com/studio/run/emulator-acceleration?utm_source=android-studio#vm-linux" >https://developer.android.com/studio/run/emulator-acceleration?utm_source=android-studio#vm-linux <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>给zsh和fish添加环境变量：<code>~/.zshrc</code>和<code>~/.config/fish/config.fish</code>中写入</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">export ANDROID_HOME=/home/hl_tang/Android/Sdk</span><br><span class="line">export PATH=$PATH:$ANDROID_HOME/emulator</span><br><span class="line">export PATH=$PATH:$ANDROID_HOME/platform-tools</span><br></pre></td></tr></table></figure></div>
 
-<p>查看，确实变java8了</p>
-<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure></div>
+<p>当前终端下输入<code>source $HOME/.zshrc</code>&amp;<code>source ~/.config/fish/config.fish</code>来reload环境变量</p>
+<p>最终目的是可以run <code>adb</code> from your terminal.</p>
+<p><strong>但我实践下来zsh没问题，fish添加这三行后报错估计是和tide有关系，不过先从fish切到zsh后运行adb再切回fish后也可以识别adb了</strong></p>
+<p>如果终端可以识别<code>adb</code>的话，那就可以<code>npm run android</code>在模拟器上运行</p>
+<h3 id="关于Expo的一些坑"><a href="#关于Expo的一些坑" class="headerlink" title="关于Expo的一些坑"></a>关于Expo的一些坑</h3><p><strong>最好装上<code>expo-cli</code></strong></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">yay -S expo-cli</span><br></pre></td></tr></table></figure></div>
 
+<p>然后<code>npm list -g</code>也有<code>expo-cli</code>了（虽然我挺排斥全局安装的）（但真的有项目<code>npx expo start</code>跑不起来，但装了<code>expo-cli</code>就跑起来了）</p>
+<p>既然都装了<code>expo-cli</code>，也没必要再<code>npx</code>了。shell已经能识别<code>expo</code>命令了</p>
+<p><strong>关于tunnel</strong></p>
+<p><a class="link"   href="https://docs.expo.dev/get-started/create-a-project/" >https://docs.expo.dev/get-started/create-a-project/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 看”Is the app not loading on your device?”</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">First, make sure you are on the same Wi-Fi network on your computer and your device.</span><br><span class="line"></span><br><span class="line">If it still doesn&#x27;t work, it may be due to the router configuration — this is common for public networks. You can work around this by choosing the Tunnel connection type when starting the development server, then scanning the QR code again.</span><br></pre></td></tr></table></figure></div>
+
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">npx expo start --tunnel</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>注意：<code>npm run start --tunnel</code>不work，试下来一定得是<code>expo start --tunnel</code></p>
+<hr />
+
+
+
+<h2 id="具体写法"><a href="#具体写法" class="headerlink" title="具体写法"></a>具体写法</h2><p>定义function based的component</p>
+<p><code>&lt;View&gt;</code>相当于<code>&lt;div&gt;</code>用来wrap各种东西。一个functon based的component只能返回一个标签，不能多个标签并列关系 (JSX expressions must have one parent element)，即用<code>&lt;View&gt;</code>包起来。</p>
+<p><code>&lt;TextInput /&gt;</code>是self closing的component，可以做输入框</p>
+<h2 id="导入Tailwind-CSS"><a href="#导入Tailwind-CSS" class="headerlink" title="导入Tailwind CSS"></a>导入Tailwind CSS</h2><p>可以用<code>NativeWind</code>包	<a class="link"   href="https://www.nativewind.dev/" >https://www.nativewind.dev/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<p>文档里只有yarn</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">yarn add nativewind</span><br><span class="line">yarn add --dev tailwindcss@3.3.2</span><br></pre></td></tr></table></figure></div>
+
+<p>要用npm的话也可以这样</p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install nativewind</span><br><span class="line">npm i -D tailwindcss@3.3.2</span><br></pre></td></tr></table></figure></div>
+
+<p>但是 <a class="link"   href="https://stackoverflow.com/questions/76688256/getting-error-use-processcss-thencb-to-work-with-async-plugins" >https://stackoverflow.com/questions/76688256/getting-error-use-processcss-thencb-to-work-with-async-plugins <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> によると，还是用<code>yarn</code>吧，但更关键的是<a class="link"   href="mailto:&#x74;&#x61;&#x69;&#108;&#x77;&#105;&#x6e;&#100;&#99;&#x73;&#115;&#64;&#x33;&#x2e;&#x33;&#x2e;&#x32;" >&#x74;&#x61;&#x69;&#108;&#x77;&#105;&#x6e;&#100;&#99;&#x73;&#115;&#64;&#x33;&#x2e;&#x33;&#x2e;&#x32; <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>。我也碰到这个问题，好久才发现</p>
+<p>配置<code>tailwind.config.js</code>记得改<code>&lt;custom directory&gt;</code></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">content: [&quot;./App.&#123;js,jsx,ts,tsx&#125;&quot;, &quot;./src/**/*.&#123;js,jsx,ts,tsx&#125;&quot;],</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>一个<code>NativeWind</code>に基づくdark mode切り替えるdemo</p>
+<p><a class="link"   href="https://www.nativewind.dev/api/use-color-scheme" >https://www.nativewind.dev/api/use-color-scheme <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a></p>
+<div class="highlight-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="code"><pre><span class="line">import &#123; StatusBar &#125; from &#x27;expo-status-bar&#x27;;</span><br><span class="line">import &#123; Text, View, TouchableOpacity, Switch &#125; from &#x27;react-native&#x27;;</span><br><span class="line">import &#123; useColorScheme &#125; from &#x27;nativewind&#x27;;</span><br><span class="line"></span><br><span class="line">export default function App() &#123;</span><br><span class="line">  const &#123;colorScheme, toggleColorScheme&#125; = useColorScheme();</span><br><span class="line"></span><br><span class="line">  return (</span><br><span class="line">    &lt;View className=&quot;flex-1 items-center justify-center dark:bg-slate-800&quot;&gt;</span><br><span class="line">      &lt;StatusBar style=&#123;colorScheme === &quot;dark&quot; ? &quot;light&quot; : &quot;dark&quot;&#125; /&gt;</span><br><span class="line">      &lt;Switch value=&#123;colorScheme === &#x27;dark&#x27;&#125; onChange=&#123;toggleColorScheme&#125; /&gt;</span><br><span class="line">      &lt;Text className=&quot;text-yellow-200&quot;&gt;Open up App.js to start working on your app!&lt;/Text&gt;</span><br><span class="line">      &lt;Text className=&quot;text-3xl font-semibold text-sky-700 dark:text-yellow-200&quot;&gt;NativeWind ネーティブ風&lt;/Text&gt;</span><br><span class="line">      &lt;TouchableOpacity className=&quot;bg-teal-500 p-3 rounded-xl mt-5 shadow-md shadow-gray-400&quot;</span><br><span class="line">      onPress=&#123;toggleColorScheme&#125;&gt;</span><br><span class="line">        &lt;Text className=&quot;text-slate-100 text-lg&quot;&gt;点我切换主题&lt;/Text&gt;</span><br><span class="line">      &lt;/TouchableOpacity&gt;</span><br><span class="line">    &lt;/View&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h2 id="Icon"><a href="#Icon" class="headerlink" title="Icon"></a>Icon</h2><p>可以导入<code>@expo/vector-icons</code>库</p>
+<p><a class="link"   href="https://icons.expo.fyi/Index" >https://icons.expo.fyi/Index <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a> 可以搜索各种图标</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a class="link"   href="https://reactnative.dev/" >https://reactnative.dev/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>	React Native官网</p>
+<p><a class="link"   href="https://docs.expo.dev/" >https://docs.expo.dev/ <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>	Expo官网文档</p>
+<p><a class="link"   href="https://reactnative.cn/docs/environment-setup" >https://reactnative.cn/docs/environment-setup <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>	React Native中文网文档，仅作参考</p>
+<p><a class="link"   href="https://www.youtube.com/watch?v=Hf4MJH0jDb4" >https://www.youtube.com/watch?v=Hf4MJH0jDb4 <i class="fa-regular fa-arrow-up-right-from-square fa-sm"></i></a>	这个Crash Course是用<code>React Native CLI</code>的方法</p>
 ]]></content>
       <tags>
-        <tag>Linux</tag>
-        <tag>Java</tag>
+        <tag>React Native</tag>
       </tags>
   </entry>
 </search>
