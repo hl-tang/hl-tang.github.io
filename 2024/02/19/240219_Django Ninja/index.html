@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Haoliang Tang">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/02/19/240219_django ninja/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="本来是打算仔细学FastAPI作为主力后端框架的，后来又意外发现了Django Ninja。api的写法和FastAPI很相似。 基于Django，是一个Fast Django REST Framework，能利用Django的ORM等生态。于是决定目前重点学Django Ninja作为主力后端。 環境構築1pip install django-ninja  当然django本身作为依赖是要安装的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="240219_Django Ninja">
+<meta property="og:url" content="http://example.com/2024/02/19/240219_Django%20Ninja/index.html">
+<meta property="og:site_name" content="Haoliang Tang&#39;s blog">
+<meta property="og:description" content="本来是打算仔细学FastAPI作为主力后端框架的，后来又意外发现了Django Ninja。api的写法和FastAPI很相似。 基于Django，是一个Fast Django REST Framework，能利用Django的ORM等生态。于是决定目前重点学Django Ninja作为主力后端。 環境構築1pip install django-ninja  当然django本身作为依赖是要安装的">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-02-18T15:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-29T14:36:33.220Z">
+<meta property="article:author" content="Haoliang Tang">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="Backend">
+<meta property="article:tag" content="Django">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/chibimon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/chibimon.png">
+    <meta name="theme-color" content="#008080">
+    <link rel="shortcut icon" href="/images/chibimon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            240219_Django Ninja | Haoliang Tang&#39;s blog
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":true,"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#008080","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallroom-1920x1200-bg-11b87d0.jpg","dark":"/images/wallhaven-rreg9j.png"},"title":"一生懸命","subtitle":{"text":["live a life you will never regret"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#708090 ","dark":"#d3d3d3"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/hl-tang","instagram":null,"zhihu":null,"twitter":null,"email":"haoliangtang0@gmail.com"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.8.2","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"About":{"path":"/about","icon":"fa-regular fa-user"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/chibimon.png" class="w-full h-full rounded-sm">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Haoliang Tang&#39;s blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/about"
+                                        >
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/about"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-regular fa-user fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">16</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">0</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">24</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">240219_Django Ninja</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/chibimon.png">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">Haoliang Tang</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-02-19</span>
+        <span class="mobile">2024-02-19</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-04-29 23:36:33</span>
+            <span class="mobile">2025-04-29 23:36:33</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Python/">Python</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Backend/">Backend</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Django/">Django</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<p>本来是打算仔细学FastAPI作为主力后端框架的，后来又意外发现了Django Ninja。api的写法和FastAPI很相似。</p>
+<p>基于Django，是一个Fast Django REST Framework，能利用Django的ORM等生态。于是决定目前重点学Django Ninja作为主力后端。</p>
+<h2 id="環境構築"><a href="#環境構築" class="headerlink" title="環境構築"></a>環境構築</h2><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install django-ninja</span><br></pre></td></tr></table></figure></div>
+
+<p>当然django本身作为依赖是要安装的 <code>pip install Django</code></p>
+<p>创建项目，运行项目和Django一样：</p>
+<p>创建项目：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">django-admin startproject xxx</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>创建一个应用：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py startapp xxx</span><br></pre></td></tr></table></figure></div>
+
+<p>完了后记得去<code>settings.py</code>的INSTALLED_APPS下追加<code>startapp</code>的app</p>
+<p>启动后端服务器：(默认8000端口)</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py runserver</span><br></pre></td></tr></table></figure></div>
+
+<p>更换服务器的监听端口，请使用命令行参数</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py runserver 8080</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>设置TIME_ZONE</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TIME_ZONE = &#x27;Asia/Shanghai&#x27;</span><br><span class="line">TIME_ZONE = &#x27;Asia/Tokyo&#x27;</span><br><span class="line"></span><br><span class="line">USE_TZ = False	# 数据库里的时间就不是UTC了，而是配置的时区</span><br></pre></td></tr></table></figure></div>
+
+<p><code>runserver</code>后命令行显示的时间应该就是本地时区了</p>
+<p>创建管理员：(可以登录管理员后台:8000&#x2F;admin)</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py createsuperuser</span><br></pre></td></tr></table></figure></div>
+
+<p>(Username: admin	Password: chedishibai)</p>
+<p><code>startapp</code>创建的app目录下编辑<code>admin.py</code>追加models后，可以登录管理员后台，在界面上crud</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/5.0/intro/overview/" >https://docs.djangoproject.com/zh-hans/5.0/intro/overview/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/5.0/intro/tutorial02/#introducing-the-django-admin" >https://docs.djangoproject.com/zh-hans/5.0/intro/tutorial02/#introducing-the-django-admin<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p>在数据库中创建表</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py migrate</span><br></pre></td></tr></table></figure></div>
+
+<p><code>migrate</code>命令只会为在<code>INSTALLED_APPS</code>里声明了的应用进行数据库迁移</p>
+<p>根据检测到的模型变化创建新的迁移（反正就是改变了models就要makemigrations）</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py makemigrations</span><br></pre></td></tr></table></figure></div>
+
+<p>改变模型需要这三步：</p>
+<ul>
+<li>编辑 <code>models.py</code> 文件，改变模型</li>
+<li>运行<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/5.0/ref/django-admin/#django-admin-makemigrations"><code>python manage.py makemigrations</code></a> to create migrations for those changes</li>
+<li>运行<a target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/5.0/ref/django-admin/#django-admin-migrate"><code>python manage.py migrate</code></a> to apply those changes to the database</li>
+</ul>
+<p>Django的Python shell交互</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py shell</span><br></pre></td></tr></table></figure></div>
+
+<p>然后可以手动插入一条记录之类的</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/5.0/intro/tutorial02/#playing-with-the-api" >https://docs.djangoproject.com/en/5.0/intro/tutorial02/#playing-with-the-api<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h2 id="apiの書き方"><a href="#apiの書き方" class="headerlink" title="apiの書き方"></a>apiの書き方</h2><p>在<code>startproject</code>的project目录下（app目录下也可以）创建个<code>api.py</code>文件。（对，放弃使用<code>views.py</code>了，<code>views.py</code>本质是返回渲染的html模板，前后端分离后这个<code>views.py</code>文件也变得鸡肋了）</p>
+<p>导入NinjaAPI类：</p>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ninja <span class="keyword">import</span> NinjaAPI</span><br><span class="line"></span><br><span class="line">api = NinjaAPI()</span><br><span class="line"><span class="comment"># xxx_api = NinjaAPI() # app目录下也用NinjaAPI()的话，这样防止重名</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者app的用Router()实例化</span></span><br><span class="line"><span class="comment"># xxx_api = Router()</span></span><br><span class="line"><span class="comment"># 那么项目目录的根api.py需要add_router app (在项目的urls.py里写)</span></span><br><span class="line"><span class="comment"># from xxx.api import xxx_api</span></span><br><span class="line"><span class="comment"># api.add_router(&quot;/app名字xxx/&quot;, xxx_api)</span></span><br></pre></td></tr></table></figure></div>
+
+<p>项目目录的<code>urls.py</code>追加：</p>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.contrib <span class="keyword">import</span> admin</span><br><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path</span><br><span class="line"><span class="keyword">from</span> 项目名称.api <span class="keyword">import</span> api</span><br><span class="line"><span class="comment">#from app名称.api import xxx_api</span></span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    path(<span class="string">&#x27;admin/&#x27;</span>, admin.site.urls),</span><br><span class="line">    path(<span class="string">&quot;api/&quot;</span>, api.urls), <span class="comment"># path(&quot;&quot;, api.urls),</span></span><br><span class="line">    <span class="comment">#path(&quot;xxx/&quot;, xxx_api.urls), # app是用NinjaAPI()实例化的话这里追加；如果是用Router()实例化则在项目目录的api.py追加add_router（或者urls.py这里都import了写这也行，感觉このやり方より良い）</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><font color='salmon'>注意: 后端定义api的url最后面slashを付いた方が良い</font></p>
+<p>如果<code>@recommendation_api.get(&quot;/recommend&quot;)</code>，前端发的请求的url最后要是有”&#x2F;“，那服务端响应不了，Not Found 404</p>
+<p>但<code>@recommendation_api.get(&quot;/recommend/&quot;)</code>(最后slashを付いた)，不管前端发的请求的url最后有没有slash，服务端都能响应</p>
+<p>有了Django Ninja, 处理endpoint函数会自动做serialization，把return的python dict转成(serialize to)json. (应该是decorator做的)</p>
+<p>(DRF djangorestframework是需要serializer操作的)</p>
+<p>CRUD官网例子：<a class="link"   target="_blank" rel="noopener" href="https://django-ninja.dev/tutorial/other/crud/" >https://django-ninja.dev/tutorial/other/crud/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@api.post(<span class="params"><span class="string">&quot;/employees&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">create_employee</span>(<span class="params">request, payload: EmployeeIn</span>):</span><br><span class="line">    employee = Employee.objects.create(**payload.<span class="built_in">dict</span>())</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;id&quot;</span>: employee.<span class="built_in">id</span>&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>post例子中<code>**payload.dict()</code>两个星是把hash map{}给destructure成keyword arguments以便传给create()</p>
+<p>JSON转python dict也是django-ninja框架自动实现的，定义了schema(说是Schema其实是检查request body有没有缺字段)的话，如此处的<code>EmployeeIn</code></p>
+<p>但定义Schema是必要的(什么xxxIn, xxxOut)，不然报错TypeError: Object of type QuerySet is not JSON serializable</p>
+<h2 id="自定义错误信息，特别是request-body不匹配时，ninja的Schema会自动报错"><a href="#自定义错误信息，特别是request-body不匹配时，ninja的Schema会自动报错" class="headerlink" title="自定义错误信息，特别是request body不匹配时，ninja的Schema会自动报错"></a>自定义错误信息，特别是request body不匹配时，ninja的Schema会自动报错</h2><p><a class="link"   target="_blank" rel="noopener" href="https://stackoverflow.com/questions/74086447/how-to-customize-the-validation-error-using-django-ninja" >https://stackoverflow.com/questions/74086447/how-to-customize-the-validation-error-using-django-ninja<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://django-ninja.dev/guides/errors/" >https://django-ninja.dev/guides/errors/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h2 id="手撸request-response"><a href="#手撸request-response" class="headerlink" title="手撸request, response"></a>手撸request, response</h2><p><a class="link"   target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/5.0/ref/request-response/" >https://docs.djangoproject.com/en/5.0/ref/request-response/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.jianshu.com/p/94785f71fdd8" >https://www.jianshu.com/p/94785f71fdd8<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://stackoverflow.com/questions/35059916/how-to-change-status-of-jsonresponse-in-django#:~:text=JsonResponse%20normally%20returns%20HTTP%20200%2C%20which%20is%20the,a%20subclass%20of%20HttpResponse%3A%20response%20%3D%20JsonResponse%28%7B%27status%27%3A%27false%27%2C%27message%27%3Amessage%7D%2C%20status%3D500%29" >https://stackoverflow.com/questions/35059916/how-to-change-status-of-jsonresponse-in-django#:~:text=JsonResponse%20normally%20returns%20HTTP%20200%2C%20which%20is%20the,a%20subclass%20of%20HttpResponse%3A%20response%20%3D%20JsonResponse%28%7B%27status%27%3A%27false%27%2C%27message%27%3Amessage%7D%2C%20status%3D500%29<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p>见我PFN的oa题</p>
+<h2 id="models-ORM-数据库"><a href="#models-ORM-数据库" class="headerlink" title="models ORM 数据库"></a>models ORM 数据库</h2><p>学数据库的时候，就感觉到一张表的schema就像定义一个类，一行记录就像一个类的实例</p>
+<p>models定义的class属性不需要写id，migrate时Django会自动产生一个id (除非指定了作为pk <code>*primary_key*=True</code>)</p>
+<p>参考Django文档 <a class="link"   target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/5.0/intro/tutorial02/" >https://docs.djangoproject.com/zh-hans/5.0/intro/tutorial02/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p>各种字段类型 <a class="link"   target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/5.0/ref/models/fields/#field-types" >https://docs.djangoproject.com/zh-hans/5.0/ref/models/fields/#field-types<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/5.1/topics/db/queries/" >https://docs.djangoproject.com/en/5.1/topics/db/queries/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p>各种ORM方法 <a class="link"   target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/5.1/ref/models/querysets/" >https://docs.djangoproject.com/en/5.1/ref/models/querysets/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h3 id="自定义User-Model"><a href="#自定义User-Model" class="headerlink" title="自定义User Model"></a>自定义User Model</h3><p><code>from django.contrib.auth.models import AbstractUser</code></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1743076" >https://cloud.tencent.com/developer/article/1743076<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1358567" >https://cloud.tencent.com/developer/article/1358567<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://stackoverflow.com/questions/21514354/abstractuser-vs-abstractbaseuser-in-django" >https://stackoverflow.com/questions/21514354/abstractuser-vs-abstractbaseuser-in-django<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h3 id="连MariaDB-MySQL"><a href="#连MariaDB-MySQL" class="headerlink" title="连MariaDB&#x2F;MySQL"></a>连MariaDB&#x2F;MySQL</h3><p>从<a class="link"   target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/5.0/" >官网文档<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> How the documentation is organized -&gt; Reference guides去找 Databases</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/5.0/ref/databases/#mysql-notes" >https://docs.djangoproject.com/en/5.0/ref/databases/#mysql-notes<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<hr>
+<p><strong>安装Python的MySQL客户端</strong></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://pypi.org/project/mysqlclient/" >https://pypi.org/project/mysqlclient/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> 官方文档推荐的</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://pypi.org/project/mysqlclient/" >mysqlclient<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> is a native driver. It’s <strong>the recommended choice</strong>.</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S python-mysqlclient</span><br><span class="line">pip install mysqlclient</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>MariaDB&#x2F;MySQL先要创建数据库</strong></p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MariaDB [(none)]&gt; create database arxiv;</span><br><span class="line">MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON arxiv.* TO &#x27;hltang&#x27;@&#x27;localhost&#x27;;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><strong>连接数据库</strong></p>
+<p>修改settings.py的DATABASES</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">    &quot;default&quot;: &#123;</span><br><span class="line">        &quot;ENGINE&quot;: &quot;django.db.backends.mysql&quot;,</span><br><span class="line">        &quot;NAME&quot;: &quot;arxiv&quot;,</span><br><span class="line">        &quot;USER&quot;: &quot;&quot;,</span><br><span class="line">        &quot;PASSWORD&quot;: &quot;&quot;,</span><br><span class="line">        &quot;HOST&quot;: &quot;127.0.0.1&quot;,</span><br><span class="line">        &quot;PORT&quot;: &quot;3306&quot;,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>然后迁移 <code>python manage.py migrate</code> ，MariaDB里就有表了</p>
+<p>或者使用配置文件</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">    &quot;default&quot;: &#123;</span><br><span class="line">        &quot;ENGINE&quot;: &quot;django.db.backends.mysql&quot;,</span><br><span class="line">        &quot;OPTIONS&quot;: &#123;</span><br><span class="line">            &quot;read_default_file&quot;: BASE_DIR / &quot;mariadb.cnf&quot;,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>根目录(和db.sqlite3同级)创建个mariadb.cnf文件</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[client]</span><br><span class="line">database = &quot;arxiv&quot;</span><br><span class="line">user = &quot;&quot;</span><br><span class="line">password = &quot;&quot;</span><br><span class="line">default-character-set = utf8</span><br><span class="line">host = &quot;127.0.0.1&quot;</span><br><span class="line">port = &quot;3306&quot;</span><br></pre></td></tr></table></figure></div>
+
+<p>但这样直接migrate会报错，参考: <a class="link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/488566846" >https://zhuanlan.zhihu.com/p/488566846<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p>使用PyMySQL， <code>pip install PyMySQL</code> ，项目目录 <code>__init__.py</code> 中写入：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import pymysql</span><br><span class="line">pymysql.install_as_MySQLdb()</span><br></pre></td></tr></table></figure></div>
+
+<p>然后再migrate就可以了</p>
+<h3 id="ORM的各种操作objects-xxx"><a href="#ORM的各种操作objects-xxx" class="headerlink" title="ORM的各种操作	objects.xxx()"></a>ORM的各种操作	objects.xxx()</h3><p>从官网文档 The model layer 去看</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/5.0/topics/db/queries/" >https://docs.djangoproject.com/en/5.0/topics/db/queries/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://docs.djangoproject.com/en/5.0/ref/models/querysets/" >https://docs.djangoproject.com/en/5.0/ref/models/querysets/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/378854594" >Django ORM常用操作介绍<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/5.0/ref/django-admin/#django-admin-sqlmigrate"><code>sqlmigrate</code></a>  命令接收一个迁移的名称 <code>polls/migrations/0001_initial.py</code> ，然后返回对应的 SQL：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py sqlmigrate polls 0001</span><br></pre></td></tr></table></figure></div>
+
+<p>查看SQL语句，确实主键(id)会被自动创建 (settings.py或apps.py中的<code>DEFAULT_AUTO_FIELD = &#39;django.db.models.BigAutoField&#39;</code>)</p>
+<p><code>sqlmigrate</code>命令并没有真正在你的数据库中执行迁移 - 相反，它只是把命令输出到屏幕上，让你看看Django认为需要执行哪些SQL语句</p>
+<p>插入假数据：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install Faker</span><br></pre></td></tr></table></figure></div>
+
+
+
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> faker <span class="keyword">import</span> Faker</span><br><span class="line"><span class="keyword">from</span> django.utils <span class="keyword">import</span> timezone</span><br><span class="line"><span class="keyword">from</span> books.models <span class="keyword">import</span> Author, Book</span><br><span class="line"></span><br><span class="line">fake = Faker()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成3个作者</span></span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">    Author.objects.create(</span><br><span class="line">        name=fake.name(),</span><br><span class="line">        birthdate=fake.date_of_birth()</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"><span class="comment">#authors = Author.objects.all()</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成20本书</span></span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">20</span>):</span><br><span class="line">    Book.objects.create(</span><br><span class="line">        title=fake.sentence(nb_words=<span class="number">4</span>, variable_nb_words=<span class="literal">True</span>, ext_word_list=<span class="literal">None</span>),</span><br><span class="line">        description=fake.paragraph(nb_sentences=<span class="number">3</span>, variable_nb_sentences=<span class="literal">True</span>, ext_word_list=<span class="literal">None</span>),</span><br><span class="line">        author=random.choice(authors),</span><br><span class="line">        isbn=fake.isbn13(separator=<span class="string">&quot;-&quot;</span>)</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;假数据插入完成！&quot;</span>)</span><br></pre></td></tr></table></figure></div>
+
+<p>用<code>Faker</code>库往数据库里插入假数据。注意不能用<code>python generate_fake_data.py</code>运行会报错导入不了model。</p>
+<p>需要在django shell里运行</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py shell</span><br></pre></td></tr></table></figure></div>
+
+<p>然后粘贴Enter，数据库里有了</p>
+<h2 id="CORS"><a href="#CORS" class="headerlink" title="CORS"></a>CORS</h2><p><a class="link"   target="_blank" rel="noopener" href="https://github.com/adamchainz/django-cors-headers" >https://github.com/adamchainz/django-cors-headers<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p>Response Header里应该有<code>access-control-allow-origin</code>字段ようになった</p>
+<p>注意 <code>CORS_ALLOW_CREDENTIALS = True</code> , 不然cookie不会被发到不同源的前端</p>
+<h2 id="Pagination-分页"><a href="#Pagination-分页" class="headerlink" title="Pagination 分页"></a>Pagination 分页</h2><p><a class="link"   target="_blank" rel="noopener" href="https://django-ninja.dev/guides/response/pagination/" >https://django-ninja.dev/guides/response/pagination/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h2 id="登录注册-权限"><a href="#登录注册-权限" class="headerlink" title="登录注册&amp;权限"></a>登录注册&amp;权限</h2><p><a class="link"   target="_blank" rel="noopener" href="https://docs.djangoproject.com/ja/5.0/topics/auth/default/" >https://docs.djangoproject.com/ja/5.0/topics/auth/default/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/5.0/topics/auth/customizing/" >https://docs.djangoproject.com/zh-hans/5.0/topics/auth/customizing/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p>用自带的 from django.contrib.auth import authenticate, login, logout</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.jianshu.com/p/612b3d76a1f5" >Django自带的auth登录认证<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> django.contrib.auth里自带方法的使用，还有AbstractUser (注意settings.py里追加AUTH_USER_MODEL)</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/677674023" >https://zhuanlan.zhihu.com/p/677674023<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> 手撸版，但login仅仅只是展示username，没有涉及session,token</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1SW4y1F7gT?p=52&vd_source=0ae70a0cf4a652e3c632b9150cd2f90e" >https://www.bilibili.com/video/BV1SW4y1F7gT?p=52&amp;vd_source=0ae70a0cf4a652e3c632b9150cd2f90e<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> 手撸版，很赞</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/377145935" >https://zhuanlan.zhihu.com/p/377145935<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> 手撸版自定义</p>
+<h3 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h3><p><a class="link"   target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=PUzgZrS_piQ" >Django API Authentication using JWT Tokens<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> 用的是DRF(djangorestframework)，&#x3D;&#x3D;很有启发性&#x3D;&#x3D;，包括用户模型应该继承自AbstractUser (还有postman里看cookie，才意识到问题是cookie没写到浏览器里，然后axios cookie一搜，axios跨域默认不带cookie)</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1743076" >Django User 模块之 AbstractUser 扩展详解<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> AbstractUser (注意settings.py里追加AUTH_USER_MODEL)</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a class="link"   target="_blank" rel="noopener" href="https://django-ninja.dev/" >https://django-ninja.dev<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=zpR1QCLBpIA" >DjangoCon 2022 | Introducing Django Ninja<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> DjangoCon Europe上作者发表，作者是🇺🇦人。注意看对Schema类的介绍，不需要再自己做类型转换了，request body的json直接转成了python dict。Schema像是对request&#x2F;response做类型检查以及过滤余計的数据 (说是Schema其实是数据库里的视图View)</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=OGUqBay7BP0" >CRUD with Django Ninja<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> 来自官方油管，作者自ら解説。跟着做library项目，思路流程清晰。19min左右学到了Schema里再套Schema，比如Book表只存了author_id，但想要一起显示author的其他属性</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=nC2kQylku0w&list=PL-2EBeDYMIbS7bXwkMOS_ajeTdNRnhApX" >Creating a CRUD API with Django-Ninja<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> 这位油管主讲得也很明白</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.bugbytes.io/posts/django-ninja/" >https://www.bugbytes.io/posts/django-ninja/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=XqkqbsdtoMI" >Django-Ninja APIs - Modern API Development in Django<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> 涉及到Schema和django-ninja-extra库</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=OEa8eLIKLOU" >Django Ninja Ecommerce Inventory Integration<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=S4nUhruExwA" >Django Ninja CRUD | Managing Form data | Image Uploads<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> 最后有上传文件</p>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 240219_Django Ninja</li>
+        <li><strong>Author:</strong> Haoliang Tang</li>
+        <li><strong>Created at
+                :</strong> 2024-02-19 00:00:00</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2025-04-29 23:36:33
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://hl-tang.github.io/2024/02/19/240219_Django Ninja/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Python/">#Python</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Backend/">#Backend</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Django/">#Django</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2024/04/21/240421_Rocky%20Linux%E4%B8%8Ednf%E7%9A%84%E5%88%9D%E6%9C%9F%E8%B0%83%E6%95%99/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">240421_Rocky Linux与dnf的初期调教</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2024/01/15/240115_SQLite/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">240115_SQLite</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+          
+          
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">240219_Django Ninja</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89"><span class="nav-text">環境構築</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#api%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9"><span class="nav-text">apiの書き方</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF%EF%BC%8C%E7%89%B9%E5%88%AB%E6%98%AFrequest-body%E4%B8%8D%E5%8C%B9%E9%85%8D%E6%97%B6%EF%BC%8Cninja%E7%9A%84Schema%E4%BC%9A%E8%87%AA%E5%8A%A8%E6%8A%A5%E9%94%99"><span class="nav-text">自定义错误信息，特别是request body不匹配时，ninja的Schema会自动报错</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%8B%E6%92%B8request-response"><span class="nav-text">手撸request, response</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#models-ORM-%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-text">models ORM 数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89User-Model"><span class="nav-text">自定义User Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9EMariaDB-MySQL"><span class="nav-text">连MariaDB&#x2F;MySQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ORM%E7%9A%84%E5%90%84%E7%A7%8D%E6%93%8D%E4%BD%9Cobjects-xxx"><span class="nav-text">ORM的各种操作	objects.xxx()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CORS"><span class="nav-text">CORS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pagination-%E5%88%86%E9%A1%B5"><span class="nav-text">Pagination 分页</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C-%E6%9D%83%E9%99%90"><span class="nav-text">登录注册&amp;权限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JWT"><span class="nav-text">JWT</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Haoliang Tang</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        24 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.2</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>

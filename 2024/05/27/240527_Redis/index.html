@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Haoliang Tang">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2024/05/27/240527_redis/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="安装https:&#x2F;&#x2F;wiki.archlinux.org&#x2F;title&#x2F;Redis 1sudo pacman -S redis  启动redis-server 1systemctl start redis  (其实本质是&#x2F;usr&#x2F;bin&#x2F;redis-server &#x2F;etc&#x2F;redis&#x2F;redis.conf) (from redis.serv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="240527_Redis">
+<meta property="og:url" content="http://example.com/2024/05/27/240527_Redis/index.html">
+<meta property="og:site_name" content="Haoliang Tang&#39;s blog">
+<meta property="og:description" content="安装https:&#x2F;&#x2F;wiki.archlinux.org&#x2F;title&#x2F;Redis 1sudo pacman -S redis  启动redis-server 1systemctl start redis  (其实本质是&#x2F;usr&#x2F;bin&#x2F;redis-server &#x2F;etc&#x2F;redis&#x2F;redis.conf) (from redis.serv">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-05-26T15:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-29T14:57:06.791Z">
+<meta property="article:author" content="Haoliang Tang">
+<meta property="article:tag" content="Database">
+<meta property="article:tag" content="NoSQL">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/chibimon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/chibimon.png">
+    <meta name="theme-color" content="#008080">
+    <link rel="shortcut icon" href="/images/chibimon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            240527_Redis | Haoliang Tang&#39;s blog
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":true,"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#008080","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallroom-1920x1200-bg-11b87d0.jpg","dark":"/images/wallhaven-rreg9j.png"},"title":"一生懸命","subtitle":{"text":["live a life you will never regret"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#708090 ","dark":"#d3d3d3"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/hl-tang","instagram":null,"zhihu":null,"twitter":null,"email":"haoliangtang0@gmail.com"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.8.2","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"About":{"path":"/about","icon":"fa-regular fa-user"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/chibimon.png" class="w-full h-full rounded-sm">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Haoliang Tang&#39;s blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/about"
+                                        >
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/about"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-regular fa-user fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">16</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">0</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">24</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">240527_Redis</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/chibimon.png">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">Haoliang Tang</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2024-05-27</span>
+        <span class="mobile">2024-05-27</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2025-04-29 23:57:06</span>
+            <span class="mobile">2025-04-29 23:57:06</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Database/">Database</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/NoSQL/">NoSQL</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Redis/">Redis</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><a class="link"   target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/Redis" >https://wiki.archlinux.org/title/Redis<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S redis</span><br></pre></td></tr></table></figure></div>
+
+<p>启动redis-server</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start redis</span><br></pre></td></tr></table></figure></div>
+
+<p>(其实本质是&#x2F;usr&#x2F;bin&#x2F;redis-server &#x2F;etc&#x2F;redis&#x2F;redis.conf) (from redis.service里的ExecStart)</p>
+<p>(在某个目录下<code>redis-server</code>也可以，然后要持久化的话，会在这个目录下生成一个dump.rdb的文件)</p>
+<p>可以用<code>systemctl status</code>查看，也可以<code>ps -ef | grep redis</code>看到redis已经启动了</p>
+<hr>
+<p>可以编辑&#x2F;etc&#x2F;redis&#x2F;redis.conf里的<code>requirepass</code>设置口令</p>
+<h2 id="命令行操作"><a href="#命令行操作" class="headerlink" title="命令行操作"></a>命令行操作</h2><p><a class="link"   target="_blank" rel="noopener" href="https://redis.io/docs/latest/commands/" >https://redis.io/docs/latest/commands/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p>使用<code>redis-cli</code></p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli ping</span><br></pre></td></tr></table></figure></div>
+
+<p>测试连接，得到一个PONG的返回</p>
+<p>直接终端输入 <code>redis-cli</code>，不带command，就进入交互模式</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">redis-cli</span><br><span class="line">127.0.0.1:6379&gt; ping</span><br><span class="line">PONG</span><br><span class="line">127.0.0.1:6379&gt; set name yukawa</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set age 25</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get name</span><br><span class="line">&quot;yukawa&quot;</span><br><span class="line">127.0.0.1:6379&gt; get age</span><br><span class="line">&quot;25&quot;</span><br></pre></td></tr></table></figure></div>
+
+<p>若redis.conf设置了requirepass口令，则要<code>redis-cli -a 口令</code>登录，不然(error) NOAUTH Authentication required.</p>
+<p>也可以先不<code>-a</code>指定口令，直接redis-cli连上后，再<code>auth 口令</code></p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; auth chedishibai</span><br><span class="line">OK</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="GUI客户端"><a href="#GUI客户端" class="headerlink" title="GUI客户端"></a>GUI客户端</h2><p>DbGate支持Redis</p>
+<p>试试Redis Insight</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">paru -S redisinsight</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="操作5种基本数据结构类型"><a href="#操作5种基本数据结构类型" class="headerlink" title="操作5种基本数据结构类型"></a>操作5种基本数据结构类型</h2><p>Redis是key-value的数据库，key都是String类型，value有8种，其中有5中常见基本类型:<code>String</code>,<code>Hash</code>,<code>List</code>,<code>Set</code>,<code>SortedSet</code></p>
+<p>没必要死记硬背，不知道就去官网文档按group查看，或者命令行help @xxx</p>
+<h3 id="不分数据类型，通用的命令"><a href="#不分数据类型，通用的命令" class="headerlink" title="不分数据类型，通用的命令"></a>不分数据类型，通用的命令</h3><p><a class="link"   target="_blank" rel="noopener" href="https://redis.io/docs/latest/commands/?group=generic" >https://redis.io/docs/latest/commands/?group=generic<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p>官网文档filter by group选generic，或者<code>127.0.0.1:6379&gt; help @generic</code>，但官网文档有使用例子，更详细。</p>
+<ul>
+<li>KEYS, DEL, EXISTS	(<code>keys *</code>因为效率问题不建议生产环境使用)</li>
+</ul>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; del age</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">1) &quot;name&quot;</span><br><span class="line">127.0.0.1:6379&gt; exists age</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; exists name</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure></div>
+
+<p>可见age被删掉了</p>
+<ul>
+<li>EXPIRE: 给key设置有效期，有效期到了会自动删除该key，节约内存</li>
+<li>TTL: 查看一个key的剩余有效期</li>
+</ul>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; help expire </span><br><span class="line"></span><br><span class="line">  EXPIRE key seconds [NX|XX|GT|LT]</span><br><span class="line">  summary: Sets the expiration time of a key in seconds.</span><br><span class="line">  since: 1.0.0</span><br><span class="line">  group: generic</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; expire name 20</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; ttl name</span><br><span class="line">(integer) 16</span><br><span class="line">127.0.0.1:6379&gt; ttl name</span><br><span class="line">(integer) 8</span><br><span class="line">127.0.0.1:6379&gt; ttl name</span><br><span class="line">(integer) 6</span><br><span class="line">127.0.0.1:6379&gt; ttl name</span><br><span class="line">(integer) 5</span><br><span class="line">127.0.0.1:6379&gt; ttl name</span><br><span class="line">(integer) -2</span><br></pre></td></tr></table></figure></div>
+
+<p>最后ttl有效期输出-2，说明有效期到期被删了，数据库里没有这个key了</p>
+<p>如果set一个key-value时不指定expire，那ttl输出-1，说明TTL: No limit永久有效</p>
+<h3 id="String"><a href="#String" class="headerlink" title="String"></a>String</h3><p><a class="link"   target="_blank" rel="noopener" href="https://redis.io/docs/latest/commands/?group=string" >https://redis.io/docs/latest/commands/?group=string<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<ul>
+<li>SET: 增或改，键值对不存在就添加，存在则修改(overwritten, regardless of its type)</li>
+<li>GET: Get the value of <code>key</code>. If the key does not exist the special value <code>nil</code> is returned. An error is returned if the value stored at <code>key</code> is not a string, because <code>GET</code> only handles &#x3D;&#x3D;string values&#x3D;&#x3D;.</li>
+<li>MSET, MGET</li>
+</ul>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set name Tang</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get name</span><br><span class="line">&quot;Tang&quot;</span><br><span class="line">127.0.0.1:6379&gt; set age 18</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; mset name Yukawa age 25 k1 v1 k2 v2 k3 v3</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; mget name age k1 k2 k3</span><br><span class="line">1) &quot;Yukawa&quot;</span><br><span class="line">2) &quot;25&quot;</span><br><span class="line">3) &quot;v1&quot;</span><br><span class="line">4) &quot;v2&quot;</span><br><span class="line">5) &quot;v3&quot;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>INCR: Increments the number stored at <code>key</code> by one.</li>
+<li>INCRBY, INCRBYFLOAT</li>
+<li>SETNX: Set <code>key</code> to hold string <code>value</code> if <code>key</code> does not exist. In that case, it is equal to <a target="_blank" rel="noopener" href="https://redis.io/docs/latest/commands/set/"><code>SET</code></a>. When <code>key</code> already holds a value, no operation is performed. <code>SETNX</code> is short for “<strong>SET</strong> if <strong>N</strong>ot e<strong>X</strong>ists”. 真正的新增</li>
+<li>SETEX: set同时设置expire <a class="link"   target="_blank" rel="noopener" href="https://redis.io/docs/latest/commands/setex/" >https://redis.io/docs/latest/commands/setex/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+</ul>
+<h3 id="通过namespace给Key分层"><a href="#通过namespace给Key分层" class="headerlink" title="通过namespace给Key分层"></a>通过namespace给Key分层</h3><p>Redis作为key-value型的数据库，那自然要求key是唯一的。但我们存一些数据，一般用id作为key。但如果涉及到多个类型，两个不同class的object的id都是1，如何区分不同class的id。</p>
+<p><code>:</code>隔开实现key的层级结构</p>
+<p>eg. <code>[项目名]:[业务名]:[类型]:[id]</code></p>
+<p>比如项目名称叫wuxia，有user和wugong两种数据类型，可以这样定义key:</p>
+<ul>
+<li><code>wuxia:user:1</code></li>
+<li><code>wuxia:wugong:1</code></li>
+</ul>
+<p>value往往是一个对象。虽然对象本身不是String，但完全可以把对象序列化成JSON字符串存储</p>
+<table>
+<thead>
+<tr>
+<th>KEY</th>
+<th>VALUE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>wuxia:user:1</td>
+<td>{“id”: 1, “name”: “张三丰”, “age”: 80}</td>
+</tr>
+<tr>
+<td>wuxia:wugong:1</td>
+<td>{“id”: 1, “name”: “降龙十八掌”, “description”: “<strong>降龍十八掌</strong>為丐幫至剛至陽之鎮幫掌法，主要以威猛力道稱雄江湖，大成後足以問鼎江湖。”}</td>
+</tr>
+</tbody></table>
+<p>注意redis-cli操作时value要加上<code>&#39;&#39;</code>在最外面</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set wuxia:user:1 &#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;张三丰&quot;, &quot;age&quot;: 80&#125;</span><br><span class="line">Invalid argument(s)</span><br><span class="line">127.0.0.1:6379&gt; set wuxia:user:1 &#x27;&#123;&quot;id&quot;: 1, &quot;name&quot;: &quot;张三丰&quot;, &quot;age&quot;: 80&#125;&#x27;</span><br><span class="line">OK</span><br></pre></td></tr></table></figure></div>
+
+<p>但RedisInsight图形界面里add key时不需要再value那加’’了</p>
+<p>RedisInsight等GUI里可以以tree状分层展示键值对了</p>
+<h3 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h3><p>value是个无序字典，相当于hashmap的值又套娃了个hashmap</p>
+<p>刚才那样把value存为对象序列化后的json字符串的弊端在于很难对object的某个字段做修改</p>
+<p>Hash类型可以可以把对象的每个字段独立存储，可以对单个字段做CRUD</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://redis.io/docs/latest/commands/?group=hash" >https://redis.io/docs/latest/commands/?group=hash<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<table>
+<thead>
+<tr>
+<th>KEY</th>
+<th>VALUE</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>wuxia:user:2</td>
+<td>{“id”: 2, “name”: “张无忌”, “age”: 20}</td>
+</tr>
+<tr>
+<td>wuxia:wugong:2</td>
+<td>{“id”: 2, “name”: “九阳神功”, “description”: “练成「九阳神功」内力自生速度奇快，似无穷尽；普通拳脚也能使出绝大威力，防御反弹外力攻击，习者速度将受到极大加成，更是疗伤圣典，百病不生，诸毒不侵。”}</td>
+</tr>
+</tbody></table>
+<ul>
+<li>HSET, HGET, HGETALL</li>
+</ul>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hset wuxia:user:2 name 张无忌</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; hset wuxia:user:2 age 20</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; hget wuxia:user:2 age</span><br><span class="line">&quot;20&quot;</span><br><span class="line">127.0.0.1:6379&gt; hgetall wuxia:user:2</span><br><span class="line">1) &quot;name&quot;</span><br><span class="line">2) &quot;\xe5\xbc\xa0\xe6\x97\xa0\xe5\xbf\x8c&quot;</span><br><span class="line">3) &quot;age&quot;</span><br><span class="line">4) &quot;20&quot;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>HMSET, HMGET(绝对用HGETALL方便)</li>
+</ul>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hmset wuxia:wugong:2 name 九阳神功 description 练成「九阳神功」内力自生速度奇快，似无穷尽；普通拳脚也能使出绝大威力，防御反弹外力攻击，习者速度将受到极大加成，更是疗伤圣典，百病不生，诸毒不侵。</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; hmget wuxia:wugong:2 name description</span><br><span class="line">1) &quot;\xe4\xb9\x9d\xe9\x98\xb3\xe7\xa5\x9e\xe5\x8a\x9f&quot;</span><br><span class="line">2) &quot;\xe7\xbb\x83\xe6\x88\x90\xe3\x80\x8c\xe4\xb9\x9d\xe9\x98\xb3\xe7\xa5\x9e\xe5\x8a\x9f\xe3\x80\x8d\xe5\x86\x85\xe5\x8a\x9b\xe8\x87\xaa\xe7\x94\x9f\xe9\x80\x9f\xe5\xba\xa6\xe5\xa5\x87\xe5\xbf\xab\xef\xbc\x8c\xe4\xbc\xbc\xe6\x97\xa0\xe7\xa9\xb7\xe5\xb0\xbd\xef\xbc\x9b\xe6\x99\xae\xe9\x80\x9a\xe6\x8b\xb3\xe8\x84\x9a\xe4\xb9\x9f\xe8\x83\xbd\xe4\xbd\xbf\xe5\x87\xba\xe7\xbb\x9d\xe5\xa4\xa7\xe5\xa8\x81\xe5\x8a\x9b\xef\xbc\x8c\xe9\x98\xb2\xe5\xbe\xa1\xe5\x8f\x8d\xe5\xbc\xb9\xe5\xa4\x96\xe5\x8a\x9b\xe6\x94\xbb\xe5\x87\xbb\xef\xbc\x8c\xe4\xb9\xa0\xe8\x80\x85\xe9\x80\x9f\xe5\xba\xa6\xe5\xb0\x86\xe5\x8f\x97\xe5\x88\xb0\xe6\x9e\x81\xe5\xa4\xa7\xe5\x8a\xa0\xe6\x88\x90\xef\xbc\x8c\xe6\x9b\xb4\xe6\x98\xaf\xe7\x96\x97\xe4\xbc\xa4\xe5\x9c\xa3\xe5\x85\xb8\xef\xbc\x8c\xe7\x99\xbe\xe7\x97\x85\xe4\xb8\x8d\xe7\x94\x9f\xef\xbc\x8c\xe8\xaf\xb8\xe6\xaf\x92\xe4\xb8\x8d\xe4\xbe\xb5\xe3\x80\x82&quot;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>HKEYS, HVALS</li>
+</ul>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hkeys wuxia:user:2</span><br><span class="line">1) &quot;name&quot;</span><br><span class="line">2) &quot;age&quot;</span><br><span class="line">127.0.0.1:6379&gt; hvals wuxia:user:2</span><br><span class="line">1) &quot;\xe5\xbc\xa0\xe6\x97\xa0\xe5\xbf\x8c&quot;</span><br><span class="line">2) &quot;20&quot;</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>HSETNX: 这次判断的是field存不存在</li>
+</ul>
+<h3 id="List"><a href="#List" class="headerlink" title="List"></a>List</h3><p>底层可以看作是双向链表的结构。既可以正向检索，也可以反向检索。</p>
+<p>特征：有序，元素可以重复，插入删除快，查询速度慢</p>
+<p>使用场景为需要順番つけ的列表</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://redis.io/docs/latest/commands/?group=list" >https://redis.io/docs/latest/commands/?group=list<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<ul>
+<li>RPUSH, RPOP</li>
+<li>LPUSH, LPOP</li>
+<li>LLEN</li>
+<li>LRANGE: 类似Python切片</li>
+</ul>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; rpush arr &quot;one&quot; 2 &quot;three&quot;</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; llen arr</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; lrange arr 0 2</span><br><span class="line">1) &quot;one&quot;</span><br><span class="line">2) &quot;2&quot;</span><br><span class="line">3) &quot;three&quot;</span><br><span class="line">127.0.0.1:6379&gt; lpop arr 2</span><br><span class="line">1) &quot;one&quot;</span><br><span class="line">2) &quot;2&quot;</span><br><span class="line">127.0.0.1:6379&gt; lrange arr -10 10</span><br><span class="line">1) &quot;three&quot;&quot;</span><br></pre></td></tr></table></figure></div>
+
+
+
+<h3 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h3><p>HashSet</p>
+<p>支持交集，并集，差集，实现业务里的共同好友列表</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://redis.io/docs/latest/commands/?group=set" >https://redis.io/docs/latest/commands/?group=set<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<ul>
+<li>SADD: 添加一个或多个元素 O(1) for each element added, so O(N) to add N elements when the command is called with multiple arguments.</li>
+<li>SREM: Removes one or more members from a set. Deletes the set if the last member was removed.</li>
+<li>SPOP: 随机移除一个幸运儿</li>
+<li>SCARD: 返回set中元素个数</li>
+<li>SISMEMBER: 判断一个元素是否在set里</li>
+<li>SMEMBERS: 返回set里的所有元素</li>
+</ul>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; sadd myset &quot;Hello&quot; a b c 1 2 3</span><br><span class="line">(integer) 7</span><br><span class="line">127.0.0.1:6379&gt; smembers myset</span><br><span class="line">1) &quot;Hello&quot;</span><br><span class="line">2) &quot;a&quot;</span><br><span class="line">3) &quot;b&quot;</span><br><span class="line">4) &quot;c&quot;</span><br><span class="line">5) &quot;1&quot;</span><br><span class="line">6) &quot;2&quot;</span><br><span class="line">7) &quot;3&quot;</span><br><span class="line">127.0.0.1:6379&gt; srem myset a</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; sismember myset a</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; scard myset</span><br><span class="line">(integer) 6</span><br></pre></td></tr></table></figure></div>
+
+<ul>
+<li>SINTER: Returns the members of the set resulting from the intersection of all the given sets.</li>
+<li>SDIFF: 差集</li>
+<li>SUNION: Returns the members of the set resulting from the union of all the given sets.</li>
+<li>SINTERSTORE, SUNIONSTORE, SDIFFSTORE</li>
+</ul>
+<h3 id="SortedSet"><a href="#SortedSet" class="headerlink" title="SortedSet"></a>SortedSet</h3><p>排序根据score</p>
+<p>用来实现排行榜功能</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://redis.io/docs/latest/commands/?group=sorted-set" >https://redis.io/docs/latest/commands/?group=sorted-set<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<ul>
+<li>ZADD, ZREM</li>
+<li>ZSCORE: 获取指定元素的score值 <strong>(用来判断元素是否存在，不存在返回nil，zset没有ISMEMBER方法)</strong></li>
+<li>ZRANK: 获取指定元素的排名</li>
+<li>ZCARD: 返回zset中元素个数</li>
+<li>ZINCRBY</li>
+<li>ZCOUNT: 统计score在指定范围内的元素个数</li>
+<li>ZRANGE: 按照名次范围取元素</li>
+<li>ZRANGEBYSCORE: 按照score范围取元素</li>
+<li>ZINTER, ZUNION, ZDIFF: 交并差</li>
+</ul>
+<p>注意：所有排名默认是升序，若要降序在命令的Z后面加上REV</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; ZADD myzset 1 &quot;one&quot;</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; ZADD myzset 2 &quot;two&quot; 3 &quot;three&quot; 4 four 5 five</span><br><span class="line">(integer) 4</span><br><span class="line">127.0.0.1:6379&gt; ZREVRANK myzset one</span><br><span class="line">(integer) 4	下标从0开始</span><br><span class="line">127.0.0.1:6379&gt; zrevrange myzset 0 2	找前三名</span><br><span class="line">1) &quot;five&quot;</span><br><span class="line">2) &quot;four&quot;</span><br><span class="line">3) &quot;three&quot;</span><br></pre></td></tr></table></figure></div>
+
+
+
+
+
+<h2 id="Python客户端"><a href="#Python客户端" class="headerlink" title="Python客户端"></a>Python客户端</h2><p><a class="link"   target="_blank" rel="noopener" href="https://redis.io/docs/latest/develop/connect/clients/python/" >https://redis.io/docs/latest/develop/connect/clients/python/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://pypi.org/project/redis/" >https://pypi.org/project/redis/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://redis.readthedocs.io/en/stable/examples/connection_examples.html" >https://redis.readthedocs.io/en/stable/examples/connection_examples.html<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<p>安装&#x3D;&#x3D;redis-py&#x3D;&#x3D;</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install redis</span><br><span class="line">sudo pacman -S python-redis</span><br></pre></td></tr></table></figure></div>
+
+<p>连接redis与使用</p>
+<div class="code-container" data-rel="Python"><figure class="iseeu highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line"></span><br><span class="line">r = redis.Redis(host=<span class="string">&#x27;localhost&#x27;</span>, port=<span class="number">6379</span>,</span><br><span class="line">                password=<span class="string">&#x27;chedishibai&#x27;</span>, decode_responses=<span class="literal">True</span>, db=<span class="number">0</span>)  <span class="comment"># db=0代表redis数据库0-15中的哪一个</span></span><br><span class="line"><span class="built_in">print</span>(r.ping())</span><br><span class="line"></span><br><span class="line">r.<span class="built_in">set</span>(<span class="string">&#x27;foo&#x27;</span>, <span class="string">&#x27;bar&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(r.get(<span class="string">&#x27;foo&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(r.get(<span class="string">&#x27;foo&#x27;</span>)))</span><br><span class="line"></span><br><span class="line">r.hset(<span class="string">&#x27;user-session:123&#x27;</span>, mapping=&#123;</span><br><span class="line">    <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;John&#x27;</span>,</span><br><span class="line">    <span class="string">&quot;surname&quot;</span>: <span class="string">&#x27;Smith&#x27;</span>,</span><br><span class="line">    <span class="string">&quot;company&quot;</span>: <span class="string">&#x27;Redis&#x27;</span>,</span><br><span class="line">    <span class="string">&quot;age&quot;</span>: <span class="number">29</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">print</span>(r.hgetall(<span class="string">&#x27;user-session:123&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(r.hgetall(<span class="string">&#x27;user-session:123&#x27;</span>)))</span><br><span class="line"></span><br><span class="line">key_list = r.keys(<span class="string">&#x27;*&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(key_list)</span><br><span class="line"></span><br><span class="line">r.rpush(<span class="string">&#x27;py_l1&#x27;</span>, <span class="string">&quot;one&quot;</span>, <span class="number">2</span>, <span class="string">&quot;three&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(r.lrange(<span class="string">&#x27;py_l1&#x27;</span>, <span class="number">0</span>, -<span class="number">1</span>))</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p><a class="link"   target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1T54y1U7kb" >https://www.bilibili.com/video/BV1T54y1U7kb<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+<h2 id="Java客户端"><a href="#Java客户端" class="headerlink" title="Java客户端"></a>Java客户端</h2><p><a class="link"   target="_blank" rel="noopener" href="https://redis.io/docs/latest/develop/connect/clients/java/jedis/" >https://redis.io/docs/latest/develop/connect/clients/java/jedis/<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 240527_Redis</li>
+        <li><strong>Author:</strong> Haoliang Tang</li>
+        <li><strong>Created at
+                :</strong> 2024-05-27 00:00:00</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2025-04-29 23:57:06
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://hl-tang.github.io/2024/05/27/240527_Redis/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Database/">#Database</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/NoSQL/">#NoSQL</a>&nbsp;
+			</li>
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Redis/">#Redis</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2024/07/07/240707_Gin%E5%AE%9E%E7%8E%B0Go%20REST%20API/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">240707_Gin实现Go REST API</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2024/05/26/240526_Git%E8%BF%9B%E9%98%B6/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">240526_Git进阶</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+          
+          
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">240527_Redis</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%93%8D%E4%BD%9C"><span class="nav-text">命令行操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GUI%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-text">GUI客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C5%E7%A7%8D%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">操作5种基本数据结构类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%88%86%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%8C%E9%80%9A%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="nav-text">不分数据类型，通用的命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String"><span class="nav-text">String</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87namespace%E7%BB%99Key%E5%88%86%E5%B1%82"><span class="nav-text">通过namespace给Key分层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hash"><span class="nav-text">Hash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#List"><span class="nav-text">List</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Set"><span class="nav-text">Set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SortedSet"><span class="nav-text">SortedSet</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-text">Python客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-text">Java客户端</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2025&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Haoliang Tang</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        24 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.2</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>
