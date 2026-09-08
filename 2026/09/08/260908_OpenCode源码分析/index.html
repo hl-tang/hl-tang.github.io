@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Haoliang Tang">
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2026/09/08/260908_opencode源码分析/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="OpenCode 是 SST 团队开源的 AI 编程助手，定位与 Claude Code 类似，但用 TypeScript + Bun 实现，并基于 Effect 与 Vercel AI SDK构建了一套相当工程化的运行时。这篇以 sst&#x2F;opencode 的真实源码为依据，逐机制拆解它 “为什么是这样设计的”。 本文所有结论均来自 github.com&#x2F;sst&#x2F;opencode 默认分支 dev">
+<meta property="og:type" content="article">
+<meta property="og:title" content="260908_OpenCode源码分析">
+<meta property="og:url" content="http://example.com/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="Haoliang Tang&#39;s blog">
+<meta property="og:description" content="OpenCode 是 SST 团队开源的 AI 编程助手，定位与 Claude Code 类似，但用 TypeScript + Bun 实现，并基于 Effect 与 Vercel AI SDK构建了一套相当工程化的运行时。这篇以 sst&#x2F;opencode 的真实源码为依据，逐机制拆解它 “为什么是这样设计的”。 本文所有结论均来自 github.com&#x2F;sst&#x2F;opencode 默认分支 dev">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-01.svg">
+<meta property="og:image" content="http://example.com/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-02.svg">
+<meta property="og:image" content="http://example.com/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-03.svg">
+<meta property="og:image" content="http://example.com/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-05.svg">
+<meta property="og:image" content="http://example.com/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-06.svg">
+<meta property="og:image" content="http://example.com/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-07.svg">
+<meta property="og:image" content="http://example.com/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-09.svg">
+<meta property="article:published_time" content="2026-09-07T15:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-08T10:39:12.250Z">
+<meta property="article:author" content="Haoliang Tang">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-01.svg">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/chibimon.png" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/chibimon.png">
+    <meta name="theme-color" content="#008080">
+    <link rel="shortcut icon" href="/images/chibimon.png">
+    <!--- Page Info-->
+    
+    <title>
+        
+            260908_OpenCode源码分析 | Haoliang Tang&#39;s blog
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.json"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":true,"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#008080","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js","enable":false,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"open_graph":true,"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/wallroom-1920x1200-bg-11b87d0.jpg","dark":"/images/wallhaven-rreg9j.png"},"title":"一生懸命","subtitle":{"text":["live a life you will never regret"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#708090 ","dark":"#d3d3d3"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":true,"style":"default","links":{"github":"https://github.com/hl-tang","instagram":null,"zhihu":null,"twitter":null,"email":"haoliangtang0@gmail.com"},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"9.3.0"}},"version":"2.8.2","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"About":{"path":"/about","icon":"fa-regular fa-user"}},"search":{"enable":true,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2022/8/17 11:45:14"};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/chibimon.png" class="w-full h-full rounded-sm">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Haoliang Tang&#39;s blog
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/about"
+                                        >
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                        <li class="navbar-item search search-popup-trigger">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/about"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-regular fa-user fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">17</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">0</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">25</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">260908_OpenCode源码分析</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/chibimon.png">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">Haoliang Tang</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv3</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2026-09-08</span>
+        <span class="mobile">2026-09-08</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2026-09-08 19:39:12</span>
+            <span class="mobile">2026-09-08 19:39:12</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/AI/">AI</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<p>OpenCode 是 SST 团队开源的 AI 编程助手，定位与 Claude Code 类似，但用 TypeScript + Bun 实现，并基于 Effect 与 Vercel AI SDK<br>构建了一套相当工程化的运行时。这篇以 <code>sst/opencode</code> 的真实源码为依据，逐机制拆解它 “为什么是这样设计的”。</p>
+<p>本文所有结论均来自 <code>github.com/sst/opencode</code> 默认分支 <code>dev</code> 的源码，并标注<br><code>packages/opencode/src/</code> 下的相对路径。代码块为示意代码（保留真实命名与结构，省略无关细节），而非逐行复制，目的是让你抓住控制流与数据流。</p>
+<p>读完这篇，你应该能回答：用户敲下回车后，消息怎样流转、工具怎样被调用、上下文超限时怎样压缩、子 Agent 怎样被委派、MCP 工具怎样被发现、权限怎样在每一步被把关。</p>
+<h2 id="1-先纠正几个常见误解"><a href="#1-先纠正几个常见误解" class="headerlink" title="1. 先纠正几个常见误解"></a>1. 先纠正几个常见误解</h2><p>在进入正文前，先把几个容易被 “想当然” 的点钉死，因为它们直接决定了你读源码时的导航方向：</p>
+<ol>
+<li><strong>没有 <code>src/context/</code> 目录</strong>。上下文管理（压缩、溢出、摘要）全部住在 <code>src/session/</code><br>下（<code>compaction.ts</code> &#x2F; <code>overflow.ts</code> &#x2F; <code>summary.ts</code>）。如果你按 “经典分层” 去找<br>context 目录，会扑空。</li>
+<li>**bash 工具实际叫 <code>shell</code>**（<code>tool/shell.ts</code> +<br><code>tool/shell/</code>），不存在 <code>bash.ts</code>。</li>
+<li>**主循环函数是 <code>runLoop</code>**（<code>session/prompt.ts</code>），而不是很多人猜测的<br><code>session.run</code> &#x2F; <code>session.chat</code>。<code>session/session.ts</code> 其实是 Session 的<br>CRUD 服务（create &#x2F; getPart &#x2F; remove &#x2F; setTitle），不承载循环逻辑。</li>
+<li><strong>“summary” 有三种，不要混淆</strong>：<code>session/summary.ts</code> 算的是<strong>文件 diff<br>摘要</strong>（基于 snapshot）；对话压缩用的是 <code>packages/core/src/session/compaction.ts</code> 里的<br><code>SUMMARY_TEMPLATE</code>；而 <code>agent/prompt/summary.txt</code> 是 “会话描述摘要 agent” 的<br>prompt（用于生成会话标题 &#x2F; 描述，像 PR description）。三者完全不同。</li>
+<li><strong>MCP 工具命名用下划线连接</strong><br><code>sanitize(serverName)_sanitize(toolName)</code>，<strong>不是</strong><br><code>mcp__server__tool</code> 这种双下划线前缀（那是 Claude Code 的风格）。</li>
+<li><strong>“always allow” 权限只存内存，不落盘</strong>，重启即失效。要持久化只能手写 <code>opencode.json</code> 的<br><code>permission</code> 字段。</li>
+<li><strong>Provider 基于 Vercel AI SDK</strong>（约 20 个 <code>@ai-sdk/*</code> 包）+ 自研<br><code>@opencode-ai/llm</code> 原生 HTTP 通路并行，不是从零自研协议适配。</li>
+</ol>
+<p>记住这几条，下面读起来会顺很多。</p>
+<h2 id="2-整体架构与分包"><a href="#2-整体架构与分包" class="headerlink" title="2. 整体架构与分包"></a>2. 整体架构与分包</h2><p>OpenCode 是一个 monorepo，<code>packages/</code> 下有 23 个分包。和 “源码解析” 最相关的是这几个：</p>
+<table>
+<thead>
+<tr>
+<th>分包</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>packages/opencode</code></td>
+<td>核心 agent 运行时，本文主体</td>
+</tr>
+<tr>
+<td><code>packages/core</code></td>
+<td>共享类型 &#x2F; Schema &#x2F; 工具（如 <code>v1/config/*</code>、<code>session/compaction.ts</code>、<code>util/token.ts</code>）</td>
+</tr>
+<tr>
+<td><code>packages/llm</code></td>
+<td>自研 LLM 抽象层 <code>@opencode-ai/llm</code>，与 AI SDK 并行的原生 HTTP 通路</td>
+</tr>
+<tr>
+<td><code>packages/sdk</code></td>
+<td>对外 SDK <code>@opencode-ai/sdk</code></td>
+</tr>
+<tr>
+<td><code>packages/server</code> &#x2F; <code>packages/tui</code> &#x2F; <code>packages/app</code> &#x2F; <code>packages/desktop</code></td>
+<td>服务端 &#x2F; TUI &#x2F; 桌面 &#x2F; UI</td>
+</tr>
+<tr>
+<td><code>packages/cli</code></td>
+<td>CLI 命令分发</td>
+</tr>
+</tbody></table>
+<p>而核心运行时 <code>packages/opencode/src/</code> 内部的目录职责如下：</p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>session/</code></td>
+<td>会话主循环、LLM 调用、压缩、消息、系统提示（<strong>最核心</strong>）</td>
+</tr>
+<tr>
+<td><code>tool/</code></td>
+<td>工具定义、注册表、schema</td>
+</tr>
+<tr>
+<td><code>provider/</code></td>
+<td>Provider &#x2F; Model 类型、消息与 schema 转换、鉴权</td>
+</tr>
+<tr>
+<td><code>permission/</code></td>
+<td>权限评估、命令前缀匹配</td>
+</tr>
+<tr>
+<td><code>mcp/</code></td>
+<td>MCP server 接入、工具发现、OAuth</td>
+</tr>
+<tr>
+<td><code>agent/</code></td>
+<td>Subagent 定义、子 agent 权限派生、prompt 模板</td>
+</tr>
+<tr>
+<td><code>server/</code></td>
+<td>HTTP API 路由、projectors、事件</td>
+</tr>
+<tr>
+<td><code>config/</code></td>
+<td>配置解析（agent &#x2F; command &#x2F; markdown &#x2F; plugin &#x2F; paths）</td>
+</tr>
+<tr>
+<td><code>storage/</code></td>
+<td>文件系统 KV 持久化层</td>
+</tr>
+<tr>
+<td><code>auth/</code></td>
+<td>opencode 账户鉴权（区别于 <code>mcp/auth.ts</code> 的 MCP token 存储）</td>
+</tr>
+</tbody></table>
+<p>整体的调用层次大致是：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CLI (packages/cli)</span><br><span class="line">  └─ opencode 核心 (packages/opencode/src)</span><br><span class="line">       ├─ index.ts          注册 effect command（SessionCommand / ProvidersCommand ...）</span><br><span class="line">       ├─ server/           HTTP API + 事件投影</span><br><span class="line">       ├─ session/          ★ 主循环 runLoop + processor + llm + compaction</span><br><span class="line">       │     ├─ tool/       工具系统（read/edit/write/shell/task...）</span><br><span class="line">       │     ├─ provider/   AI SDK 工厂 + transform</span><br><span class="line">       │     ├─ agent/      subagent 定义与权限派生</span><br><span class="line">       │     ├─ permission/ ask/reply + arity 匹配</span><br><span class="line">       │     └─ mcp/        transport + catalog + oauth</span><br><span class="line">       └─ storage/          drizzle+sqlite（主） + 文件 KV（元数据）</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>注意 <code>src/context/</code> 与 <code>src/subagent/</code> 这两个 “看起来应该存在” 的目录都不存在 —— 上下文在<br><code>session/</code>，子 Agent 在 <code>agent/</code> + <code>tool/task.ts</code>。</p>
+</blockquote>
+<p>下面进入正题。</p>
+<h2 id="3-会话主循环与工具调用"><a href="#3-会话主循环与工具调用" class="headerlink" title="3. 会话主循环与工具调用"></a>3. 会话主循环与工具调用</h2><p>这是 OpenCode 的心脏。理解了它，其余章节都是在不同侧面给它打补丁。</p>
+<h3 id="3-1-入口链：prompt-→-loop-→-runLoop"><a href="#3-1-入口链：prompt-→-loop-→-runLoop" class="headerlink" title="3.1 入口链：prompt → loop → runLoop"></a>3.1 入口链：prompt → loop → runLoop</h3><p>用户发一条消息，最终走到的是 <code>session/prompt.ts</code> 里的三层函数：</p>
+<ul>
+<li><code>prompt</code>（<code>session/prompt.ts</code>，effect 名<br><code>&quot;SessionPrompt.prompt&quot;</code>）：对外入口，创建用户消息后调用 <code>loop</code>。</li>
+<li><code>loop</code>（<code>session/prompt.ts</code>，effect 名 <code>&quot;SessionPrompt.loop&quot;</code>）：通过<br><code>state.ensureRunning(sessionID, lastAssistant(...), runLoop(sessionID))</code> 把<br><code>runLoop</code> 交给运行状态机执行。</li>
+<li><code>runLoop</code>（<code>session/prompt.ts</code>）：真正的 <code>while (true)</code> 循环体，签名是<br><code>(sessionID: SessionID) =&gt; Effect.Effect&lt;SessionV1.WithParts&gt;</code>。</li>
+</ul>
+<p><code>ensureRunning</code> 定义在 <code>session/run-state.ts</code>，它的作用是保证同一 session 同一时刻只有一个循环在跑 —— 如果上一次assistant 还没结束就来了新输入，会按策略合并或排队，而不是并发触发两个 LLM 流。这是一个朴素但关键的并发护栏。</p>
+<p>三层入口与运行状态机的协作关系如下：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-01.svg"
+                      alt="Mermaid diagram 1"
+                ></p>
+<p>关键点是 <code>ensureRunning</code> 用 <code>lastAssistant(...)</code> 作为幂等键：同一 session 的并发输入不会触发两个 LLM流，而是被合并或排队。这是 Effect 结构化并发的典型用法。</p>
+<h3 id="3-2-一次循环的-16-步"><a href="#3-2-一次循环的-16-步" class="headerlink" title="3.2 一次循环的 16 步"></a>3.2 一次循环的 16 步</h3><p><code>runLoop</code> 的循环体（<code>session/prompt.ts</code>）展开后是这样的一组步骤。我用伪代码把骨架画出来，注释里标注了来源文件：</p>
+<div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// session/prompt.ts</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> runLoop = <span class="title class_">Effect</span>.<span class="title function_">fn</span>(<span class="string">&quot;SessionPrompt.run&quot;</span>)(<span class="function">(<span class="params">sessionID</span>) =&gt;</span></span><br><span class="line">  <span class="title class_">Effect</span>.<span class="title function_">gen</span>(<span class="keyword">function</span>* () &#123;</span><br><span class="line">    <span class="keyword">let</span> step = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* status.<span class="title function_">set</span>(sessionID, &#123; <span class="attr">type</span>: <span class="string">&quot;busy&quot;</span> &#125;)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 1. 取消息：过滤掉已被压缩覆盖的历史</span></span><br><span class="line">      <span class="keyword">const</span> msgs = <span class="keyword">yield</span>* <span class="title class_">MessageV2</span>.<span class="title function_">filterCompactedEffect</span>(sessionID)</span><br><span class="line">      <span class="keyword">const</span> last = <span class="title class_">MessageV2</span>.<span class="title function_">latest</span>(msgs)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 2. 退出判定（见下文&quot;stop 条件全集&quot;）</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="title function_">shouldBreak</span>(last)) <span class="keyword">break</span></span><br><span class="line">      step++</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 3. 第一步时 fork 出标题生成</span></span><br><span class="line">      <span class="keyword">if</span> (step === <span class="number">1</span>) <span class="keyword">yield</span>* <span class="title class_">Effect</span>.<span class="title function_">fork</span>(<span class="title function_">title</span>(sessionID))</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 4. 取模型</span></span><br><span class="line">      <span class="keyword">const</span> model = <span class="keyword">yield</span>* <span class="title function_">getModel</span>(...)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 5. 处理&quot;任务&quot;：subtask 或 compaction</span></span><br><span class="line">      <span class="keyword">const</span> task = last.<span class="property">tasks</span>.<span class="title function_">pop</span>()</span><br><span class="line">      <span class="keyword">if</span> (task?.<span class="property">type</span> === <span class="string">&quot;subtask&quot;</span>) &#123; <span class="keyword">yield</span>* <span class="title function_">handleSubtask</span>(...); <span class="keyword">continue</span> &#125;</span><br><span class="line">      <span class="keyword">if</span> (task?.<span class="property">type</span> === <span class="string">&quot;compaction&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> r = <span class="keyword">yield</span>* compaction.<span class="title function_">process</span>(...)</span><br><span class="line">        <span class="keyword">if</span> (r === <span class="string">&quot;stop&quot;</span>) <span class="keyword">break</span></span><br><span class="line">    	<span class="keyword">continue</span></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 6. 溢出检查 → 自动压缩</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">yield</span>* compaction.<span class="title function_">isOverflow</span>(...)) &#123;</span><br><span class="line">        <span class="keyword">yield</span>* compaction.<span class="title function_">create</span>(&#123; <span class="attr">auto</span>: <span class="literal">true</span> &#125;); <span class="keyword">continue</span></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 7. 取 agent、步数软上限</span></span><br><span class="line">      <span class="keyword">const</span> agent = agents.<span class="title function_">get</span>(last.<span class="property">lastUser</span>.<span class="property">agent</span>)</span><br><span class="line">      <span class="keyword">const</span> maxSteps = agent.<span class="property">steps</span> ?? <span class="title class_">Infinity</span></span><br><span class="line">      <span class="keyword">const</span> isLastStep = step &gt;= maxSteps</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 8. 注入提醒（如&quot;你已到最后一步&quot;）</span></span><br><span class="line">      <span class="keyword">yield</span>* <span class="title class_">SessionReminders</span>.<span class="title function_">apply</span>(...)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 9. 构造 assistant 占位消息并落库</span></span><br><span class="line">      <span class="keyword">const</span> msg = <span class="title function_">makeAssistantMessage</span>(...)</span><br><span class="line">      <span class="keyword">yield</span>* sessions.<span class="title function_">updateMessage</span>(msg)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 10. 创建 processor handle</span></span><br><span class="line">      <span class="keyword">const</span> handle = <span class="keyword">yield</span>* processor.<span class="title function_">create</span>(&#123; assistantMessage, sessionID, model &#125;)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 11. 解析可用工具集</span></span><br><span class="line">      <span class="keyword">const</span> tools = <span class="keyword">yield</span>* <span class="title class_">SessionTools</span>.<span class="title function_">resolve</span>(...)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 12. 组装 system prompt</span></span><br><span class="line">      <span class="keyword">const</span> system = sys.<span class="title function_">skills</span>(agent) + sys.<span class="title function_">environment</span>(model) + instruction.<span class="title function_">system</span>()</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 13. 转模型消息</span></span><br><span class="line">      <span class="keyword">const</span> messages = <span class="keyword">yield</span>* <span class="title class_">MessageV2</span>.<span class="title function_">toModelMessagesEffect</span>(msgs, model)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 14. 真正调 LLM 流</span></span><br><span class="line">      <span class="keyword">const</span> result = <span class="keyword">yield</span>* handle.<span class="title function_">process</span>(&#123; user, agent, system, messages, tools, model, ... &#125;)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 15. 处理返回值</span></span><br><span class="line">      <span class="keyword">if</span> (result === <span class="string">&quot;structured&quot;</span>) <span class="keyword">break</span></span><br><span class="line">      <span class="keyword">if</span> (result === <span class="string">&quot;finished&quot;</span> &amp;&amp; isError) <span class="keyword">break</span></span><br><span class="line">      <span class="keyword">if</span> (result === <span class="string">&quot;stop&quot;</span>) <span class="keyword">break</span></span><br><span class="line">      <span class="keyword">if</span> (result === <span class="string">&quot;compact&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">yield</span>* compaction.<span class="title function_">create</span>(&#123; <span class="attr">auto</span>: <span class="literal">true</span>, <span class="attr">overflow</span>: !handle.<span class="property">message</span>.<span class="property">finish</span> &#125;)</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 16. 收尾：fork 修剪压缩记录</span></span><br><span class="line">    <span class="keyword">yield</span>* <span class="title class_">Effect</span>.<span class="title function_">fork</span>(compaction.<span class="title function_">prune</span>(sessionID))</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">lastAssistant</span>(sessionID)</span><br><span class="line">  &#125;)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+
+<p>这 16 步里有几个值得停下来看的设计点。</p>
+<p><strong>为什么 “取消息” 要 <code>filterCompactedEffect</code>？</strong> 因为压缩不是物理删除旧消息，而是用一条 compaction 消息 “覆盖”掉它。<code>MessageV2.filterCompactedEffect</code> 把这些被覆盖的历史过滤掉，让 LLM 看到的是 “摘要 + 近期对话”，而不是 “摘要 + 已被摘要吃掉的原文”。这是压缩与循环解耦的关键 —— 压缩只产生一条记录，循环每次按需过滤。</p>
+<p><strong>为什么 <code>step === 1</code> 才 fork 标题？</strong> 标题生成是一次独立的 LLM 调用（用 <code>title</code> agent），它和主对话并行跑，但只需要在循环开始时触发一次。fork 出去不阻塞主循环。</p>
+<p><strong>为什么 <code>task</code> 要先于工具调用处理？</strong> 因为有些 “轮次”不是真的让模型继续生成，而是系统塞进去的子任务（subtask）或压缩任务（compaction）。<code>tasks</code> 是一个队列，<code>pop</code>出来按类型分流，避免它们和普通生成混在一起。</p>
+<h3 id="3-3-工具是怎么注入到-LLM-调用里的"><a href="#3-3-工具是怎么注入到-LLM-调用里的" class="headerlink" title="3.3 工具是怎么注入到 LLM 调用里的"></a>3.3 工具是怎么注入到 LLM 调用里的</h3><p>第 11 步的 <code>SessionTools.resolve</code>（<code>session/tools.ts</code>）是工具系统的总装车间。它把两类工具组装成一个<code>Record&lt;string, AITool&gt;</code>：</p>
+<div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// session/tools.ts  SessionTools.resolve</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> resolve = <span class="title class_">Effect</span>.<span class="title function_">fn</span>(<span class="string">&quot;SessionTools.resolve&quot;</span>)(<span class="function">(<span class="params">input</span>) =&gt;</span></span><br><span class="line">  <span class="title class_">Effect</span>.<span class="title function_">gen</span>(<span class="keyword">function</span>* () &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="attr">tools</span>: <span class="title class_">Record</span>&lt;<span class="built_in">string</span>, <span class="title class_">AITool</span>&gt; = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. registry 工具：内置 + 插件，用 AI SDK tool() 包装</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">of</span> <span class="keyword">yield</span>* registry.<span class="title function_">tools</span>(input.<span class="property">model</span>)) &#123;</span><br><span class="line">      tools[item.<span class="property">id</span>] = ai.<span class="title function_">tool</span>(&#123;</span><br><span class="line">        <span class="attr">description</span>: item.<span class="property">description</span>,</span><br><span class="line">        <span class="attr">inputSchema</span>: <span class="title function_">jsonSchema</span>(<span class="title class_">ProviderTransform</span>.<span class="title function_">schema</span>(input.<span class="property">model</span>, <span class="title class_">ToolJsonSchema</span>.<span class="title function_">fromTool</span>(item))),</span><br><span class="line">        <span class="attr">execute</span>: <span class="function">(<span class="params">args</span>) =&gt;</span> <span class="title function_">wrapExecute</span>(item, args, ctx),</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. MCP 工具：下划线连接命名</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> [key, item] <span class="keyword">of</span> <span class="title class_">Object</span>.<span class="title function_">entries</span>(<span class="keyword">yield</span>* mcp.<span class="title function_">tools</span>())) &#123;</span><br><span class="line">      tools[key] = <span class="title function_">wrapMcpTool</span>(key, item, ctx)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> tools</span><br><span class="line">  &#125;)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+
+<p>注意几个细节：</p>
+<ul>
+<li>工具的 <code>inputSchema</code> 不是直接拿原始 schema，而是先 <code>ToolJsonSchema.fromTool</code>（effect Schema → JSON Schema），再 <code>ProviderTransform.schema</code> 按 model 适配（OpenAI 走<br><code>sanitizeOpenAISchema</code>、moonshot 去 <code>$ref</code> 兄弟关键字等）。</li>
+<li>MCP 工具的命名是 <code>sanitize(serverName)_sanitize(toolName)</code>，和内置工具混在同一个 dict 里，对 LLM 来说没有区别。</li>
+<li>每个 execute 内部最终调 <code>item.execute(args, ctx)</code>，结果含 <code>attachments</code>，并触发<br><code>tool.execute.before/after</code> 插件钩子，再 <code>processor.completeToolCall</code> 把结果写回 part。</li>
+</ul>
+<p>这份 <code>tools</code> 传给 <code>handle.process</code> →<code>llm.stream</code>（<code>session/llm.ts</code>）→<br><code>LLMRequestPrep.prepare</code>（<code>session/llm/request.ts</code>）的 <code>resolveTools</code> → 最终<br><code>streamText(&#123; tools, activeTools, toolChoice &#125;)</code>（<code>session/llm.ts</code>）。</p>
+<p>从工具定义到最终下发到 LLM 的完整链路：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-02.svg"
+                      alt="Mermaid diagram 2"
+                ></p>
+<p>有个有趣的特例：Copilot 模型在没有工具、但历史里含 tool calls 时，会注入一个 <code>_noop</code>工具（<code>session/llm/request.ts</code>）。这是因为某些模型在历史含 tool calls 时强制要求 tools 参数非空，<code>_noop</code>是个不会被调用的占位工具，纯粹为了满足协议。</p>
+<h3 id="3-4-processor：消费-LLM-事件流"><a href="#3-4-processor：消费-LLM-事件流" class="headerlink" title="3.4 processor：消费 LLM 事件流"></a>3.4 processor：消费 LLM 事件流</h3><p><code>handle.process</code>（<code>session/processor.ts</code>）是循环里真正干活的地方。它把 LLM 的流式事件归一化成<code>LLMEvent</code>，再用 <code>Stream.tap(handleEvent)</code> 消费：</p>
+<div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// session/processor.ts  process（简化）</span></span><br><span class="line"><span class="keyword">const</span> stream = <span class="keyword">yield</span>* <span class="variable constant_">LLM</span>.<span class="title function_">stream</span>(&#123; ...input, tools &#125;)</span><br><span class="line"><span class="keyword">const</span> events = <span class="title class_">Stream</span>.<span class="title function_">tap</span>(stream, handleEvent)</span><br><span class="line"></span><br><span class="line"><span class="keyword">yield</span>* <span class="title class_">Stream</span>.<span class="title function_">runDrain</span>(events)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (ctx.<span class="property">blocked</span> || ctx.<span class="property">assistantMessage</span>.<span class="property">error</span>) <span class="keyword">return</span> <span class="string">&quot;stop&quot;</span></span><br><span class="line"><span class="keyword">if</span> (ctx.<span class="property">needsCompaction</span>) <span class="keyword">return</span> <span class="string">&quot;compact&quot;</span></span><br><span class="line"><span class="keyword">if</span> (ctx.<span class="property">structured</span>) <span class="keyword">return</span> <span class="string">&quot;structured&quot;</span></span><br><span class="line"><span class="keyword">if</span> (ctx.<span class="property">assistantMessage</span>.<span class="property">finish</span>) <span class="keyword">return</span> <span class="string">&quot;finished&quot;</span></span><br><span class="line"><span class="keyword">return</span> <span class="string">&quot;continue&quot;</span></span><br></pre></td></tr></table></figure></div>
+
+<p><code>handleEvent</code>（<code>processor.ts</code>）按事件类型更新 parts（reasoning &#x2F; text &#x2F; tool），并向 V1&#x2F;V2<br>双写发布事件。这里有几个机制值得拎出来：</p>
+<p><strong>流内压缩（<code>needsCompaction</code>）</strong>。<code>Stream.takeUntil(() =&gt; ctx.needsCompaction)</code><br>会在流式生成中发现 “上下文要爆了” 时提前终止流，<code>process</code> 返回 <code>&quot;compact&quot;</code>，外层 <code>runLoop</code><br>收到后触发压缩再 <code>continue</code>。这意味着压缩不一定要等一轮结束 ——<br>它可以在生成中途就被触发。这是个很聪明的点：<span style="color:red;">与其等模型生成完一长串然后下一轮才发现超限，不如在流式过程中就监测 token 用量。</span></p>
+<p><strong>doom loop 检测</strong>。如果连续 <code>DOOM_LOOP_THRESHOLD = 3</code> 次出现 “相同工具名 + 相同输入”，processor 会触发<code>permission.ask(&#123; permission: &quot;doom_loop&quot;, ... &#125;)</code>（<code>processor.ts</code>），把 “是否继续”交给用户。这是防止模型陷入 “反复读同一个文件” 死循环的安全阀。</p>
+<p><strong>中断处理</strong>。<code>Effect.onInterrupt(() =&gt; finalizeInterruptedAssistant)</code> 保证用户 Ctrl + C 时，正在跑的 assistant 消息会被妥善标记为中断态，而不是悬空。中断后<code>halt(new DOMException(&quot;Aborted&quot;, &quot;AbortError&quot;))</code>（<code>processor.ts</code>）。</p>
+<p><strong>权限拒绝传播</strong>。当 <code>experimental.continue_loop_on_deny !== true</code> 时，工具被拒会置<br><code>ctx.blocked</code>，下一轮 <code>process</code> 返回 <code>&quot;stop&quot;</code>，循环结束。<span style="color:red;">默认行为是 “被拒就停”，避免模型在被拒后疯狂重试。</span></p>
+<p>processor 内部对 LLM 事件流的消费与三条异常分支（流内压缩 &#x2F; doom loop &#x2F; 权限拒绝）：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-03.svg"
+                      alt="Mermaid diagram 3"
+                ></p>
+<h3 id="3-5-stop-条件全集"><a href="#3-5-stop-条件全集" class="headerlink" title="3.5 stop 条件全集"></a>3.5 stop 条件全集</h3><p>把循环的所有退出路径汇总，方便对照：</p>
+<table>
+<thead>
+<tr>
+<th>退出条件</th>
+<th>触发位置</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自然结束</td>
+<td><code>prompt.ts</code></td>
+<td><code>lastAssistant.finish</code> 且非 <code>tool-calls</code> 且无 tool calls 且 <code>lastUser.id &lt; lastAssistant.id</code></td>
+</tr>
+<tr>
+<td><code>result === &quot;stop&quot;</code></td>
+<td><code>prompt.ts</code></td>
+<td><code>ctx.blocked</code>（权限拒绝）或 <code>assistantMessage.error</code></td>
+</tr>
+<tr>
+<td><code>result === &quot;structured&quot;</code></td>
+<td><code>prompt.ts</code></td>
+<td>命中结构化输出</td>
+</tr>
+<tr>
+<td><code>result === &quot;finished&quot;</code> + error</td>
+<td><code>prompt.ts</code></td>
+<td>content-filter 或结构化错误</td>
+</tr>
+<tr>
+<td>步数软上限</td>
+<td><code>prompt.ts</code></td>
+<td><code>step &gt;= agent.steps</code>，注入 <code>MAX_STEPS_PROMPT</code> 引导收尾（<strong>非硬 break</strong>）</td>
+</tr>
+<tr>
+<td>用户中断</td>
+<td><code>prompt.ts</code></td>
+<td><code>onInterrupt</code> → 标记中断态</td>
+</tr>
+<tr>
+<td>compaction 返回 <code>&quot;stop&quot;</code></td>
+<td><code>prompt.ts</code></td>
+<td>压缩后仍超限（<code>ContextOverflowError</code>）</td>
+</tr>
+</tbody></table>
+<p>注意 “步数软上限” 不是硬性的 —— 它只是在最后一步注入一段提示让模型收尾，模型理论上仍可以继续。真正硬性的终止是<br><code>ContextOverflowError</code>（压缩两次都救不回来）和用户中断。</p>
+<p>整个主循环可以用一张图概括：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-05.svg"
+                      alt="Mermaid diagram 5"
+                ></p>
+<p>图里两条压缩路径（轮次边界的 <code>isOverflow</code> 与生成中途的 <code>needsCompaction</code>）最终都汇入<br><code>compaction.create</code>，这是压缩与循环解耦的体现：压缩只产生一条记录，循环每次按需过滤。</p>
+<h2 id="4-Provider-抽象与工具协议"><a href="#4-Provider-抽象与工具协议" class="headerlink" title="4. Provider 抽象与工具协议"></a>4. Provider 抽象与工具协议</h2><p>主循环只管 “调模型”，但 “怎么调不同厂家的模型” 是 Provider 层的事。</p>
+<h3 id="4-1-三层适配：工厂映射-定制-loader-transform"><a href="#4-1-三层适配：工厂映射-定制-loader-transform" class="headerlink" title="4.1 三层适配：工厂映射 + 定制 loader + transform"></a>4.1 三层适配：工厂映射 + 定制 loader + transform</h3><p>OpenCode 的 Provider 适配不是一个大 switch，而是三层叠加：</p>
+<p>**第一层：工厂映射 <code>BUNDLED_PROVIDERS</code>**（<code>provider/provider.ts</code>）。它把 npm 包名动态<br>import 到 AI SDK 的 <code>createXxx</code> 工厂：</p>
+<div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// provider/provider.ts  （示意）</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">BUNDLED_PROVIDERS</span> = &#123;</span><br><span class="line">  <span class="string">&quot;@ai-sdk/anthropic&quot;</span>:        <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&quot;@ai-sdk/anthropic&quot;</span>).<span class="title function_">then</span>(<span class="function"><span class="params">m</span> =&gt;</span> m.<span class="property">createAnthropic</span>),</span><br><span class="line">  <span class="string">&quot;@ai-sdk/openai&quot;</span>:           <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&quot;@ai-sdk/openai&quot;</span>).<span class="title function_">then</span>(<span class="function"><span class="params">m</span> =&gt;</span> m.<span class="property">createOpenAI</span>),</span><br><span class="line">  <span class="string">&quot;@ai-sdk/google&quot;</span>:           <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&quot;@ai-sdk/google&quot;</span>).<span class="title function_">then</span>(<span class="function"><span class="params">m</span> =&gt;</span> m.<span class="property">createGoogleGenerativeAI</span>),</span><br><span class="line">  <span class="string">&quot;@ai-sdk/azure&quot;</span>:            <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&quot;@ai-sdk/azure&quot;</span>).<span class="title function_">then</span>(<span class="function"><span class="params">m</span> =&gt;</span> m.<span class="property">createAzure</span>),</span><br><span class="line">  <span class="string">&quot;@ai-sdk/amazon-bedrock&quot;</span>:   <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&quot;@ai-sdk/amazon-bedrock&quot;</span>).<span class="title function_">then</span>(<span class="function"><span class="params">m</span> =&gt;</span> m.<span class="property">createAmazonBedrock</span>),</span><br><span class="line">  <span class="string">&quot;@ai-sdk/google-vertex/anthropic&quot;</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(...).<span class="title function_">then</span>(<span class="function"><span class="params">m</span> =&gt;</span> m.<span class="property">createVertexAnthropic</span>),</span><br><span class="line">  <span class="comment">// ...约 20 个</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>动态 import 意味着未使用的 provider 不会进启动开销。</p>
+<p>**第二层：定制 loader <code>custom(dep)</code>**（<code>provider.ts</code>）。每个 provider有自己的怪癖，这里集中处理：</p>
+<ul>
+<li><code>anthropic</code>：注入 beta header<br><code>interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14</code>（交错思考 + 细粒度工具流）。</li>
+<li><code>openai</code> &#x2F; <code>xai</code>：<code>getModel</code> 走<code>sdk.responses(modelID)</code>（Responses API，而非 Chat Completions）。</li>
+<li><code>github-copilot</code>：按 gpt 版本号选 <code>responses</code> 或 <code>chat</code>。</li>
+<li><code>azure</code>：解析 <code>resourceName</code>，按 <code>useCompletionUrls</code> 选<br><code>chat</code>&#x2F;<code>responses</code>&#x2F;<code>messages</code>。</li>
+<li><code>amazon-bedrock</code>：区域前缀注入（<code>us.</code>&#x2F;<code>eu.</code>&#x2F;<code>apac.</code>&#x2F;<code>jp.</code>&#x2F;<code>au.</code>）、bearer token &#x2F; credential chain。</li>
+</ul>
+<p>**第三层：消息转换 <code>provider/transform.ts</code>**（约 430 行）。<code>normalizeMessages</code> +<br><code>message()</code> 针对各 provider 做规范化：</p>
+<ul>
+<li>anthropic &#x2F; bedrock：过滤空消息。</li>
+<li>claude：清洗 <code>toolCallId</code>。</li>
+<li>mistral：修复 <code>tool</code> → <code>user</code> 序列。</li>
+<li>deepseek：给 assistant 补 reasoning。</li>
+<li>interleaved-thinking 字段处理。</li>
+</ul>
+<p>还有一个 <code>sdkKey(npm)</code> 把 npm 包名映射到 AI SDK 的 <code>providerOptions</code> key。</p>
+<h3 id="4-2-Provider-与-Model-的类型"><a href="#4-2-Provider-与-Model-的类型" class="headerlink" title="4.2 Provider 与 Model 的类型"></a>4.2 Provider 与 Model 的类型</h3><div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// provider/provider.ts  （示意）</span></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Model</span> = <span class="title class_">Schema</span>.<span class="title class_">Struct</span>(&#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="title class_">Schema</span>.<span class="property">String</span>,</span><br><span class="line">  <span class="attr">providerID</span>: <span class="title class_">Schema</span>.<span class="property">String</span>,</span><br><span class="line">  <span class="attr">api</span>: <span class="title class_">ProviderApiInfo</span>,</span><br><span class="line">  <span class="attr">name</span>: <span class="title class_">Schema</span>.<span class="property">String</span>,</span><br><span class="line">  <span class="attr">family</span>: <span class="title class_">Schema</span>.<span class="property">String</span>.<span class="property">optional</span>,</span><br><span class="line">  <span class="attr">capabilities</span>: <span class="title class_">ProviderCapabilities</span>,   <span class="comment">// 能力集</span></span><br><span class="line">  <span class="attr">cost</span>: <span class="title class_">ProviderCost</span>,                   <span class="comment">// 计费</span></span><br><span class="line">  <span class="attr">limit</span>: <span class="title class_">ProviderLimit</span>,                 <span class="comment">// context / output 上限</span></span><br><span class="line">  <span class="attr">status</span>: <span class="title class_">ModelStatus</span>,</span><br><span class="line">  <span class="attr">options</span>: <span class="title class_">Schema</span>.<span class="title class_">Record</span>(&#123; <span class="attr">key</span>: <span class="title class_">Schema</span>.<span class="property">String</span>, <span class="attr">value</span>: <span class="title class_">Schema</span>.<span class="property">Any</span> &#125;),</span><br><span class="line">  <span class="attr">headers</span>: <span class="title class_">Schema</span>.<span class="title class_">Record</span>(...),</span><br><span class="line">  <span class="attr">release_date</span>: <span class="title class_">Schema</span>.<span class="property">String</span>.<span class="property">optional</span>,</span><br><span class="line">  <span class="attr">variants</span>: <span class="title class_">Schema</span>.<span class="title class_">Array</span>(<span class="title class_">Schema</span>.<span class="property">String</span>).<span class="property">optional</span>,</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Info</span> = <span class="title class_">Schema</span>.<span class="title class_">Struct</span>(&#123;            <span class="comment">// 即 Provider 类型</span></span><br><span class="line">  <span class="attr">id</span>: <span class="title class_">ProviderV2</span>.<span class="property">ID</span>,</span><br><span class="line">  <span class="attr">name</span>: <span class="title class_">Schema</span>.<span class="property">String</span>,</span><br><span class="line">  <span class="attr">source</span>: <span class="title class_">Schema</span>.<span class="title class_">Literal</span>(<span class="string">&quot;env&quot;</span>, <span class="string">&quot;config&quot;</span>, <span class="string">&quot;custom&quot;</span>, <span class="string">&quot;api&quot;</span>),</span><br><span class="line">  <span class="attr">env</span>: <span class="title class_">Schema</span>.<span class="title class_">Array</span>(<span class="title class_">Schema</span>.<span class="property">String</span>),     <span class="comment">// 需要哪些环境变量</span></span><br><span class="line">  <span class="attr">key</span>: <span class="title class_">Schema</span>.<span class="property">String</span>.<span class="property">optional</span>,</span><br><span class="line">  <span class="attr">options</span>: <span class="title class_">Schema</span>.<span class="title class_">Record</span>(...),          <span class="comment">// baseURL 藏在这里</span></span><br><span class="line">  <span class="attr">models</span>: <span class="title class_">Schema</span>.<span class="title class_">Record</span>(&#123; <span class="attr">key</span>: <span class="title class_">Schema</span>.<span class="property">String</span>, <span class="attr">value</span>: <span class="title class_">Model</span> &#125;),</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></div>
+
+<p>注意 <code>Info</code> 里<strong>没有顶层 <code>url</code> &#x2F; <code>fetch</code> 字段</strong> ——<span style="color:red;">baseURL 是通过<br><code>options.baseURL</code> 传给底层 SDK 的</span>（见 <code>native-runtime.ts</code> 中<br><code>baseURL: input.provider.options.baseURL</code>）。<code>Provider.Interface</code> 暴露<br><code>list</code> &#x2F; <code>getProvider</code> &#x2F; <code>getModel</code> &#x2F; <code>getLanguage</code>（返回<br><code>LanguageModelV3</code>）&#x2F; <code>closest</code>（模型回退）&#x2F; <code>getSmallModel</code> &#x2F;<br><code>defaultModel</code>。</p>
+<h3 id="4-3-工具-schema-的定义与下发"><a href="#4-3-工具-schema-的定义与下发" class="headerlink" title="4.3 工具 schema 的定义与下发"></a>4.3 工具 schema 的定义与下发</h3><p>工具参数用 effect Schema 定义，下发前要转成 JSON Schema 并按 model 适配。这条链路在 <code>tool/json-schema.ts</code>：</p>
+<div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tool/json-schema.ts  （示意）</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">fromSchema</span>(<span class="params"><span class="attr">schema</span>: <span class="title class_">Schema</span>.<span class="title class_">Top</span></span>): <span class="title class_">JSON</span>Schema7 &#123;</span><br><span class="line">  <span class="keyword">const</span> doc = <span class="title class_">Schema</span>.<span class="title function_">toJsonSchemaDocument</span>(schema)   <span class="comment">// effect → JSON Schema</span></span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">normalize</span>(<span class="title function_">inlineLocalReferences</span>(<span class="title function_">dropDefinitionsIfResolved</span>(doc)))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">fromTool</span>(<span class="params"><span class="attr">tool</span>: <span class="title class_">Tool</span>.<span class="title class_">Def</span></span>): <span class="title class_">JSON</span>Schema7 &#123;</span><br><span class="line">  <span class="keyword">return</span> tool.<span class="property">jsonSchema</span> ?? <span class="title function_">fromSchema</span>(tool.<span class="property">parameters</span>)   <span class="comment">// 优先预计算</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>带 <code>WeakMap</code> 缓存，避免重复转换。下发时（<code>session/tools.ts</code>）每个工具的 schema 还要过一遍<br><code>ProviderTransform.schema(input.model, ...)</code>：</p>
+<ul>
+<li>openai &#x2F; azure：<code>sanitizeOpenAISchema</code>（去掉 OpenAI 不支持的关键字）。</li>
+<li>moonshot &#x2F; kimi：去除 <code>$ref</code> 的兄弟关键字、合并 tuple items。</li>
+<li>其他：透传。</li>
+</ul>
+<p>这套 “effect Schema → JSON Schema → model 适配 → AI SDK tool ()” 的四段式，让工具定义保持类型安全（effect Schema编译期校验），同时兼容各模型对 JSON Schema 的不同支持程度。</p>
+<h3 id="4-4-tool-txt：给-LLM-看的说明书"><a href="#4-4-tool-txt：给-LLM-看的说明书" class="headerlink" title="4.4 tool/*.txt：给 LLM 看的说明书"></a>4.4 <code>tool/*.txt</code>：给 LLM 看的说明书</h3><p>这是 OpenCode 一个很有意思的约定：<strong>每个工具基本都有一个同名 <code>.txt</code>，作为给 LLM 看的使用说明</strong>，通过<br><code>import DESCRIPTION from &quot;./xxx.txt&quot;</code> 以字符串导入，赋给 <code>Tool.define</code> 的<br><code>description</code> 字段。</p>
+<div class="code-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">read.txt  edit.txt  write.txt  glob.txt  grep.txt</span><br><span class="line">webfetch.txt  websearch.txt  skill.txt  question.txt</span><br><span class="line">todowrite.txt  plan-enter.txt  plan-exit.txt  apply_patch.txt</span><br><span class="line">shell.txt</span><br></pre></td></tr></table></figure></div>
+
+<p>其中 <code>shell.txt</code> 不是静态文本，而是<strong>模板</strong>，含 <code>$&#123;intro&#125;</code> &#x2F; <code>$&#123;os&#125;</code> &#x2F;<br><code>$&#123;shell&#125;</code> &#x2F; <code>$&#123;workdirSection&#125;</code> &#x2F; <code>$&#123;commandSection&#125;</code> &#x2F;<br><code>$&#123;tmp&#125;</code> 占位符，由 <code>ShellPrompt.render</code>（<code>shell/prompt.ts</code>）按平台动态渲染 —— 所以<br>shell 工具的描述会随 OS、shell 类型、工作目录变化。</p>
+<p><code>task</code> 工具的描述更进一步：<code>registry.ts</code> 会拼接 <code>describeTask(agent)</code>，动态列出当前可用的子<br>agent 类型。这让 LLM 永远知道 “现在能委派哪些 subagent”，而不用硬编码。</p>
+<h2 id="5-工具系统"><a href="#5-工具系统" class="headerlink" title="5. 工具系统"></a>5. 工具系统</h2><p>Provider 层讲完了工具的 “下发”，现在看工具本身的 “定义与执行”。</p>
+<h3 id="5-1-Tool-Def-接口"><a href="#5-1-Tool-Def-接口" class="headerlink" title="5.1 Tool.Def 接口"></a>5.1 Tool.Def 接口</h3><div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tool/tool.ts</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> <span class="title class_">Def</span>&lt;<span class="title class_">Parameters</span>, M&gt; &#123;</span><br><span class="line">  <span class="attr">id</span>: <span class="built_in">string</span></span><br><span class="line">  <span class="attr">description</span>: <span class="built_in">string</span></span><br><span class="line">  <span class="attr">parameters</span>: <span class="title class_">Parameters</span>                                    <span class="comment">// effect Schema.Decoder&lt;unknown&gt;</span></span><br><span class="line">  <span class="attr">jsonSchema</span>?: <span class="title class_">JSON</span>Schema7                                  <span class="comment">// 可选预计算</span></span><br><span class="line">  <span class="title function_">execute</span>(args, ctx): <span class="title class_">Effect</span>.<span class="property">Effect</span>&lt;<span class="title class_">ExecuteResult</span>&lt;M&gt;&gt;</span><br><span class="line">  formatValidationError?(error): <span class="built_in">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// tool/tool.ts</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> <span class="title class_">ExecuteResult</span>&lt;M&gt; &#123;</span><br><span class="line">  <span class="attr">title</span>: <span class="built_in">string</span></span><br><span class="line">  <span class="attr">metadata</span>: M</span><br><span class="line">  <span class="attr">output</span>: <span class="built_in">string</span></span><br><span class="line">  <span class="attr">attachments</span>?: <span class="title class_">FilePart</span>[]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// tool/tool.ts  工具执行上下文</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> <span class="title class_">Context</span>&lt;M&gt; &#123;</span><br><span class="line">  sessionID, messageID, agent</span><br><span class="line">  <span class="attr">abort</span>: <span class="title class_">AbortSignal</span></span><br><span class="line">  <span class="attr">callID</span>?: <span class="built_in">string</span></span><br><span class="line">  <span class="attr">extra</span>?: <span class="built_in">unknown</span></span><br><span class="line">  <span class="attr">messages</span>: <span class="title class_">SessionV1</span>.<span class="property">WithParts</span>[]</span><br><span class="line">  <span class="title function_">metadata</span>(input): <span class="title class_">Effect</span>&lt;<span class="built_in">void</span>&gt;      <span class="comment">// 实时回写进度</span></span><br><span class="line">  <span class="title function_">ask</span>(input): <span class="title class_">Effect</span>&lt;<span class="built_in">void</span>&gt;           <span class="comment">// 触发权限询问</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>注册用 <code>define(id, init)</code>（<code>tool.ts</code>），返回带 <code>.id</code> 的<code>Effect&lt;Info&gt;</code>。</p>
+<h3 id="5-2-execute-的包装：解码-→-执行-→-截断"><a href="#5-2-execute-的包装：解码-→-执行-→-截断" class="headerlink" title="5.2 execute 的包装：解码 → 执行 → 截断"></a>5.2 execute 的包装：解码 → 执行 → 截断</h3><p><code>wrap</code>（<code>tool.ts</code>）是每个工具 execute 外面的统一外壳：</p>
+<div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tool/tool.ts  wrap（示意）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">wrap</span>(<span class="params">execute, parameters</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">args, ctx</span>) =&gt;</span></span><br><span class="line">    <span class="title class_">Effect</span>.<span class="title function_">gen</span>(<span class="keyword">function</span>* () &#123;</span><br><span class="line">      <span class="comment">// 1. 解码：effect Schema 校验参数</span></span><br><span class="line">      <span class="keyword">const</span> decoded = <span class="keyword">yield</span>* <span class="title class_">Schema</span>.<span class="title function_">decodeUnknownEffect</span>(parameters)(args).<span class="title function_">pipe</span>(</span><br><span class="line">        <span class="title class_">Effect</span>.<span class="title function_">catchAll</span>(<span class="function">() =&gt;</span> <span class="title class_">Effect</span>.<span class="title function_">fail</span>(<span class="keyword">new</span> <span class="title class_">InvalidArgumentsError</span>()))</span><br><span class="line">      )</span><br><span class="line">      <span class="comment">// 2. 执行原 execute</span></span><br><span class="line">      <span class="keyword">const</span> result = <span class="keyword">yield</span>* <span class="title function_">execute</span>(decoded, ctx)</span><br><span class="line">      <span class="comment">// 3. 截断过长输出</span></span><br><span class="line">      <span class="keyword">const</span> truncated = truncate.<span class="title function_">output</span>(result.<span class="property">output</span>)</span><br><span class="line">      <span class="keyword">return</span> &#123; ...result, <span class="attr">output</span>: truncated.<span class="property">output</span>, <span class="attr">metadata</span>: &#123; ...result.<span class="property">metadata</span>, ...truncated &#125; &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>三段式很清晰：先解码（参数不对直接 <code>InvalidArgumentsError</code>，不会传到 execute 内部），再执行，最后截断（过长输出落盘到文件，metadata 里记<br><code>truncated</code> &#x2F; <code>outputPath</code>）。截断是保护上下文的重要手段 —— 一次 <code>read</code> 读出几万行不能直接塞回消息。</p>
+<h3 id="5-3-注册表"><a href="#5-3-注册表" class="headerlink" title="5.3 注册表"></a>5.3 注册表</h3><p><code>tool/registry.ts</code> 的 <code>layer</code> 内各工具经 <code>yield* XxxTool</code> 再<br><code>Tool.init(xxx)</code> 初始化。内置工具 <code>builtin</code> 数组（约 225-245 行）：</p>
+<div class="code-container" data-rel="Txt"><figure class="iseeu highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">invalid, question(条件), shell, read, glob, grep, edit, write,</span><br><span class="line">task, fetch, todo, search, skill, patch, lsp(实验), plan(实验)</span><br></pre></td></tr></table></figure></div>
+
+<p><code>tools(model)</code> 会按 model 过滤 —— 比如 gpt-5 系用 <code>ApplyPatchTool</code> 替代<br><code>Edit</code>&#x2F;<code>Write</code>（因为 gpt-5 更适合用 patch 格式），<code>websearch</code> 按 provider 开关。插件工具通过<br><code>fromPlugin(id, def)</code> 把插件 Zod args 转 <code>Tool.Def</code>，并扫描<br><code>&#123;tool,tools&#125;/*.&#123;js,ts&#125;</code> 动态 import 自定义工具。</p>
+<h3 id="5-4-关键工具的-execute-要点"><a href="#5-4-关键工具的-execute-要点" class="headerlink" title="5.4 关键工具的 execute 要点"></a>5.4 关键工具的 execute 要点</h3><table>
+<thead>
+<tr>
+<th>工具</th>
+<th>文件</th>
+<th>execute 要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>read</td>
+<td><code>tool/read.ts</code>（<code>ReadTool</code>，execute）</td>
+<td>读文件 &#x2F; 目录，按行返回 <code>&lt;line&gt;: &lt;content&gt;</code>，默认 2000 行、单行截断 2000 字符；图片 &#x2F; PDF 作附件</td>
+</tr>
+<tr>
+<td>edit</td>
+<td><code>tool/edit.ts</code></td>
+<td>参数 <code>filePath/oldString/newString</code>，字符串替换，带 diff 修正算法、LSP 诊断验证、按文件加 <code>Semaphore</code> 锁</td>
+</tr>
+<tr>
+<td>write</td>
+<td><code>tool/write.ts</code></td>
+<td>参数 <code>content/filePath</code>，写入文件</td>
+</tr>
+<tr>
+<td>shell</td>
+<td><code>tool/shell.ts</code>（<code>ShellTool</code>）</td>
+<td>web-tree-sitter 解析命令 AST，<code>collect</code> 扫描涉及目录 &#x2F; 文件用于权限询问，再 <code>run</code> 执行；description 由 <code>ShellPrompt.render</code> 动态生成</td>
+</tr>
+<tr>
+<td>task</td>
+<td><code>tool/task.ts</code>（<code>TaskTool</code>，execute）</td>
+<td>参数 <code>description/prompt/subagent_type/task_id?/command?/background?</code>；经 <code>Agent.Service.get(subagent_type)</code> 取子 agent，派生子会话权限并运行</td>
+</tr>
+</tbody></table>
+<p><code>edit</code> 的 “ 按文件加 <code>Semaphore</code> 锁 “ 值得注意：它防止模型对同一文件并发发多个 edit 导致冲突。<code>shell</code> 用<br>web-tree-sitter 解析命令 AST 是为了<strong>权限询问</strong> —— 它能从命令里提取出会涉及的目录 &#x2F; 文件（重定向目标、路径参数），用于<br><code>external_directory</code> 和 <code>bash</code> 权限的 pattern 匹配。</p>
+<h3 id="5-5-工具结果回填到消息"><a href="#5-5-工具结果回填到消息" class="headerlink" title="5.5 工具结果回填到消息"></a>5.5 工具结果回填到消息</h3><p>工具执行完，结果怎么回到消息里供下一轮 LLM 看？这条链路在 <code>session/processor.ts</code>：</p>
+<div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// session/processor.ts  completeToolCall（示意）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">completeToolCall</span>(<span class="params">toolCallID, output</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Effect</span>.<span class="title function_">gen</span>(<span class="keyword">function</span>* () &#123;</span><br><span class="line">    <span class="keyword">const</span> part = <span class="keyword">yield</span>* <span class="title function_">readToolCall</span>(toolCallID)        <span class="comment">// 定位 message part</span></span><br><span class="line">    <span class="keyword">yield</span>* session.<span class="title function_">updatePart</span>(part.<span class="property">id</span>, &#123;</span><br><span class="line">      <span class="attr">status</span>: <span class="string">&quot;completed&quot;</span>,</span><br><span class="line">      input, output, metadata, title,</span><br><span class="line">      <span class="attr">time</span>: &#123; start, end &#125;,</span><br><span class="line">      attachments,</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>流式 tool-result（<code>processor.ts</code>）还会归一化图片附件（<code>image.normalize</code>），发布<br><code>SessionEvent.Tool.Success/Failed</code>（V2 双写），再 <code>completeToolCall</code>。运行中状态由<br><code>updateToolCall</code>（<code>processor.ts</code>）实时更新 title&#x2F;metadata&#x2F;input，而<br><code>Context.metadata</code>（<code>tools.ts</code>）让工具能在执行过程中实时回写进度 —— 这就是 TUI 里能看到 “正在读文件…” 的来源。</p>
+<h2 id="6-上下文管理与压缩"><a href="#6-上下文管理与压缩" class="headerlink" title="6. 上下文管理与压缩"></a>6. 上下文管理与压缩</h2><p>长对话必然会超 context window。OpenCode 的压缩机制是它工程化程度最高的部分之一。</p>
+<h3 id="6-1-双层持久化"><a href="#6-1-双层持久化" class="headerlink" title="6.1 双层持久化"></a>6.1 双层持久化</h3><p>消息存两层：</p>
+<ul>
+<li><strong>数据库层（主存储）</strong>：<code>session/session.ts</code> 通过<br><code>makeRuntime(Database.Service, Database.defaultLayer)</code> 建立运行时。消息读取走<br><code>MessageV2.page(&#123; sessionID, limit, before &#125;)</code>（<code>session/session.ts</code>）分页查询 +<br><code>MessageV2.stream</code>（<code>message-v2.ts</code>）流式读取。底层是<br><code>packages/effect-drizzle-sqlite</code> &#x2F; <code>packages/effect-sqlite-node</code>（drizzle +<br>sqlite）。</li>
+<li><strong>文件 KV 层</strong>：<code>storage/storage.ts</code> 提供文件系统<br>KV（<code>read/write/update/list/remove</code>），存 session&#x2F;message&#x2F;diff&#x2F;summary 文件元数据，带<br><code>Migration</code> 机制。</li>
+</ul>
+<p>为什么要两层？sqlite 负责高频读写和查询（分页、流式），文件 KV 负责可移植的元数据快照和迁移。这种 “热数据进 DB，元数据进文件” 的分层在需要导出 &#x2F; 迁移场景下很实用。</p>
+<h3 id="6-2-overflow-ts：判定是否该压缩"><a href="#6-2-overflow-ts：判定是否该压缩" class="headerlink" title="6.2 overflow.ts：判定是否该压缩"></a>6.2 overflow.ts：判定是否该压缩</h3><p>只有 34 行的 <code>session/overflow.ts</code> 是压缩的判定门：</p>
+<div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// session/overflow.ts  （示意）</span></span><br><span class="line"><span class="keyword">const</span> <span class="variable constant_">COMPACTION_BUFFER</span> = <span class="number">20000</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">usable</span>(<span class="params">&#123; cfg, model, outputTokenMax &#125;</span>) &#123;</span><br><span class="line">  <span class="comment">// 模型有 limit.input 则 input - reserved，否则 context - maxOutputTokens</span></span><br><span class="line">  <span class="keyword">const</span> reserved = cfg.<span class="property">compaction</span>?.<span class="property">reserved</span> ?? <span class="title class_">Math</span>.<span class="title function_">min</span>(<span class="variable constant_">COMPACTION_BUFFER</span>, maxOutputTokens)</span><br><span class="line">  <span class="keyword">return</span> model.<span class="property">limit</span>.<span class="property">input</span> ? model.<span class="property">limit</span>.<span class="property">input</span> - reserved : model.<span class="property">context</span> - maxOutputTokens</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">isOverflow</span>(<span class="params">&#123; cfg, tokens, model, outputTokenMax &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (cfg.<span class="property">compaction</span>?.<span class="property">auto</span> === <span class="literal">false</span> || model.<span class="property">context</span> === <span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">  <span class="keyword">const</span> count = tokens.<span class="property">total</span> ?? (input + output + cache)</span><br><span class="line">  <span class="keyword">return</span> count &gt;= <span class="title function_">usable</span>(&#123; cfg, model, outputTokenMax &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>关键点：</p>
+<ul>
+<li><code>cfg.compaction?.auto === false</code> 时直接关掉自动压缩（用户可配置）。</li>
+<li><code>reserved</code> 取配置或 <code>min(20000, maxOutputTokens)</code>，给输出留 buffer。</li>
+<li><code>count</code> 优先用 provider 返回的 <code>tokens.total</code>（精确），否则用 input + output + cache 之和。</li>
+</ul>
+<h3 id="6-3-compaction-ts：压缩流程"><a href="#6-3-compaction-ts：压缩流程" class="headerlink" title="6.3 compaction.ts：压缩流程"></a>6.3 compaction.ts：压缩流程</h3><p><code>session/compaction.ts</code> 的 <code>Interface</code> 暴露 <code>isOverflow</code> &#x2F;<br><code>select</code> &#x2F; <code>process</code> 等。核心是 <code>process</code>（<code>processCompaction</code>）：</p>
+<div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// session/compaction.ts  process（骨架）</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> process = <span class="title class_">Effect</span>.<span class="title function_">fn</span>(<span class="string">&quot;SessionCompaction.process&quot;</span>)(<span class="function">(<span class="params">input</span>) =&gt;</span></span><br><span class="line">  <span class="title class_">Effect</span>.<span class="title function_">gen</span>(<span class="keyword">function</span>* () &#123;</span><br><span class="line">    <span class="comment">// 1. 取 compaction agent 与模型</span></span><br><span class="line">    <span class="keyword">const</span> agent = agents.<span class="title function_">get</span>(<span class="string">&quot;compaction&quot;</span>)</span><br><span class="line">    <span class="keyword">const</span> model = <span class="keyword">yield</span>* <span class="title function_">getModel</span>(...)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 找出历史已完成压缩，隐藏其 user/assistant，取 previousSummary</span></span><br><span class="line">    <span class="keyword">const</span> &#123; history, previousSummary &#125; = <span class="title function_">completedCompactions</span>(input.<span class="property">history</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 切分 head（待压缩）/ tail（保留近期）</span></span><br><span class="line">    <span class="keyword">const</span> &#123; head, tailStartId &#125; = <span class="keyword">yield</span>* <span class="title function_">select</span>(&#123;</span><br><span class="line">      history, <span class="attr">tailTurns</span>: <span class="variable constant_">DEFAULT_TAIL_TURNS</span> <span class="comment">/* 2 */</span>, ...input</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 插件钩子：允许注入上下文或替换 prompt</span></span><br><span class="line">    <span class="keyword">const</span> pluginCtx = <span class="keyword">yield</span>* plugin.<span class="title function_">trigger</span>(<span class="string">&quot;experimental.session.compacting&quot;</span>, ...)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 5. 构建压缩指令（有 previousSummary 则&quot;更新锚定摘要&quot;，否则&quot;新建&quot;）</span></span><br><span class="line">    <span class="keyword">const</span> prompt = <span class="title function_">buildPrompt</span>(&#123; previousSummary, <span class="attr">context</span>: pluginCtx &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 6. 创建 mode: &quot;compaction&quot; 的 assistant 消息，跑 LLM（tools: &#123;&#125;, system: []）</span></span><br><span class="line">    <span class="keyword">const</span> msg = <span class="title function_">makeCompactionMessage</span>(...)</span><br><span class="line">    <span class="keyword">const</span> handle = <span class="keyword">yield</span>* processor.<span class="title function_">create</span>(...)</span><br><span class="line">    <span class="keyword">const</span> result = <span class="keyword">yield</span>* handle.<span class="title function_">process</span>(&#123; <span class="attr">tools</span>: &#123;&#125;, <span class="attr">system</span>: [], <span class="attr">messages</span>: [prompt], ... &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 7. 压缩后仍超限 → ContextOverflowError → 返回 &quot;stop&quot;</span></span><br><span class="line">    <span class="keyword">if</span> (result === <span class="string">&quot;compact&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* <span class="title class_">Effect</span>.<span class="title function_">fail</span>(<span class="keyword">new</span> <span class="title class_">ContextOverflowError</span>())</span><br><span class="line">      <span class="keyword">return</span> <span class="string">&quot;stop&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 8. auto 模式下可选 replay 或注入 &quot;Continue if you have next steps...&quot;</span></span><br><span class="line">    <span class="keyword">if</span> (input.<span class="property">auto</span> &amp;&amp; result === <span class="string">&quot;continue&quot;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* <span class="title function_">maybeAutoContinue</span>(...)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;continue&quot;</span></span><br><span class="line">  &#125;)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+
+<p>几个设计要点：</p>
+<p><strong><code>select</code> 按 <code>tail_turns</code>（默认2）切分</strong>。<code>DEFAULT_TAIL_TURNS = 2</code> 保留最近 2 轮对话不压缩，<code>preserveRecentBudget</code>（区间2000-8000）是保留近期对话的 token 预算。这保证模型始终能看到 “刚刚发生了什么”，而更早的对话被摘要替代。</p>
+<p><strong>摘要由独立 LLM 调用产生</strong>，不是某种启发式截断。压缩用的 prompt 模板是<br><code>packages/core/src/session/compaction.ts</code> 的 <code>SUMMARY_TEMPLATE</code> +<br><code>buildPrompt</code>，含 Goal &#x2F; Constraints &#x2F; Progress &#x2F; Key Decisions &#x2F; Next Steps &#x2F; Critical Context<br>&#x2F; Relevant Files 等 section。有 <code>previousSummary</code> 时走 “更新锚定摘要”，没有时走 “新建锚定摘要”——<br>所以摘要是增量演进的，不是每次重头来。</p>
+<p><strong>压缩后仍超限就报错</strong>。<code>result === &quot;compact&quot;</code> 表示压缩完还是超限，这时<br><code>ContextOverflowError</code>，<code>process</code> 返回 <code>&quot;stop&quot;</code>，主循环 break。这是真正的 “上下文耗尽”<br>硬终止。</p>
+<p><strong><code>mode: &quot;compaction&quot;</code> 的消息</strong>。压缩产生的是一条特殊 mode 的 assistant 消息，它在<br><code>MessageV2.filterCompactedEffect</code> 里会 “覆盖” 掉它压缩的那些历史 —— 这就是前面循环里 “取消息要 filterCompacted” 的由来。</p>
+<h3 id="6-4-流内压缩-vs-主动压缩"><a href="#6-4-流内压缩-vs-主动压缩" class="headerlink" title="6.4 流内压缩 vs 主动压缩"></a>6.4 流内压缩 vs 主动压缩</h3><p>压缩有两种触发路径：</p>
+<ol>
+<li><strong>主动压缩</strong>（循环第 6 步）：<code>compaction.isOverflow</code> 为真 →<br><code>compaction.create(&#123; auto: true &#125;)</code> → <code>continue</code>。这是轮次开始前的预防性压缩。</li>
+<li><strong>流内压缩</strong>（processor 内）：<code>Stream.takeUntil(() =&gt; ctx.needsCompaction)</code><br>在生成中发现超限 → <code>process</code> 返回 <code>&quot;compact&quot;</code> → 主循环<br><code>compaction.create(&#123; auto: true, overflow: !handle.message.finish &#125;)</code> →<br><code>continue</code>。这是生成中途的紧急压缩。</li>
+</ol>
+<p>两者最终都走 <code>process</code>，区别在于 “在轮次边界压缩” 还是 “在轮次中途压缩”。</p>
+<p>压缩的内部流程（<code>processCompaction</code>）与触发路径：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-06.svg"
+                      alt="Mermaid diagram 6"
+                ></p>
+<h3 id="6-5-token-计数：粗估-vs-精确"><a href="#6-5-token-计数：粗估-vs-精确" class="headerlink" title="6.5 token 计数：粗估 vs 精确"></a>6.5 token 计数：粗估 vs 精确</h3><p>OpenCode 的 token 计数有两套：</p>
+<ul>
+<li><strong>粗估</strong>：<code>packages/core/src/util/token.ts</code>（仅 5<br>行）——<code>const CHARS_PER_TOKEN = 4; export const estimate = (input) =&gt; Math.max(0, Math.round(input.length / 4))</code>。按<br>“每 4 字符 ≈ 1 token” 估算。用在 <code>compaction.ts</code> 估算消息体积、<code>compaction.ts</code> 估算工具输出大小（prune<br>流程）、<code>core/session/compaction.ts</code> 判断 prompt 是否超 context。</li>
+<li><strong>精确</strong>：provider 返回的 <code>tokens</code>（<code>SessionV1.Assistant.tokens</code>，含<br>input&#x2F;output&#x2F;reasoning&#x2F;cache），<code>isOverflow</code> 优先用<br><code>tokens.total</code>（<code>overflow.ts</code>）。</li>
+</ul>
+<p>为什么要粗估？因为精确 token 要等 LLM 调用返回才知道，但压缩的 <code>select</code>（切分 head &#x2F; tail）发生在调用之前，这时只能用粗估来判断<br>“切多少去压缩”。粗估够用，因为 <code>select</code> 只是切个大致边界，真正的超限判定用 <code>tokens.total</code>。</p>
+<h2 id="7-子-Agent-Subagent"><a href="#7-子-Agent-Subagent" class="headerlink" title="7. 子 Agent &#x2F; Subagent"></a>7. 子 Agent &#x2F; Subagent</h2><p>OpenCode 的子 Agent 不是独立的运行时，而是<strong>复用 session 机制</strong> —— 这是理解它的关键。</p>
+<h3 id="7-1-task-工具：唯一的委派入口"><a href="#7-1-task-工具：唯一的委派入口" class="headerlink" title="7.1 task 工具：唯一的委派入口"></a>7.1 task 工具：唯一的委派入口</h3><p>子 Agent 的委派完全通过 <code>task</code> 工具（<code>tool/task.ts</code>）完成，没有别的路径。它的 execute<br>流程（<code>task.ts</code>）：</p>
+<div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tool/task.ts  TaskTool execute（骨架）</span></span><br><span class="line"><span class="attr">execute</span>: <span class="function">(<span class="params">params, ctx</span>) =&gt;</span></span><br><span class="line">  <span class="title class_">Effect</span>.<span class="title function_">gen</span>(<span class="keyword">function</span>* () &#123;</span><br><span class="line">    <span class="comment">// 1. 权限检查：按 subagent_type 询问</span></span><br><span class="line">    <span class="keyword">yield</span>* ctx.<span class="title function_">ask</span>(&#123;</span><br><span class="line">      <span class="attr">permission</span>: <span class="string">&quot;task&quot;</span>,</span><br><span class="line">      <span class="attr">patterns</span>: [params.<span class="property">subagent_type</span>],</span><br><span class="line">      <span class="attr">always</span>: [<span class="string">&quot;*&quot;</span>],</span><br><span class="line">    &#125;)                                      <span class="comment">// 104-114，可被 ctx.extra?.bypassAgentCheck 跳过</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 取子 agent 定义</span></span><br><span class="line">    <span class="keyword">const</span> next = <span class="keyword">yield</span>* agent.<span class="title function_">get</span>(params.<span class="property">subagent_type</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 创建或复用子会话</span></span><br><span class="line">    <span class="keyword">const</span> nextSession = params.<span class="property">task_id</span></span><br><span class="line">      ? <span class="keyword">yield</span>* sessions.<span class="title function_">get</span>(params.<span class="property">task_id</span>)               <span class="comment">// 复用</span></span><br><span class="line">      : <span class="keyword">yield</span>* sessions.<span class="title function_">create</span>(&#123;                          <span class="comment">// 新建</span></span><br><span class="line">          <span class="attr">parentID</span>: ctx.<span class="property">sessionID</span>,                         <span class="comment">// 关联父会话</span></span><br><span class="line">          <span class="attr">agent</span>: next.<span class="property">name</span>,</span><br><span class="line">          <span class="attr">permission</span>: [...],</span><br><span class="line">        &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 把任务 prompt 注入子会话并驱动运行——复用 session.prompt！</span></span><br><span class="line">    <span class="keyword">yield</span>* ops.<span class="title function_">prompt</span>(&#123;</span><br><span class="line">      <span class="attr">sessionID</span>: nextSession.<span class="property">id</span>,</span><br><span class="line">      <span class="attr">agent</span>: next.<span class="property">name</span>,</span><br><span class="line">      <span class="attr">parts</span>: [&#123; <span class="attr">type</span>: <span class="string">&quot;text&quot;</span>, <span class="attr">text</span>: params.<span class="property">prompt</span> &#125;],</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 5. background 模式：异步跑，完成后回调注入父会话</span></span><br><span class="line">    <span class="keyword">if</span> (params.<span class="property">background</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">yield</span>* <span class="title function_">runInBackground</span>(nextSession, ctx)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 6. 同步模式：等子会话结束，返回最后一条 assistant 消息</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">yield</span>* <span class="title function_">waitForResult</span>(nextSession)</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure></div>
+
+
+
+<p>第 4 步是精髓：<code>ops.prompt</code> 就是前面讲的 <code>session/prompt.ts</code> 的 <code>prompt</code> 入口。**子<br>Agent 跑的完全是同一个 <code>runLoop</code>**，只是用了一个不同的 agent 定义（不同<br>prompt、不同模型、不同权限）。这意味着主循环的所有机制（压缩、工具调用、doom loop 检测）对子 Agent 全部适用，零额外实现成本。</p>
+<p>子 Agent 委派的全过程，注意第 4 步复用了同一个 <code>runLoop</code>：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-07.svg"
+                      alt="Mermaid diagram 7"
+                ></p>
+<p><code>background</code> 模式需要环境变量 <code>OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true</code>，异步跑子<br>agent，完成后通过 <code>BackgroundJob</code> 回调把结果注入父会话。</p>
+<h3 id="7-2-Agent-Info-与内置-agent"><a href="#7-2-Agent-Info-与内置-agent" class="headerlink" title="7.2 Agent.Info 与内置 agent"></a>7.2 <a class="link"   target="_blank" rel="noopener" href="http://agent.info/" >Agent.Info<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a> 与内置 agent</h3><div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// agent/agent.ts</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> <span class="title class_">Info</span> &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span></span><br><span class="line">  <span class="attr">description</span>: <span class="built_in">string</span></span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&quot;subagent&quot;</span> | <span class="string">&quot;primary&quot;</span> | <span class="string">&quot;all&quot;</span>     <span class="comment">// 决定是子 agent 还是主 agent</span></span><br><span class="line">  <span class="attr">native</span>: <span class="built_in">boolean</span></span><br><span class="line">  <span class="attr">hidden</span>: <span class="built_in">boolean</span>                          <span class="comment">// 是否在 agent 选择器隐藏</span></span><br><span class="line">  topP, temperature, color</span><br><span class="line">  <span class="attr">permission</span>: <span class="title class_">PermissionV1</span>.<span class="property">Ruleset</span>         <span class="comment">// 该 agent 的权限规则</span></span><br><span class="line">  <span class="attr">model</span>?: &#123; modelID, providerID &#125;          <span class="comment">// 可选专属模型</span></span><br><span class="line">  <span class="attr">variant</span>: <span class="built_in">string</span></span><br><span class="line">  <span class="attr">prompt</span>: <span class="built_in">string</span>                           <span class="comment">// 系统 prompt</span></span><br><span class="line">  <span class="attr">options</span>: <span class="title class_">Record</span>&lt;<span class="built_in">string</span>, <span class="built_in">any</span>&gt;</span><br><span class="line">  <span class="attr">steps</span>?: <span class="built_in">number</span>                           <span class="comment">// 步数上限</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>内置 agent（<code>agent.ts</code> 硬编码）：</p>
+<table>
+<thead>
+<tr>
+<th>agent</th>
+<th>mode</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>build</code></td>
+<td>primary</td>
+<td>默认主 agent</td>
+</tr>
+<tr>
+<td><code>plan</code></td>
+<td>primary</td>
+<td>规划，禁编辑</td>
+</tr>
+<tr>
+<td><code>general</code></td>
+<td>subagent</td>
+<td>通用子 agent</td>
+</tr>
+<tr>
+<td><code>explore</code></td>
+<td>subagent</td>
+<td>只读搜索专家</td>
+</tr>
+<tr>
+<td><code>compaction</code></td>
+<td>primary (hidden)</td>
+<td>上下文压缩</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>primary (hidden)</td>
+<td>标题生成</td>
+</tr>
+<tr>
+<td><code>summary</code></td>
+<td>primary (hidden)</td>
+<td>会话描述摘要</td>
+</tr>
+</tbody></table>
+<p><code>mode</code> 字段决定 subagent 与 primary 的区别；<code>defaultInfo</code>（<code>agent.ts</code>）拒绝把 subagent<br>或 hidden agent 设为默认。</p>
+<h3 id="7-3-权限派生"><a href="#7-3-权限派生" class="headerlink" title="7.3 权限派生"></a>7.3 权限派生</h3><p>子会话通过 <code>sessions.create(&#123; parentID, agent, permission &#125;)</code> 创建，带 <code>parentID</code><br>关联父会话。权限派生函数 <code>deriveSubagentSessionPermission</code>（<code>agent/subagent-permissions.ts</code>）：</p>
+<div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// agent/subagent-permissions.ts  （示意）</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">deriveSubagentSessionPermission</span>(<span class="params">parent, child</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="comment">// 继承父 session 的 deny 规则和 external_directory 规则</span></span><br><span class="line">    ...(<span class="title function_">filterDeny</span>(parent.<span class="property">permission</span>)),</span><br><span class="line">    ...(<span class="title function_">filterExternalDir</span>(parent.<span class="property">permission</span>)),</span><br><span class="line">    <span class="comment">// 子 agent 自身规则</span></span><br><span class="line">    ...child.<span class="property">permission</span>,</span><br><span class="line">    <span class="comment">// 若子 agent 未显式允许 todowrite/task，追加 deny（防止嵌套委派）</span></span><br><span class="line">    ...<span class="title function_">maybeDeny</span>(child, [<span class="string">&quot;todowrite&quot;</span>, <span class="string">&quot;task&quot;</span>]),</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>源码注释明确：<strong>“Parent agent restrictions only govern that agent; the subagent’s own permissions determine its capabilities”</strong>—— 父 agent 的限制只约束父 agent 自己，子 agent 的能力由它自己的权限决定。继承的只是 deny 和 external_directory。<code>task.ts</code> 还额外追加 <code>childToolDenies</code>：把<br><code>experimental.primary_tools</code> 列出的工具对子 agent deny，防止子 agent 用主 agent 专属工具。</p>
+<h3 id="7-3-agent-prompt-txt-各-prompt-用途"><a href="#7-3-agent-prompt-txt-各-prompt-用途" class="headerlink" title="7.3 agent/prompt/*.txt 各 prompt 用途"></a>7.3 <code>agent/prompt/*.txt</code> 各 prompt 用途</h3><table>
+<thead>
+<tr>
+<th>文件</th>
+<th>绑定 agent</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>explore.txt</code></td>
+<td>explore</td>
+<td>“file search specialist”，强调用 Glob&#x2F;Grep&#x2F;Read&#x2F;Bash 搜索、返回绝对路径、不修改系统</td>
+</tr>
+<tr>
+<td><code>compaction.txt</code></td>
+<td>compaction</td>
+<td>“anchored context summarization”，只总结历史、保留文件路径与标识符、不回答对话本身</td>
+</tr>
+<tr>
+<td><code>summary.txt</code></td>
+<td>summary</td>
+<td>会话摘要，像 PR description 写 2-3 句、第一人称、描述改动而非过程</td>
+</tr>
+<tr>
+<td><code>title.txt</code></td>
+<td>title</td>
+<td>标题生成，单行 ≤50 字符、不含工具名、用对话同语言</td>
+</tr>
+<tr>
+<td><code>generate.txt</code></td>
+<td>—</td>
+<td>用于 <code>Agent.generate</code>（LLM 自动生成 agent 配置）</td>
+</tr>
+</tbody></table>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h2 id="8-权限机制"><a href="#8-权限机制" class="headerlink" title="8. 权限机制"></a>8. 权限机制</h2><p>权限是贯穿所有工具调用的横切关注点。OpenCode 用一套 “规则集 + 询问” 模型实现。</p>
+<h3 id="8-1-ask-reply-三态"><a href="#8-1-ask-reply-三态" class="headerlink" title="8.1 ask &#x2F; reply 三态"></a>8.1 ask &#x2F; reply 三态</h3><p>权限服务 <code>permission/index.ts</code>，接口 <code>ask</code>&#x2F;<code>reply</code>&#x2F;<code>list</code>。Action 类型是<br><code>&quot;ask&quot; | &quot;allow&quot; | &quot;deny&quot;</code>（<code>packages/core/src/v1/config/permission.ts</code>）。</p>
+<p>工具执行前通过 <code>ctx.ask</code> 触发询问。<code>ctx.ask</code> 的实现（<code>session/tools.ts</code>）把 <strong>agent<br>权限 + session 权限</strong>合并为 ruleset 传入：</p>
+<div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// session/tools.ts  ctx.ask（示意）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ask</span>(<span class="params">req</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> permission.<span class="title function_">ask</span>(&#123;</span><br><span class="line">    ...req,</span><br><span class="line">    sessionID,</span><br><span class="line">    <span class="attr">tool</span>: &#123; messageID, callID &#125;,</span><br><span class="line">    <span class="attr">ruleset</span>: <span class="title class_">Permission</span>.<span class="title function_">merge</span>(agent.<span class="property">permission</span>, session.<span class="property">permission</span> ?? []),</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p><code>ask</code> 流程（<code>index.ts</code>）：</p>
+<div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// permission/index.ts  ask（骨架）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ask</span>(<span class="params">req</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Effect</span>.<span class="title function_">gen</span>(<span class="keyword">function</span>* () &#123;</span><br><span class="line">    <span class="keyword">let</span> needsAsk = <span class="literal">false</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> pattern <span class="keyword">of</span> req.<span class="property">patterns</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> result = <span class="title function_">evaluate</span>(req.<span class="property">permission</span>, pattern, ...rulesets)</span><br><span class="line">      <span class="keyword">if</span> (result.<span class="property">action</span> === <span class="string">&quot;deny&quot;</span>) <span class="keyword">yield</span>* <span class="title class_">Effect</span>.<span class="title function_">fail</span>(<span class="keyword">new</span> <span class="title class_">DeniedError</span>())</span><br><span class="line">      <span class="keyword">if</span> (result.<span class="property">action</span> === <span class="string">&quot;ask&quot;</span>) needsAsk = <span class="literal">true</span></span><br><span class="line">      <span class="comment">// allow → 跳过</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (needsAsk) &#123;</span><br><span class="line">      <span class="keyword">yield</span>* <span class="title class_">Event</span>.<span class="title function_">publish</span>(&#123; <span class="attr">type</span>: <span class="string">&quot;Asked&quot;</span>, req &#125;)     <span class="comment">// 发布询问事件</span></span><br><span class="line">      <span class="keyword">yield</span>* <span class="title class_">Deferred</span>.<span class="title function_">await</span>(<span class="title function_">pendingReply</span>(req.<span class="property">id</span>))       <span class="comment">// 阻塞等用户回复</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>事件流 <code>permission.asked</code> &#x2F; <code>permission.replied</code>（<code>index.ts</code>），TUI &#x2F; HTTP 端通过<br><code>reply</code> 接口回送结果。</p>
+<h3 id="8-2-evaluate：后定义优先"><a href="#8-2-evaluate：后定义优先" class="headerlink" title="8.2 evaluate：后定义优先"></a>8.2 evaluate：后定义优先</h3><p><code>evaluate(permission, pattern, ...rulesets)</code>（<code>index.ts</code>）用<br><code>Wildcard.match</code> 同时匹配 <code>permission</code> 名和 <code>pattern</code>，<code>findLast</code><br>取<strong>最后一条命中规则</strong>（后定义优先），无命中默认返回 <code>&#123; action: &quot;ask&quot;, permission, pattern: &quot;*&quot; &#125;</code>：</p>
+<div class="code-container" data-rel="Typescript"><figure class="iseeu highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// permission/index.ts  evaluate（示意）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">evaluate</span>(<span class="params">permission, pattern, ...rulesets</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> allRules = rulesets.<span class="title function_">flat</span>()</span><br><span class="line">  <span class="keyword">const</span> matched = <span class="title function_">findLast</span>(allRules, <span class="function"><span class="params">r</span> =&gt;</span></span><br><span class="line">    <span class="title class_">Wildcard</span>.<span class="title function_">match</span>(r.<span class="property">permission</span>, permission) &amp;&amp; <span class="title class_">Wildcard</span>.<span class="title function_">match</span>(r.<span class="property">pattern</span>, pattern)</span><br><span class="line">  )</span><br><span class="line">  <span class="keyword">return</span> matched ?? &#123; <span class="attr">action</span>: <span class="string">&quot;ask&quot;</span>, permission, <span class="attr">pattern</span>: <span class="string">&quot;*&quot;</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>“后定义优先” 意味着配置里后面的规则可以覆盖前面的，这给了用户灵活的 “先放行大类再限制小类” 或反过来能力。</p>
+<h3 id="8-3-reply-三态"><a href="#8-3-reply-三态" class="headerlink" title="8.3 reply 三态"></a>8.3 reply 三态</h3><p><code>reply</code>（<code>index.ts</code>）：</p>
+<ul>
+<li><code>reject</code>：拒绝并连带取消同 session 其他 pending。</li>
+<li><code>once</code>：仅本次放行。</li>
+<li><code>always</code>：把 <code>always</code> 数组里的 pattern 作为 allow 规则 push 到内存 <code>approved</code>。</li>
+</ul>
+<p>ask 到 reply 的完整交互，以及三态 reply 的不同落点：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="/2026/09/08/260908_OpenCode%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/mermaid-09.svg"
+                      alt="Mermaid diagram 9"
+                ></p>
+<h3 id="8-4-always-allow-只存内存"><a href="#8-4-always-allow-只存内存" class="headerlink" title="8.4 always allow 只存内存"></a>8.4 always allow 只存内存</h3><p>这是开篇强调过的点。<code>reply</code> 的 <code>always</code> 分支只<br><code>approved.push(&#123; permission, pattern, action: &quot;allow&quot; &#125;)</code> 到内存<br><code>State.approved</code>（<code>index.ts</code>），<strong>无任何文件写入</strong>。HTTP handler<br><code>handlers/permission.ts</code> 的 <code>reply</code> 仅调 <code>svc.reply</code>，无 config<br>写回。<code>config.ts</code> 中只有 permission 读取（546 &#x2F; 562 行），未发现写回逻辑。</p>
+<p><strong>结论：always allow 是 InstanceState 级内存持久化，重启后失效。</strong> 用户若要持久化需手动在 <code>opencode.json</code> 的<br><code>permission</code> 字段预设规则。这是个有意的设计选择 —— 避免 “用户随手 always 了一次危险操作然后就永久放行”。</p>
+<h3 id="8-5-权限规则的两层来源"><a href="#8-5-权限规则的两层来源" class="headerlink" title="8.5 权限规则的两层来源"></a>8.5 权限规则的两层来源</h3><ul>
+<li><strong>配置 schema</strong><br><code>ConfigPermissionV1.Info</code>（<code>core/v1/config/permission.ts</code>）：<code>Record&lt;permission, Rule&gt;</code>，<code>Rule = Action | Record&lt;pattern, Action&gt;</code>。</li>
+<li><strong>配置读取</strong>（<code>config/config.ts</code>）：从 <code>opencode.json</code> 读<br><code>permission</code> 字段并 <code>mergeDeep</code>，含 <code>OPENCODE_PERMISSION</code> 环境变量覆盖。</li>
+<li><strong>agent 默认权限</strong>（<code>agent.ts</code>）：由 <code>Permission.fromConfig</code> 构造<br><code>defaults</code>（如 <code>*: allow</code>、<code>doom_loop: ask</code>、<code>read</code> 对<br><code>*.env</code> ask、<code>question</code>&#x2F;<code>plan_*: deny</code>），再与用户配置 <code>user</code><br>merge。</li>
+<li><strong>运行时内存</strong> <code>State.approved: PermissionV1.Rule[]</code>（<code>index.ts</code>）：存<br>always 批准的规则。</li>
+</ul>
+<p><code>fromConfig</code>（<code>index.ts</code>）：string 值展开为 <code>pattern: &quot;*&quot;</code>；object 值按每个 key 作为<br>pattern（支持 <code>~</code>、<code>$HOME</code> 展开）。所以配置可以很简洁：</p>
+<div class="code-container" data-rel="Json"><figure class="iseeu highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;permission&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;bash&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ask&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;edit&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;*.env&quot;</span><span class="punctuation">:</span> <span class="string">&quot;deny&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;*&quot;</span><span class="punctuation">:</span> <span class="string">&quot;allow&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;read&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;*.env&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ask&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></div>
+
+
+
+<h2 id="9-扩展机制"><a href="#9-扩展机制" class="headerlink" title="9. 扩展机制"></a>9. 扩展机制</h2><p>OpenCode 的扩展点分散在几个层面，分别对应不同复杂度的定制需求。</p>
+<h3 id="9-1-自定义-Tool：插件机制"><a href="#9-1-自定义-Tool：插件机制" class="headerlink" title="9.1 自定义 Tool：插件机制"></a>9.1 自定义 Tool：插件机制</h3><p>工具注册表 <code>tool/registry.ts</code> 除了内置工具，还通过 <code>fromPlugin(id, def)</code> 加载插件工具 —— 把插件的 Zod args<br>转成 <code>Tool.Def</code>。此外它会扫描 <code>&#123;tool,tools&#125;/*.&#123;js,ts&#125;</code> 动态 import<br>自定义工具文件。这意味着添加一个自定义工具，只需在约定目录放一个导出 <code>Tool.Def</code> 的 <code>.ts</code>&#x2F;<code>.js</code> 文件，无需改核心代码。</p>
+<p>工具按 model 过滤的机制（<code>tools(model)</code>）也让扩展工具能声明 “只在某些模型下可用”—— 例如 gpt-5 系用 <code>ApplyPatchTool</code><br>替代 <code>Edit</code>&#x2F;<code>Write</code>。</p>
+<h3 id="9-2-自定义-Provider：插件目录"><a href="#9-2-自定义-Provider：插件目录" class="headerlink" title="9.2 自定义 Provider：插件目录"></a>9.2 自定义 Provider：插件目录</h3><p>Provider 适配除了 <code>BUNDLED_PROVIDERS</code> 的 AI SDK 工厂映射，还有 <code>plugin/</code> 目录下的 Provider<br>插件（<code>azure.ts</code>、<code>xai.ts</code>、<code>github-copilot/copilot.ts</code>、<code>openai/codex.ts</code>、<code>openai/ws.ts</code><br>等），负责 OAuth 鉴权与特殊传输（如 Codex 的 WebSocket）。新增一个有特殊鉴权或传输需求的 provider，在 <code>plugin/</code> 下加一个插件文件即可，不必动<br><code>BUNDLED_PROVIDERS</code>。</p>
+<h3 id="9-3-自定义-Agent：两种途径"><a href="#9-3-自定义-Agent：两种途径" class="headerlink" title="9.3 自定义 Agent：两种途径"></a>9.3 自定义 Agent：两种途径</h3><p>前文章节提到过，自定义 agent 有两种途径：运行时合并（<code>cfg.agent</code> 配置覆盖或 <code>disable</code> 内置<br>agent）和文件加载（<code>&#123;agent,agents&#125;/**/*.md</code> 的 frontmatter + 正文 prompt）。markdown 方式尤其友好 —— 一个<code>.md</code> 文件就是一个 agent，frontmatter 写配置、正文写系统 prompt，降低自定义门槛。</p>
+<h3 id="9-4-MCP：外部能力接入"><a href="#9-4-MCP：外部能力接入" class="headerlink" title="9.4 MCP：外部能力接入"></a>9.4 MCP：外部能力接入</h3><p>MCP 是最重量级的扩展点，允许接入任意外部工具服务器（local stdio &#x2F; remote HTTP）。MCP 工具自动并入 session 工具表，对 LLM<br>而言与内置工具无异。<code>cli/cmd/mcp.ts</code> 的 <code>mcp add</code> 把 server 写入<br><code>opencode.json</code>，OAuth token 持久化到 <code>mcp-auth.json</code>。</p>
+<h3 id="9-5-插件钩子"><a href="#9-5-插件钩子" class="headerlink" title="9.5 插件钩子"></a>9.5 插件钩子</h3><p>除了 “加东西”，扩展还能 “改行为”。源码里多处 <code>plugin.trigger(...)</code> 钩子允许插件介入核心流程，例如：</p>
+<ul>
+<li><code>experimental.session.compacting</code>（<code>compaction.ts</code>）：压缩前允许插件注入上下文或替换 prompt。</li>
+<li><code>experimental.compaction.autocontinue</code>：控制压缩后是否自动续接。</li>
+<li><code>tool.execute.before/after</code>：工具执行前后钩子。</li>
+</ul>
+<p>这套钩子让插件能在不 fork 核心的前提下改变压缩、续接、工具执行等行为，是比单纯 “加工具 &#x2F; provider” 更深的扩展维度。</p>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 260908_OpenCode源码分析</li>
+        <li><strong>Author:</strong> Haoliang Tang</li>
+        <li><strong>Created at
+                :</strong> 2026-09-08 00:00:00</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2026-09-08 19:39:12
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://hl-tang.github.io/2026/09/08/260908_OpenCode源码分析/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/AI/">#AI</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2024/10/04/241004_order%20by%E5%88%B0%E5%BA%95%E8%B5%B0%E4%B8%8D%E8%B5%B0%E7%B4%A2%E5%BC%95/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item">241004_order by到底走不走索引 ORDER BYは一体インデックスを使うのか?</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.mjs';
+
+      function loadWaline() {
+        init({
+          el: '#waline',
+          serverURL: 'https://example.example.com',
+          lang: 'zh-CN',
+          dark: 'body[class~="dark-mode"]',
+          reaction: false,
+          requiredMeta: ['nick', 'mail'],
+          emoji: [],
+          
+          
+        });
+      }
+
+      if (typeof swup !== 'undefined') {
+        loadWaline();
+      } else {
+        window.addEventListener('DOMContentLoaded', loadWaline);
+      }
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">260908_OpenCode源码分析</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%85%88%E7%BA%A0%E6%AD%A3%E5%87%A0%E4%B8%AA%E5%B8%B8%E8%A7%81%E8%AF%AF%E8%A7%A3"><span class="nav-text">1. 先纠正几个常见误解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%88%86%E5%8C%85"><span class="nav-text">2. 整体架构与分包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E4%BC%9A%E8%AF%9D%E4%B8%BB%E5%BE%AA%E7%8E%AF%E4%B8%8E%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8"><span class="nav-text">3. 会话主循环与工具调用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%85%A5%E5%8F%A3%E9%93%BE%EF%BC%9Aprompt-%E2%86%92-loop-%E2%86%92-runLoop"><span class="nav-text">3.1 入口链：prompt → loop → runLoop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E4%B8%80%E6%AC%A1%E5%BE%AA%E7%8E%AF%E7%9A%84-16-%E6%AD%A5"><span class="nav-text">3.2 一次循环的 16 步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%B7%A5%E5%85%B7%E6%98%AF%E6%80%8E%E4%B9%88%E6%B3%A8%E5%85%A5%E5%88%B0-LLM-%E8%B0%83%E7%94%A8%E9%87%8C%E7%9A%84"><span class="nav-text">3.3 工具是怎么注入到 LLM 调用里的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-processor%EF%BC%9A%E6%B6%88%E8%B4%B9-LLM-%E4%BA%8B%E4%BB%B6%E6%B5%81"><span class="nav-text">3.4 processor：消费 LLM 事件流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-stop-%E6%9D%A1%E4%BB%B6%E5%85%A8%E9%9B%86"><span class="nav-text">3.5 stop 条件全集</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Provider-%E6%8A%BD%E8%B1%A1%E4%B8%8E%E5%B7%A5%E5%85%B7%E5%8D%8F%E8%AE%AE"><span class="nav-text">4. Provider 抽象与工具协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E4%B8%89%E5%B1%82%E9%80%82%E9%85%8D%EF%BC%9A%E5%B7%A5%E5%8E%82%E6%98%A0%E5%B0%84-%E5%AE%9A%E5%88%B6-loader-transform"><span class="nav-text">4.1 三层适配：工厂映射 + 定制 loader + transform</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Provider-%E4%B8%8E-Model-%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">4.2 Provider 与 Model 的类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%B7%A5%E5%85%B7-schema-%E7%9A%84%E5%AE%9A%E4%B9%89%E4%B8%8E%E4%B8%8B%E5%8F%91"><span class="nav-text">4.3 工具 schema 的定义与下发</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-tool-txt%EF%BC%9A%E7%BB%99-LLM-%E7%9C%8B%E7%9A%84%E8%AF%B4%E6%98%8E%E4%B9%A6"><span class="nav-text">4.4 tool&#x2F;*.txt：给 LLM 看的说明书</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%B7%A5%E5%85%B7%E7%B3%BB%E7%BB%9F"><span class="nav-text">5. 工具系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-Tool-Def-%E6%8E%A5%E5%8F%A3"><span class="nav-text">5.1 Tool.Def 接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-execute-%E7%9A%84%E5%8C%85%E8%A3%85%EF%BC%9A%E8%A7%A3%E7%A0%81-%E2%86%92-%E6%89%A7%E8%A1%8C-%E2%86%92-%E6%88%AA%E6%96%AD"><span class="nav-text">5.2 execute 的包装：解码 → 执行 → 截断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E6%B3%A8%E5%86%8C%E8%A1%A8"><span class="nav-text">5.3 注册表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E5%85%B3%E9%94%AE%E5%B7%A5%E5%85%B7%E7%9A%84-execute-%E8%A6%81%E7%82%B9"><span class="nav-text">5.4 关键工具的 execute 要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-%E5%B7%A5%E5%85%B7%E7%BB%93%E6%9E%9C%E5%9B%9E%E5%A1%AB%E5%88%B0%E6%B6%88%E6%81%AF"><span class="nav-text">5.5 工具结果回填到消息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86%E4%B8%8E%E5%8E%8B%E7%BC%A9"><span class="nav-text">6. 上下文管理与压缩</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E5%8F%8C%E5%B1%82%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-text">6.1 双层持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-overflow-ts%EF%BC%9A%E5%88%A4%E5%AE%9A%E6%98%AF%E5%90%A6%E8%AF%A5%E5%8E%8B%E7%BC%A9"><span class="nav-text">6.2 overflow.ts：判定是否该压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-compaction-ts%EF%BC%9A%E5%8E%8B%E7%BC%A9%E6%B5%81%E7%A8%8B"><span class="nav-text">6.3 compaction.ts：压缩流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E6%B5%81%E5%86%85%E5%8E%8B%E7%BC%A9-vs-%E4%B8%BB%E5%8A%A8%E5%8E%8B%E7%BC%A9"><span class="nav-text">6.4 流内压缩 vs 主动压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-token-%E8%AE%A1%E6%95%B0%EF%BC%9A%E7%B2%97%E4%BC%B0-vs-%E7%B2%BE%E7%A1%AE"><span class="nav-text">6.5 token 计数：粗估 vs 精确</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E5%AD%90-Agent-Subagent"><span class="nav-text">7. 子 Agent &#x2F; Subagent</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-task-%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%94%AF%E4%B8%80%E7%9A%84%E5%A7%94%E6%B4%BE%E5%85%A5%E5%8F%A3"><span class="nav-text">7.1 task 工具：唯一的委派入口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-Agent-Info-%E4%B8%8E%E5%86%85%E7%BD%AE-agent"><span class="nav-text">7.2 Agent.Info 与内置 agent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E6%9D%83%E9%99%90%E6%B4%BE%E7%94%9F"><span class="nav-text">7.3 权限派生</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-agent-prompt-txt-%E5%90%84-prompt-%E7%94%A8%E9%80%94"><span class="nav-text">7.3 agent&#x2F;prompt&#x2F;*.txt 各 prompt 用途</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E6%9D%83%E9%99%90%E6%9C%BA%E5%88%B6"><span class="nav-text">8. 权限机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-ask-reply-%E4%B8%89%E6%80%81"><span class="nav-text">8.1 ask &#x2F; reply 三态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-evaluate%EF%BC%9A%E5%90%8E%E5%AE%9A%E4%B9%89%E4%BC%98%E5%85%88"><span class="nav-text">8.2 evaluate：后定义优先</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-reply-%E4%B8%89%E6%80%81"><span class="nav-text">8.3 reply 三态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-4-always-allow-%E5%8F%AA%E5%AD%98%E5%86%85%E5%AD%98"><span class="nav-text">8.4 always allow 只存内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-5-%E6%9D%83%E9%99%90%E8%A7%84%E5%88%99%E7%9A%84%E4%B8%A4%E5%B1%82%E6%9D%A5%E6%BA%90"><span class="nav-text">8.5 权限规则的两层来源</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6"><span class="nav-text">9. 扩展机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E8%87%AA%E5%AE%9A%E4%B9%89-Tool%EF%BC%9A%E6%8F%92%E4%BB%B6%E6%9C%BA%E5%88%B6"><span class="nav-text">9.1 自定义 Tool：插件机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-%E8%87%AA%E5%AE%9A%E4%B9%89-Provider%EF%BC%9A%E6%8F%92%E4%BB%B6%E7%9B%AE%E5%BD%95"><span class="nav-text">9.2 自定义 Provider：插件目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-%E8%87%AA%E5%AE%9A%E4%B9%89-Agent%EF%BC%9A%E4%B8%A4%E7%A7%8D%E9%80%94%E5%BE%84"><span class="nav-text">9.3 自定义 Agent：两种途径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-4-MCP%EF%BC%9A%E5%A4%96%E9%83%A8%E8%83%BD%E5%8A%9B%E6%8E%A5%E5%85%A5"><span class="nav-text">9.4 MCP：外部能力接入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-5-%E6%8F%92%E4%BB%B6%E9%92%A9%E5%AD%90"><span class="nav-text">9.5 插件钩子</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2026&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Haoliang Tang</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        25 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.8.2</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+	<div class="search-pop-overlay">
+	<div class="popup search-popup">
+		<div class="search-header">
+			<span class="search-input-field-pre">
+				<i class="fa-solid fa-keyboard"></i>
+			</span>
+			<div class="search-input-container">
+				<input autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Search..." spellcheck="false" type="search" class="search-input">
+			</div>
+			<span class="popup-btn-close">
+				<i class="fa-solid fa-times"></i>
+			</span>
+		</div>
+		<div id="search-result">
+			<div id="no-result">
+				<i class="fa-solid fa-spinner fa-spin-pulse fa-5x fa-fw"></i>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/tools/localSearch.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+	
+</body>
+
+</html>
